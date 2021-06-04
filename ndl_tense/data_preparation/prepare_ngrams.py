@@ -1,0 +1,66 @@
+#!/usr/bin/python3
+
+####################
+# Preliminary steps
+####################
+
+### Import necessary packages
+import pandas as pd
+
+### Set working directory
+def prepare_ngrams(TARGETS,FREQ_1G_PATH,FREQ_2G_PATH,FREQ_3G_PATH,FREQ_4G_PATH, N,
+                   TARGETS_1G, TARGETS_2G, TARGETS_3G, TARGETS_4G):
+
+    #################################################################
+    # Load the frequency files as dictionaries prior to band-sampling
+    #################################################################
+
+    ########## 1-grams ##########
+    # Load as dataframe and retain only 10k ngrams whose freq >= 10
+    Freq_1G_df = pd.read_csv(FREQ_1G_PATH)
+    Freq_1G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
+    Freq_1G_df = Freq_1G_df[Freq_1G_df['frequency']>=10] # Remove ngrams whose freq < 10
+    Freq_1G_df = Freq_1G_df.sample(frac=1) # Shuffle ngrams with the same frequency
+    Freq_1G_df = Freq_1G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
+    Freq_1G_df = Freq_1G_df.iloc[0:N] # Extract N ngrams 
+
+    ########## 2-grams ##########
+    # Load as dataframe and retain only 10k ngrams whose freq >= 10
+    Freq_2G_df = pd.read_csv(FREQ_2G_PATH)
+    Freq_2G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
+    Freq_2G_df = Freq_2G_df[Freq_2G_df['frequency']>=10] # Remove ngrams whose freq < 10
+    Freq_2G_df = Freq_2G_df.sample(frac=1) # Shuffle ngrams with the same frequency
+    Freq_2G_df = Freq_2G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
+    Freq_2G_df = Freq_2G_df.iloc[0:N] # Extract N ngrams 
+
+    ########## 3-grams ##########
+    # Load as dataframe and retain only 10k ngrams whose freq >= 10
+    Freq_3G_df = pd.read_csv(FREQ_3G_PATH)
+    Freq_3G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
+    Freq_3G_df = Freq_3G_df[Freq_3G_df['frequency']>=10] # Remove ngrams whose freq < 10
+    Freq_3G_df = Freq_3G_df.sample(frac=1) # Shuffle ngrams with the same frequency
+    Freq_3G_df = Freq_3G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
+    Freq_3G_df = Freq_3G_df.iloc[0:N] # Extract N ngrams 
+
+
+    ########## 4-grams ##########
+    # Load as dataframe and retain only 10k ngrams whose freq >= 10
+    Freq_4G_df = pd.read_csv(FREQ_4G_PATH)
+    Freq_4G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
+    Freq_4G_df = Freq_4G_df[Freq_4G_df['frequency']>=10] # Remove ngrams whose freq < 10
+    Freq_4G_df = Freq_4G_df.sample(frac=1) # Shuffle ngrams with the same frequency
+    Freq_4G_df = Freq_4G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
+    Freq_4G_df = Freq_4G_df.iloc[0:N] # Extract N ngrams 
+
+    ########## All n-grams ##########
+    # Append all datasets
+    Freq_all_df = Freq_1G_df.copy()
+    Freq_all_df = Freq_all_df.append([Freq_2G_df.copy(), Freq_3G_df.copy(), Freq_4G_df.copy()])
+
+    # Save a separate dataframe for each group
+    Freq_1G_df.to_csv(TARGETS_1G, sep = ',', index = False)
+    Freq_2G_df.to_csv(TARGETS_2G, sep = ',', index = False)
+    Freq_3G_df.to_csv(TARGETS_3G, sep = ',', index = False)
+    Freq_4G_df.to_csv(TARGETS_4G, sep = ',', index = False)
+    Freq_all_df.to_csv(TARGETS, sep = ',', index = False)
+
