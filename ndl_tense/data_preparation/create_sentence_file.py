@@ -12,16 +12,13 @@ import sys
 import time
 #from nltk.stem.wordnet import WordNetLemmatizer
 
-### Set WD
-os.chdir(WD)
-
 
 ###################
 # Useful functions
 ###################
     
 
-def process_token(line, end_sent_marks):
+def process_token(line, end_sent_marks, to_remove):
 
     """Skip or extract a cleaned token from a tagged line from a written COCA file
 
@@ -58,7 +55,10 @@ def process_token(line, end_sent_marks):
             return None 
 
     ### Going through all the filters using if statements
-
+    for token_r, tag_r in to_remove.items():            
+        # remove unwanted tags and tokens
+        if token == token_r and tag == tag_r:
+            return "CTBD", "DEL"
     # Remove possessive 's
     if tag == 'POS':
         return None
@@ -88,7 +88,8 @@ def process_token(line, end_sent_marks):
     elif token == 'ca' and tag == 'VM0':
         return 'can', tag
     elif token == 'wo' and tag == 'VM0':
-        return 'will', tag
+        return 'will', tag    
+    # Split words seperated with a dash
     elif seq_dash_pattern.search(token):
         words = token.lower().split('-')
         for word in words:
@@ -141,7 +142,7 @@ def process_token(line, end_sent_marks):
     else:
         return token, tag
 
-def extract_sentences(file):
+def extract_sentences(file, to_remove):
 
     """ Extract a cleaned list of all sentences in a tagged BNC file
 
@@ -169,39 +170,47 @@ def extract_sentences(file):
 
         # Record start time
         start = time.time()
+        keep_sen = True
         for ii, line in enumerate(f):
             try:
-                token, tag = process_token(line, end_sent_marks)
+                token, tag = process_token(line, end_sent_marks, to_remove)
             except:
                 continue
-            # For sequence of tokens
-            if isinstance(token, list) : 
-                if (token[-1] == '.'): 
-                    current_sent.extend(token[:-1])
-                    if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
-                        current_sent_str = " ".join(current_sent)
-                        # only if sentence is new, add to dictionary
-                        if current_sent_str not in all_sents:
-                            all_sents[current_sent_str] = current_verbs
-                    current_sent = [] # reinitialise the sent
-                    current_verbs = [] # reinitialise the verbs
-                else: # Case of a sequence of words
-                    current_sent.extend(token) 
-            elif token in end_sent_marks: # marker for the end of a sentence
-                if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
-                    current_sent_str = " ".join(current_sent)
-                    if current_sent_str not in all_sents:
-                        all_sents[current_sent_str ] = current_verbs
-                current_sent = [] # reinitialise the sent
-                current_verbs = [] # reinitialise the verbs
-            else:
-                current_sent.append(token)
-                if tag.lower().startswith("v"): 
-                    if "-" in tag: # Exclude sentences having ambiguous verb tags
+            if token == "CTBD":
+                current_sent, current_verbs = [], []
+                keep_sen = False
+            if keep_sen:
+                # For sequence of tokens
+                if isinstance(token, list): 
+                    if (token[-1] == '.'): 
+                        current_sent.extend(token[:-1])
+                        if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
+                            current_sent_str = " ".join(current_sent)
+                            # only if sentence is new, add to dictionary
+                            if current_sent_str not in all_sents:
+                                all_sents[current_sent_str] = current_verbs
                         current_sent = [] # reinitialise the sent
                         current_verbs = [] # reinitialise the verbs
-                    else:
-                        current_verbs.append([token, tag, len(current_sent) - 1])     
+                    else: # Case of a sequence of words
+                        current_sent.extend(token) 
+                elif token in end_sent_marks: # marker for the end of a sentence
+                    if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
+                        current_sent_str = " ".join(current_sent)
+                        if current_sent_str not in all_sents:
+                            all_sents[current_sent_str ] = current_verbs
+                    current_sent = [] # reinitialise the sent
+                    current_verbs = [] # reinitialise the verbs
+                else:
+                    current_sent.append(token)
+                    if tag.lower().startswith("v"): 
+                        if "-" in tag: # Exclude sentences having ambiguous verb tags
+                            current_sent = [] # reinitialise the sent
+                            current_verbs = [] # reinitialise the verbs
+                        else:
+                            current_verbs.append([token, tag, len(current_sent) - 1])
+            else:
+                if token in end_sent_marks:
+                    keep_sen = True     
             if (ii+1) % 1000000 == 0:
                 sys.stdout.write('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
                 sys.stdout.flush()
@@ -211,8 +220,9 @@ def extract_sentences(file):
         return all_sents
 
 
-def create_sentence_file(BNC_TAGGED_ALL, RESULTS_TSV, RESULTS_CSV, SEP_CSV_FILES):
-    sentences = extract_sentences(BNC_TAGGED_ALL) # 43264 with ambiguous verb tags / 40436 without
+def run(EXTRACT_SENTENCES_FILES, TO_REMOVE):
+    TAGGED_FILE,RESULTS_TSV, RESULTS_CSV, SEP_CSV_FILES = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1], EXTRACT_SENTENCES_FILES[2], EXTRACT_SENTENCES_FILES[3]
+    sentences = extract_sentences(TAGGED_FILE, TO_REMOVE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
     sentences_dict = dict()

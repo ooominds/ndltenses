@@ -8,11 +8,10 @@
 import os
 import numpy as np
 import pandas as pd
-from tags_to_tense_1 import *
-from tags_to_tense_full_sent import *
+from tags_to_tense_full_sent import tags_to_tense_full_sent
 
 def clean_sents(BNC_SENTS, SENTS_CLEAN):
-  bnc_tenses =  pd.read_csv(BNC_SENTS, na_values = "")
+  bnc_tenses =  pd.read_csv("%s.csv"%(BNC_SENTS), na_values = "")
 
   ### Reorder the columns
   nC = len(bnc_tenses.columns)
@@ -56,16 +55,20 @@ def clean_sents(BNC_SENTS, SENTS_CLEAN):
   print(bnc_tenses.shape) # 4227346 81
 
   ### Save resulting dataset
-  bnc_tenses.to_csv(SENTS_CLEAN, encoding="utf-8")
+  bnc_tenses.to_csv("%s.csv"%(SENTS_CLEAN), encoding="utf-8")
 
 #################
 # Annotation
 #################
-def annotate_tenses(BNC_SENTS, SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN, TENSES_ANNOTED_CLEAN_N):
+def run(ANNOTATE_FILES):
+  BNC_SENTS, SENTS_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
+  TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[2], ANNOTATE_FILES[3]
+  TENSES_ANNOTATED_CLEAN_N = ANNOTATE_FILES[4]
+
   clean_sents(BNC_SENTS, SENTS_CLEAN)
   ### Basic data preparation
   # Reload the data
-  bnc_tenses = pd.read_csv(SENTS_CLEAN, encoding="utf-8")
+  bnc_tenses = pd.read_csv("%s.csv"%(SENTS_CLEAN), encoding="utf-8")
 
   # Remove 'sentence_length' and 'num_verb_tags' columns
   bnc_tenses.drop(columns= ["sentence_length", "num_verb_tags"], inplace=True)
@@ -93,10 +96,10 @@ def annotate_tenses(BNC_SENTS, SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOT
   tenses_annotated.columns=col_names
 
   for j in range(0, tenses_annotated.shape[0]):
-    tenses_annotated.loc[j] = tag_to_tense_full_sent(bnc_tenses.iloc[j,:], col_names)
+    tenses_annotated.loc[j] = tags_to_tense_full_sent(bnc_tenses.iloc[j,:], col_names)
 
   ### Save resulting dataset
-  tenses_annotated.to_csv(TENSES_ANNOTATED_NOINF, encoding="utf-8", index=False)
+  tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF), encoding="utf-8", index=False)
   print(tenses_annotated.shape) # 
 
   ##################################
@@ -108,7 +111,7 @@ def annotate_tenses(BNC_SENTS, SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOT
   # Drop these columns from the dataframe
   names2remove = [col for col in tenses_annotated.columns if (tenses_annotated[col].isnull().all()) and ("Tense" in col)]
   tenses_annotated.drop(names2remove, axis=1, inplace=True)
-  tenses_annotated.to_csv(TENSES_ANNOTATED_NOINF_CLEAN, encoding="utf-8", index = False)
+  tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   
   ### Divide the full set into smaller subsets
   n_div = 6
@@ -120,7 +123,7 @@ def annotate_tenses(BNC_SENTS, SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOT
   ##############
 
   for n in range(n_div):
-    filename_n = "%s%s.csv"%(TENSES_ANNOTED_CLEAN_N,n)
+    filename_n = "%s%s.csv"%(TENSES_ANNOTATED_CLEAN_N,n)
     if (n < n_div):
       tenses_annotated.iloc[(1+(n-1)*nR_div):(n*nR_div), ].to_csv(filename_n)
     else:

@@ -13,26 +13,6 @@ from nltk.util import ngrams
 import gzip 
 from pyndl.count import cues_outcomes
 
-### Set working directory
-TOP = "/rds/projects/d/divjakd-ooo-machines/Users/tekevwe/English_tense/Data_preparation/"
-#TOP = '/media/adnane/HDD drive/Adnane/PostDoc_ooominds/Programming/English_Tense/Work_in_Birmingham/Data_preparation/'
-WD = TOP + 'Step5_Prepare_ngrams_for_training/'
-os.chdir(WD)
-
-### Set the max width of a column
-pd.set_option('display.max_colwidth', 120)
-
-### Define file paths
-TENSES_GZ = TOP + "Data_shared/tenses_annotated_one_sent_per_verb_shuffeled.csv.gz"
-NGRAM1 = WD + "Data/multi_verbs/1grams.csv"
-NGRAM2 = WD + "Data/multi_verbs/2grams.csv"
-NGRAM3 = WD + "Data/multi_verbs/3grams.csv"
-NGRAM4 = WD + "Data/multi_verbs/4grams.csv"
-NGRAM = WD + "Data/multi_verbs/ngrams.csv"
-TEMP_DIR = WD + "Data"
-
-### Parameters to use
-NUM_THREADS = 4
 
 ###################
 # Useful functions
@@ -145,7 +125,7 @@ def compute_cue_freqs(data, temp_dir, num_threads, verbose = False):
 ####################
 # Data preparation
 ####################
-def extract_ngrams(TENSES_GZ,NGRAM,NGRAM1,NGRAM2,NGRAM3,NGRAM4,TEMP_DIR, NUM_THREADS):
+def extract_ngrams(TENSES_GZ, NGRAM,NGRAM1,NGRAM2,NGRAM3,NGRAM4,TEMP_DIR, NUM_THREADS):
     ### Load the data
     start = time.time()
     tenses_full = pd.read_csv(TENSES_GZ, compression='gzip', usecols = ['WordCuesNoInfinitive', 'Tense'])

@@ -28,3 +28,4 @@ ndl_tense/data_preparation/ngram_prep_data/one_verb/3grams_touse.csv
 ndl_tense/data_preparation/ngram_prep_data/one_verb/4grams.csv
 ndl_tense/data_preparation/ngram_prep_data/one_verb/4grams_touse.csv
 ndl_tense/data_preparation/ngram_prep_data/one_verb/ngrams_touse.csv
+BNC.tagged.txt

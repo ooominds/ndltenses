@@ -1,6 +1,6 @@
 from numpy import transpose
 from pandas import DataFrame
-from tags_to_tense_1 import *
+from tags_to_tense import tags_to_tense
 import re
 
 def tag_to_tense_full_sent(vect_tags, vect_names):
