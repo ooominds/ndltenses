@@ -6,9 +6,9 @@
 
 ### Libraries
 import os
+from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
 import pandas as pd
-from tags_to_tense_full_sent import tags_to_tense_full_sent
 
 def clean_sents(BNC_SENTS, SENTS_CLEAN):
   bnc_tenses =  pd.read_csv("%s.csv"%(BNC_SENTS), na_values = "")
@@ -96,7 +96,7 @@ def run(ANNOTATE_FILES):
   tenses_annotated.columns=col_names
 
   for j in range(0, tenses_annotated.shape[0]):
-    tenses_annotated.loc[j] = tags_to_tense_full_sent(bnc_tenses.iloc[j,:], col_names)
+    tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(bnc_tenses.iloc[j,:])
 
   ### Save resulting dataset
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF), encoding="utf-8", index=False)

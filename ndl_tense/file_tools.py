@@ -1,4 +1,3 @@
-from ndl_tense.data_preparation import create_sentence_file
 from os import path, mkdir, sep
 import pandas as pd
 
