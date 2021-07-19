@@ -3,13 +3,13 @@
 # EXTRACT SENTENCES
 ####################################
 
-
+NF = 'D:\\work\\OoOM\\ndl\\necessary_files'
 TOP = 'D:\\work\\OoOM\\ndl\\test_location\\data_preparation'
 
 WD_EXTRACT = TOP + "\\extract" 
 #TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.txt'
 TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\sample_q.txt' # should be a .txt file
-RESULTS_TSV = WD_EXTRACT + "\\Results\\example_sentences"
+RESULTS_TSV = WD_EXTRACT + "\\Results\\example_sentences" # a .csv file that stores the results
 RESULTS_CSV = WD_EXTRACT + "\\Results\\example_sentences"
 SEP_CSV_FILES = WD_EXTRACT + "\\Data_shared\\Results\\example_sentences"
 
@@ -21,15 +21,15 @@ EXTRACT_SENTENCES_FILES = [TAGGED_FILE,RESULTS_TSV, RESULTS_CSV, SEP_CSV_FILES]
 ######################################
 
 WD_ANNOTATE = TOP + "\\annotate_complex_sentences"
-BNC_SENTS = RESULTS_CSV
+SENTS = RESULTS_CSV
 
-BNC_SENTS_CLEAN = WD_ANNOTATE + "\\Results\\sentences_clean" # should be a csv file
+SENTS_CLEAN = WD_ANNOTATE + "\\Results\\sentences_clean" # should be a csv file
 TENSES_ANNOTATED_NOINF = WD_ANNOTATE + "\\Data_shared\\NoDoparallel\\tenses_annotated_noinf"
-TENSES_ANNOTATED_NOINF_CLEAN = WD_ANNOTATE + "\\Data_shared\\NoDoparallel\\tenses_annotated_noinf_clean.csv"
+TENSES_ANNOTATED_NOINF_CLEAN = WD_ANNOTATE + "\\Data_shared\\NoDoparallel\\tenses_annotated_noinf_clean"
 TENSES_ANNOTATED_CLEAN_N = WD_ANNOTATE + "\\Data_shared\\Results\\NoDoparallel\\tenses_annotated_noinf_clean_"
 
 ANNOTATE_DIRS = [WD_ANNOTATE]
-ANNOTATE_FILES = [BNC_SENTS, BNC_SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN, TENSES_ANNOTATED_CLEAN_N]
+ANNOTATE_FILES = [SENTS, SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN, TENSES_ANNOTATED_CLEAN_N]
 
 ######################################
 # PREPARE DATA
@@ -44,14 +44,18 @@ TENSES_WITH_INF = TOP + "\\Data_shared\\NoDoparallel\\tenses_annotated_withinf.c
 TENSES_WITH_INF_NEW = TOP + "\\Data_shared\\tenses_annotated_withinf_new.csv"
 TENSES_ONE_SENT_PER_VERB = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb.csv"
 TENSES_ONE_SENT_PER_VERB_WITH_MODALS = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_with_modals.csv"
-TENSES_ONE_SENT_PER_VERB_READY = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_ready.csv"
 TENSES_ONE_SENT_PER_VERB_READY_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_ready.csv.gz"
 TENSES_ONE_SENT_PER_VERB_SHUF_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_shuffeled.csv.gz"
 TENSES_ONE_VERB = TOP + "\\Data_shared\\tenses_annotated_oneverb.csv"
 TENSES_ONE_VERB_READY_GZ = TOP + "\\Data_shared\\tenses_annotated_oneverb_ready.csv.gz"
 TENSES_ONE_VERB_SHUF_GZ = TOP + "\\Data_shared\\tenses_annotated_oneverb_shuffeled.csv.gz"
-AE2BE_LIST = WD_PREPDAT +  "\\Data\\List_AE2BE.csv"
-INFINITIVE_CORR_LIST = WD_PREPDAT +  "\\Data\\Infinitive_corrections_freq10.csv" 
+AE2BE_LIST = NF + "\\List_AE2BE.csv" #this file has to be created or obtained from the repository
+INFINITIVE_CORR_LIST = NF + "\\Infinitive_corrections_freq10.csv" 
+
+PREPDAT_DIRS = [WD_PREPDAT]
+PREPDAT_FILES = [TENSES, TENSES_WITH_INF, TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB,
+                 TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_READY_GZ, TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_ONE_VERB,
+                 TENSES_ONE_VERB_READY_GZ, TENSES_ONE_VERB_SHUF_GZ, AE2BE_LIST, INFINITIVE_CORR_LIST]
 
 ######################################
 # PREPARE TRAIN VALID TEST
@@ -70,6 +74,9 @@ WORD_EVENTS_MULTI_VERBS_TRAIN = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_ev
 WORD_EVENTS_MULTI_VERBS_VALID = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eventfile_multiverbs_valid.gz"
 WORD_EVENTS_MULTI_VERBS_TEST = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eventfile_multiverbs_test.gz"
 
+PREPARE_TRAIN_VALID_TEST_FILES = [TENSES_MULTI_VERBS_TRAIN_GZ, TENSES_MULTI_VERBS_VALID_GZ, TENSES_MULTI_VERBS_TEST_GZ,
+                                  NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST,
+                                  WORD_EVENTS_MULTI_VERBS_TRAIN, WORD_EVENTS_MULTI_VERBS_VALID, WORD_EVENTS_MULTI_VERBS_TEST]
 ######################################
 # EXTRACT INFINITIVES FOR TRAINING
 ######################################

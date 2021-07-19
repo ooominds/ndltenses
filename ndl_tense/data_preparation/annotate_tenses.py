@@ -86,13 +86,12 @@ def run(ANNOTATE_FILES):
   bnc_tenses.rename(columns={"sentence":"Sentence"}, inplace=True)
   ### Initialise the data.table that will contain the tense annotations
   max_nV = 26
-  tenses_annotated_mat = np.full((bnc_tenses.shape[0], 1+max_nV*5), "")
+  tenses_annotated_mat = np.full((bnc_tenses.shape[0], 1+max_nV*4), "")
   tenses_annotated = pd.DataFrame(tenses_annotated_mat)
 
   col_names = ['Sentence']
   for j in range(1,1+max_nV):
-    col_names += ["Tense%s"%(j),"VerbForm%s"%(j), "MainVerb%s"%(j), "Position%s"%(j) ,"Infinitive%s"%(j)]
-
+    col_names += ["Tense%s"%(j),"VerbForm%s"%(j), "MainVerb%s"%(j), "Position%s"%(j)]
   tenses_annotated.columns=col_names
 
   for j in range(0, tenses_annotated.shape[0]):
@@ -100,7 +99,6 @@ def run(ANNOTATE_FILES):
 
   ### Save resulting dataset
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF), encoding="utf-8", index=False)
-  print(tenses_annotated.shape) # 
 
   ##################################
   # Remove unnecessery empty columns
@@ -109,8 +107,13 @@ def run(ANNOTATE_FILES):
   ### Remove empty columns (except infinitive columns of non-empty verb columns)
 
   # Drop these columns from the dataframe
-  names2remove = [col for col in tenses_annotated.columns if (tenses_annotated[col].isnull().all()) and ("Tense" in col)]
+  names2remove = [col for col in tenses_annotated.columns if (tenses_annotated[col].isnull().all())]
   tenses_annotated.drop(names2remove, axis=1, inplace=True)
+  non_empty_verb_col = len([col for col in tenses_annotated.columns if "MainVerb" in col])
+  for j in range(non_empty_verb_col):
+    tenses_annotated["Infinitive%s"%(j+1)] = np.nan
+
+  print(TENSES_ANNOTATED_NOINF_CLEAN)
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   
   ### Divide the full set into smaller subsets

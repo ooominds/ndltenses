@@ -6,6 +6,7 @@
 
 ### Import necessary packages
 import os
+from param_file import PREPDAT_DIRS
 import pandas as pd
 import numpy as np
 import re
@@ -22,7 +23,7 @@ from collections import Counter
 #nltk.download('wordnet')
 #tqdm.pandas()
 
-def convert_to_inf():
+def convert_to_inf(TENSES, TENSES_WITH_INF):
     lemmatizer = WordNetLemmatizer() # Initialise the lemmatizer
 
     ### Set the max width of a column
@@ -92,19 +93,21 @@ def convert_to_inf():
                 tenses.at[tenses.index[i], "".join(['Infinitive', str(j)])] = lemmatizer.lemmatize(tenses.loc[tenses.index[i], "".join(['MainVerb', str(j)])], 'v')
             else:
                 tenses.at[tenses.index[i], "".join(['Infinitive', str(j)])] = np.nan
-
     tenses.to_csv(TENSES_WITH_INF, index = False, encoding="utf-8")
 
 ##############################################
 # Adding Sentence lengths and number of verbs
 ##############################################
-def add_sen_length():
+def add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW):
     ### Load the data
     tenses = pd.read_csv(TENSES_WITH_INF)
+    #print(tenses)
 
     nC = tenses.shape[1] # number of columns 
     nR = tenses.shape[0] # number of rows
     nV = int((nC-1)/5)  # number of verbs 
+
+    #print("number of verbs: %s"%(nV))
 
     ### Add SentLength column
     tenses['SentenceLength'] = tenses['Sentence'].apply(lambda s: len(s.split(' '))) 
@@ -152,7 +155,7 @@ def add_sen_length():
 # Remove sentences with no tense/verb
 ######################################
 
-def remove_sen():
+def remove_sen(TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB_WITH_MODALS):
     #####################################
     # New dataset with one verb per row
     #####################################
@@ -271,7 +274,7 @@ def convert_mainverb_AE2BE(word, AE_to_BE):
     except:
         return word
 
-def convert_sens():
+def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST):
     # Load the data
     tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, encoding="utf-8")
     # Load the dictionary that can convert AE to BE
@@ -281,7 +284,7 @@ def convert_sens():
     inf_corrections = import_dict(dict_path = INFINITIVE_CORR_LIST)
 
     # Correct the infinitives in the dataframe
-    tenses["Infinitive_BE"] = tenses["Infinitive"].apply(lambda s: correct_infinitive(s))
+    tenses["Infinitive_BE"] = tenses["Infinitive"].apply(lambda s: correct_infinitive(inf_corrections, s))
 
     #############################################
     # Convert the infinitves to British English
@@ -308,7 +311,7 @@ def convert_sens():
             'MainVerb',
             'Position',    
             'Infinitive']
-
+    
     tenses = tenses.loc[:, cols]
     # Convert the sentences in the dataframe
     print(tenses.columns)
@@ -449,7 +452,7 @@ def create_ngram_cues(s, n, sep_s = " ", sep_words = "#", sep_ngrams = '_'):
 ################################################################
 # Add information about the order of each verb within a sentence 
 #################################################################
-def add_info():
+def add_info(tenses, TENSES_ONE_VERB_READY_GZ):
     #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7047168
 
@@ -481,7 +484,7 @@ def add_info():
 #############################################################
 # Shuffle the sentences while keeping the order of the events 
 #############################################################
-def shuffle_sents():
+def shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ):
     # Create a counter of sent ids
     SentID_list = list(tenses["SentenceID"])
     count_sentid = Counter()
@@ -510,7 +513,7 @@ def shuffle_sents():
     # Export the dataset
     tenses.to_csv(TENSES_ONE_SENT_PER_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")
 
-def remove_modals(tenses):
+def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
         #######################################################################
     # Remove modals and imperatives from the dataset with one verb per row
     #######################################################################
@@ -606,18 +609,20 @@ def remove_modals(tenses):
     # Export the dataset
     tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
 
-def prepare_data(TENSES, TENSES_WITH_INF, TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB,
-                TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_READY, TENSES_ONE_SENT_PER_VERB_READY_GZ,
-                TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_ONE_VERB, TENSES_ONE_VERB_READY_GZ,
-                TENSES_ONE_VERB_SHUF_GZ, AE2BE_LIST, INFINITIVE_CORR_LIST):
-    
-    convert_to_inf()
-    add_sen_length()
-    remove_sen()
-    convert_sens()
+def run(TENSES, PREPDAT_FILES):
+    TENSES_WITH_INF, TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB, = PREPDAT_FILES[0], PREPDAT_FILES[1], PREPDAT_FILES[2] 
+    TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_READY_GZ = PREPDAT_FILES[3], PREPDAT_FILES[4]
+    TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_ONE_VERB, TENSES_ONE_VERB_READY_GZ = PREPDAT_FILES[5], PREPDAT_FILES[6], PREPDAT_FILES[7]
+    TENSES_ONE_VERB_SHUF_GZ, AE2BE_LIST, INFINITIVE_CORR_LIST = PREPDAT_FILES[8], PREPDAT_FILES[9], PREPDAT_FILES[10]
+    #tenses = pd.read_csv(TENSES, keep_default_na = False, encoding="utf-8")
+    #print(tenses)
+    convert_to_inf("%s.csv"%(TENSES), TENSES_WITH_INF)
+    add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW)
+    remove_sen(TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB_WITH_MODALS)
+    convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST)
 
     tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB, keep_default_na = False, encoding="utf-8")
-    remove_modals(tenses)
+    remove_modals(tenses, TENSES_ONE_SENT_PER_VERB)
 
     ######################
     # Creating word cues
@@ -661,9 +666,9 @@ def prepare_data(TENSES, TENSES_WITH_INF, TENSES_WITH_INF_NEW, TENSES_ONE_SENT_P
     # Add new NumOfVerbs that doesn't take into account modals and imperatives 
     ###########################################################################
 
-    add_info()
+    add_info(tenses, TENSES_ONE_VERB_READY_GZ)
+    shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ)
 
-    shuffle_sents()
     ### Load the data
     start = time.time()
     tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")

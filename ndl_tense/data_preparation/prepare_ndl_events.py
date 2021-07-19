@@ -68,7 +68,11 @@ def word_cues(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverb
 
     del tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test
 
-def prepare_ndl_events(TENSES_MULTI_VERBS_TRAIN_GZ, TENSES_MULTI_VERBS_VALID_GZ, TENSES_MULTI_VERBS_TEST_GZ):
+def run(PREPARE_TRAIN_VALID_TEST_FILES):
+    
+    TENSES_MULTI_VERBS_TRAIN_GZ = PREPARE_TRAIN_VALID_TEST_FILES[0]
+    TENSES_MULTI_VERBS_VALID_GZ = PREPARE_TRAIN_VALID_TEST_FILES[1]
+    TENSES_MULTI_VERBS_TEST_GZ = PREPARE_TRAIN_VALID_TEST_FILES[2]
     
     ### Load the data
     start = time.time()

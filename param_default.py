@@ -4,6 +4,7 @@
 ####################################
 
 
+NF = "necessary_files\\" # Where necessary files downloaded from the repo are stored
 TOP = "" # Top level directory from which each subsequent process and file is run and saved
 
 WD_EXTRACT = "" # The directory from which the sentence extraction takes place
@@ -18,13 +19,15 @@ EXTRACT_SENTENCES = [WD_EXTRACT, TAGGED_FILE, RESULTS_TSV, RESULTS_CSV, SEP_CSV_
 ######################################
 
 WD_ANNOTATE = "" # the directory from which sentence annotation takes place
-BNC_SENTS = "" # the same as RESULTS_CSV
+SENTS = "" # the same as RESULTS_CSV
 
-BNC_SENTS_CLEAN = "" # should be a csv file, the sentences are "cleaned" and then saved here
-TENSES_ANNOTATED_NOINF = WD_ANNOTATE + "\\Data_shared\\NoDoparallel\\tenses_annotated_noinf.csv"
-TENSES_ANNOTATED_NOINF_CLEAN = WD_ANNOTATE + "\\Data_shared\\NoDoparallel\\tenses_annotated_noinf_clean.csv"
-TENSES_ANNOTED_CLEAN_N = WD_ANNOTATE + "\\Data_shared\\Results\\NoDoparallel\\tenses_annotated_noinf_clean_"
+SENTS_CLEAN = "" # should be a csv file, the sentences are "cleaned" and then saved here
+TENSES_ANNOTATED_NOINF = "" # a .csv file that holds the results of the annotation process on the sentences
+TENSES_ANNOTATED_NOINF_CLEAN = "" # a .csv file that holds the results of the annotation process on the sentences but with unecessary columns removed
+TENSES_ANNOTATED_CLEAN_N = "" # a .csv file that holds the results of the annotation process on the sentences but with unecessary columns removed
 
+ANNOTATE_DIRS = [WD_ANNOTATE]
+ANNOTATE_FILES = [SENTS, SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN, TENSES_ANNOTATED_CLEAN_N]
 
 ######################################
 # PREPARE DATA
