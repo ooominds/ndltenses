@@ -10,8 +10,8 @@ from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
 import pandas as pd
 
-def clean_sents(BNC_SENTS, SENTS_CLEAN):
-  bnc_tenses =  pd.read_csv("%s.csv"%(BNC_SENTS), na_values = "")
+def clean_sents(SENTS, SENTS_CLEAN):
+  bnc_tenses =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
 
   ### Reorder the columns
   nC = len(bnc_tenses.columns)
@@ -61,11 +61,11 @@ def clean_sents(BNC_SENTS, SENTS_CLEAN):
 # Annotation
 #################
 def run(ANNOTATE_FILES):
-  BNC_SENTS, SENTS_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
+  SENTS, SENTS_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
   TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[2], ANNOTATE_FILES[3]
   TENSES_ANNOTATED_CLEAN_N = ANNOTATE_FILES[4]
 
-  clean_sents(BNC_SENTS, SENTS_CLEAN)
+  clean_sents(SENTS, SENTS_CLEAN)
   ### Basic data preparation
   # Reload the data
   bnc_tenses = pd.read_csv("%s.csv"%(SENTS_CLEAN), encoding="utf-8")
@@ -73,7 +73,7 @@ def run(ANNOTATE_FILES):
   # Remove 'sentence_length' and 'num_verb_tags' columns
   bnc_tenses.drop(columns= ["sentence_length", "num_verb_tags"], inplace=True)
   (nR, nC) = bnc_tenses.shape #nR=  number of rows, nC = number of columns
-  nV = ((nC-1)/3)  # number of verbs 
+  nV = int((nC-1)/3)  # number of verbs 
 
   ## Rename column names (remove "_" and start from verb1)
 
@@ -85,12 +85,11 @@ def run(ANNOTATE_FILES):
   #colnames(bnc_tenses)[colnames(bnc_tenses) == "sentence"] = "Sentence"
   bnc_tenses.rename(columns={"sentence":"Sentence"}, inplace=True)
   ### Initialise the data.table that will contain the tense annotations
-  max_nV = 26
-  tenses_annotated_mat = np.full((bnc_tenses.shape[0], 1+max_nV*4), "")
+  tenses_annotated_mat = np.full((bnc_tenses.shape[0], 1+nV*4), "")
   tenses_annotated = pd.DataFrame(tenses_annotated_mat)
 
   col_names = ['Sentence']
-  for j in range(1,1+max_nV):
+  for j in range(1,1+nV):
     col_names += ["Tense%s"%(j),"VerbForm%s"%(j), "MainVerb%s"%(j), "Position%s"%(j)]
   tenses_annotated.columns=col_names
 
@@ -98,6 +97,7 @@ def run(ANNOTATE_FILES):
     tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(bnc_tenses.iloc[j,:])
 
   ### Save resulting dataset
+  #print(tenses_annotated)
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF), encoding="utf-8", index=False)
 
   ##################################

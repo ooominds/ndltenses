@@ -1,5 +1,4 @@
 from os import path, mkdir, sep
-import pandas as pd
 
 def check_folder_exist(filepath):
     if path.isdir(filepath):
@@ -20,3 +19,10 @@ def manage_directories(dir_list, FILE_DIREC):
             create_directories(dir_path, sep_file_path, (len(sep_file_path) - 2))
         else:
             create_directories(dir_path, sep_file_path, (len(sep_file_path) - 1))
+
+def create_file(files_list, ext):
+    for filepath in files_list:
+        if path.isfile(filepath):
+            return
+        else:
+            mkdir(filepath)

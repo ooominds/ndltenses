@@ -21,9 +21,10 @@ def step_3():
     chdir(WD_PREPDAT)
     file_tools.manage_directories(PREPDAT_FILES, True)
     file_tools.manage_directories(PREPARE_TRAIN_VALID_TEST_FILES, True)
-
+    file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, True)
     #for one verb per sent, so this is optional
     prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:])
+    prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES)
     prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES)
 
 #def step_4():

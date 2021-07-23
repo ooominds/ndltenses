@@ -1,3 +1,4 @@
 ,sentence,sentence_length,num_verb_tags,verb_1,verb_1_tag,verb_1_position,verb_2,verb_2_tag,verb_2_position,verb_3,verb_3_tag,verb_3_position
-0,take the rainbow road,4,1,take,VVB,1,,,,,,
-1,put the world on hold and for a moment watch the world unfold,13,3,put,VVB,1,watch,VVB,10.0,unfold,VVI,13.0
+0,i am taking the rainbow road,6,2,am,VBB,2,taking,VVG,3,,,
+1,i am putting the world on hold and for a moment,11,2,am,VBB,2,putting,VVG,3,,,
+2,i am watching the world unfold,6,3,am,VBB,2,watching,VVG,3,unfold,VVI,6.0

@@ -10,7 +10,6 @@ def get_vect_tenses(vect_tags):
     ############ Generating the tenses ##############
 
     ### Define tense of the first verb 
-
     vect_tenses = {"Sentence": vect_tags['Sentence']}
     i = 0 # Counter for the number of tenses extracted so far
     vect_tags = vect_tags.to_frame().T.iloc[:,1:]

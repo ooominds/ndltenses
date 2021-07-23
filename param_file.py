@@ -8,7 +8,7 @@ TOP = 'D:\\work\\OoOM\\ndl\\test_location\\data_preparation'
 
 WD_EXTRACT = TOP + "\\extract" 
 #TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.txt'
-TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\sample_q.txt' # should be a .txt file
+TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.txt' # should be a .txt file
 RESULTS_TSV = WD_EXTRACT + "\\Results\\example_sentences" # a .csv file that stores the results
 RESULTS_CSV = WD_EXTRACT + "\\Results\\example_sentences"
 SEP_CSV_FILES = WD_EXTRACT + "\\Data_shared\\Results\\example_sentences"
@@ -45,7 +45,7 @@ TENSES_WITH_INF_NEW = TOP + "\\Data_shared\\tenses_annotated_withinf_new.csv"
 TENSES_ONE_SENT_PER_VERB = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb.csv"
 TENSES_ONE_SENT_PER_VERB_WITH_MODALS = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_with_modals.csv"
 TENSES_ONE_SENT_PER_VERB_READY_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_ready.csv.gz"
-TENSES_ONE_SENT_PER_VERB_SHUF_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_shuffeled.csv.gz"
+TENSES_ONE_SENT_PER_VERB_SHUF_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_shuffeled"
 TENSES_ONE_VERB = TOP + "\\Data_shared\\tenses_annotated_oneverb.csv"
 TENSES_ONE_VERB_READY_GZ = TOP + "\\Data_shared\\tenses_annotated_oneverb_ready.csv.gz"
 TENSES_ONE_VERB_SHUF_GZ = TOP + "\\Data_shared\\tenses_annotated_oneverb_shuffeled.csv.gz"
@@ -62,9 +62,16 @@ PREPDAT_FILES = [TENSES, TENSES_WITH_INF, TENSES_WITH_INF_NEW, TENSES_ONE_SENT_P
 ######################################
 
 ### Define file paths
-TENSES_MULTI_VERBS_TRAIN_GZ = TOP + "\\Data_shared\\tenses_one_sent_per_verb_train.csv.gz"
-TENSES_MULTI_VERBS_VALID_GZ = TOP + "\\Data_shared\\tenses_one_sent_per_verb_valid.csv.gz"
-TENSES_MULTI_VERBS_TEST_GZ = TOP + "\\Data_shared\\tenses_one_sent_per_verb_test.csv.gz"
+
+TENSES_TRAIN_GZ = TOP + "Data_shared/tenses_one_sent_per_verb_train.csv.gz"
+TENSES_VALID_GZ = TOP + "Data_shared/tenses_one_sent_per_verb_valid.csv.gz"
+TENSES_TEST_GZ = TOP + "Data_shared/tenses_one_sent_per_verb_test.csv.gz"
+
+TENSES_ONE_VERB_SHUF_GZ = TOP + "Data_shared/tenses_annotated_oneverb_shuffeled.csv.gz"
+TENSES_ONE_VERB_TRAIN_GZ = TOP + "Data_shared/tenses_oneverb_train.csv.gz"
+TENSES_ONE_VERB_VALID_GZ = TOP + "Data_shared/tenses_oneverb_valid.csv.gz"
+TENSES_ONE_VERB_TEST_GZ = TOP + "Data_shared/tenses_oneverb_test.csv.gz"
+
 # n-gram based event files ready for training NDL (verb infinitives included as cues)
 NGRAM_EVENTS_MULTI_VERBS_TRAIN = TOP + "\\Data_shared\\Eventfiles_forNDL\\ngram_eventfile_multiverbs_train.gz"
 NGRAM_EVENTS_MULTI_VERBS_VALID = TOP + "\\Data_shared\\Eventfiles_forNDL\\ngram_eventfile_multiverbs_valid.gz"
@@ -74,16 +81,20 @@ WORD_EVENTS_MULTI_VERBS_TRAIN = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_ev
 WORD_EVENTS_MULTI_VERBS_VALID = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eventfile_multiverbs_valid.gz"
 WORD_EVENTS_MULTI_VERBS_TEST = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eventfile_multiverbs_test.gz"
 
-PREPARE_TRAIN_VALID_TEST_FILES = [TENSES_MULTI_VERBS_TRAIN_GZ, TENSES_MULTI_VERBS_VALID_GZ, TENSES_MULTI_VERBS_TEST_GZ,
+PREPARE_TRAIN_VALID_TEST_FILES = [TENSES_TRAIN_GZ, TENSES_VALID_GZ, TENSES_TEST_GZ,
+                                  TENSES_ONE_VERB_SHUF_GZ,TENSES_ONE_VERB_TRAIN_GZ,TENSES_ONE_VERB_VALID_GZ,TENSES_ONE_VERB_TEST_GZ,
                                   NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST,
                                   WORD_EVENTS_MULTI_VERBS_TRAIN, WORD_EVENTS_MULTI_VERBS_VALID, WORD_EVENTS_MULTI_VERBS_TEST]
+
+CREATE_TRAIN_VALID_TEST_FILES = [TENSES_ONE_SENT_PER_VERB_SHUF_GZ,  TENSES_ONE_VERB_SHUF_GZ, TENSES_TRAIN_GZ,TENSES_VALID_GZ,TENSES_TEST_GZ,
+                                 TENSES_ONE_VERB_TRAIN_GZ, TENSES_ONE_VERB_VALID_GZ, TENSES_ONE_VERB_TEST_GZ]
 ######################################
 # EXTRACT INFINITIVES FOR TRAINING
 ######################################
 
 WD_EXTRACT_INF = TOP + "\\extract_infinitives"
 ### Define file paths
-TENSES_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_shuffeled.csv.gz"
+TENSES_GZ = TENSES_ONE_SENT_PER_VERB_SHUF_GZ
 COOC_FREQ_CSV = WD_EXTRACT + "\\Results\\multi_verbs\\Cooc_freq.csv"
 INFINITIVES_CSV = WD_EXTRACT + "\\Data\\multi_verbs\\infinitives_freq10.csv"
 

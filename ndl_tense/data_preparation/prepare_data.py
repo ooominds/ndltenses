@@ -101,7 +101,6 @@ def convert_to_inf(TENSES, TENSES_WITH_INF):
 def add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW):
     ### Load the data
     tenses = pd.read_csv(TENSES_WITH_INF)
-    #print(tenses)
 
     nC = tenses.shape[1] # number of columns 
     nR = tenses.shape[0] # number of rows
@@ -114,24 +113,21 @@ def add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW):
 
     ### Add NumOfVerbs column
     # Initialising the column
-    tenses['NumOfVerbs'] = np.nan
+    tenses['NumOfVerbs'] = 0
     # Record start time
     start = time.time()
     for i in range(0, nR):
-
         # Progress message
         if (i+1) % 100000 == 0:
             now = time.time()
             sys.stdout.write('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
             sys.stdout.flush()
-
         for j in range(1, (nV+1)):
             if str(tenses.at[i, "".join(['Tense', str(j)])]) != 'nan':
                 continue
             else:
                 break 
-        #tenses.loc[tenses.index[i], 'NumOfVerbs'] = j-1
-        tenses.at[i, 'NumOfVerbs'] = j-1
+        tenses.at[i, 'NumOfVerbs'] = j
 
     # move the columns after the 'Sentence' column
     cols = list(tenses.columns)
@@ -139,7 +135,6 @@ def add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW):
     cols.insert(2, cols.pop(cols.index('NumOfVerbs')))
     tenses = tenses.loc[:, cols]
     tenses = tenses[tenses.NumOfVerbs !=0 ]
-    
     ### Add a column that has SentenceID (useful when dividing into train/valid/test sets)
     tenses['SentenceID'] = np.arange(1, (len(tenses)+1))
 
@@ -162,7 +157,6 @@ def remove_sen(TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB_WITH_MODALS):
 
     ### Load the data
     tenses = pd.read_csv(TENSES_WITH_INF_NEW)
-
     ### Extract all verbs from each sentence and put them in seperate rows (these will be the bases of our events)
     nC = tenses.shape[1] # number of columns 
     nR = tenses.shape[0] # number of rows
@@ -230,7 +224,7 @@ def import_dict(dict_path):
     return mapping_dict
 
 # Function that can convert a string of words
-def convert_AE2BE(AE_to_BE, string):
+def convert_string_AE2BE(string, AE_to_BE):
     
 
     """convert a text from American English to British English
@@ -251,7 +245,7 @@ def convert_AE2BE(AE_to_BE, string):
     return string_new
 
 # Function that can convert verbs in the MainVerb column from American English to British English
-def convert_mainverb_AE2BE(word, AE_to_BE):
+def convert_word_AE2BE(word, AE_to_BE):
 
     """convert a word from American English to British English
 
@@ -291,7 +285,15 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
     #############################################
 
     # Convert the verbforms in the dataframe
-    tenses["Infinitive_BE"] = tenses["Infinitive_BE"].apply(lambda s: convert_mainverb_AE2BE(s))
+    tenses["Infinitive_BE"] = tenses["Infinitive_BE"].apply(lambda s: convert_word_AE2BE(s, AE_to_BE))
+    # Convert the sentences in the dataframe
+    tenses["Sentence_BE"] = tenses["Sentence"].apply(lambda s: convert_string_AE2BE(s, AE_to_BE))
+
+    # Convert the verbforms in the dataframe
+    tenses["VerbForm_BE"] = tenses["VerbForm"].apply(lambda s: convert_word_AE2BE(s, AE_to_BE))
+
+    # Convert the verbforms in the dataframe
+    tenses["MainVerb_BE"] = tenses["MainVerb"].apply(lambda s: convert_word_AE2BE(s, AE_to_BE))
 
     # Remove the unnecessary columns
     tenses.drop(columns = ["Sentence", "VerbForm", "MainVerb", "Infinitive"], inplace = True)
@@ -302,7 +304,7 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
                             "MainVerb_BE": "MainVerb",
                             "Infinitive_BE": "Infinitive"}, inplace = True)
     # Reorder the columns
-    cols = ['SentenceID', 
+    tenses = tenses[['SentenceID', 
             'Sentence', 
             'SentenceLength', 
             'NumOfVerbs', 
@@ -310,19 +312,7 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
             'VerbForm', 
             'MainVerb',
             'Position',    
-            'Infinitive']
-    
-    tenses = tenses.loc[:, cols]
-    # Convert the sentences in the dataframe
-    print(tenses.columns)
-    tenses["Sentence_BE"] = tenses["Sentence"].apply(lambda s: convert_AE2BE(s, AE_to_BE))
-
-    # Convert the verbforms in the dataframe
-    tenses["VerbForm_BE"] = tenses["VerbForm"].apply(lambda s: convert_AE2BE(s, AE_to_BE))
-
-    # Convert the verbforms in the dataframe
-    tenses["MainVerb_BE"] = tenses["MainVerb"].apply(lambda s: convert_mainverb_AE2BE(s, AE_to_BE))
-
+            'Infinitive']]
     return(tenses)
 
 ########################################################################
@@ -360,10 +350,14 @@ def correct_infinitive(inf_corrections, verb):
 ########################################################
                                                                                                                 
 ### Function that create context with infinitive replacing the verb form. 
-def extract_context(sent, verb_form, pos, inf):
-
+#def extract_context(sent, verb_form, pos, inf):
+def extract_context(row):
     ''' Add a description
     '''
+    sent = row.loc['Sentence']
+    verb_form = row.loc['VerbForm']
+    pos = row.loc['Position']
+    inf = row.loc['Infinitive']
 
     # Create list of words that makes up the verb form
     words_to_remove = verb_form.split(" ") 
@@ -382,7 +376,6 @@ def extract_context(sent, verb_form, pos, inf):
 
     # Remove the extra spaces
     context = " ".join(context_list)
-
     # Return the context
     return context 
 
@@ -392,11 +385,12 @@ def extract_context(sent, verb_form, pos, inf):
 ###########################################################
 
 ### Function that create context without infinitive. It removes the verb form from a sentence
-def remove_verb_form(sent, verb_form, pos):
-
+def remove_verb_form(row):
+    sent = row.loc['Sentence']
+    verb_form = row.loc['VerbForm'] 
+    pos = row.loc['Position']
     ''' Add a description
     '''
-
     # Create list of words that makes up the verb form
     words_to_remove = verb_form.split(" ") 
     num_to_remove = len(words_to_remove)
@@ -511,7 +505,9 @@ def shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ):
     tenses = SentID_df.merge(tenses)
 
     # Export the dataset
-    tenses.to_csv(TENSES_ONE_SENT_PER_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")
+    print("DOING IT RIGHT NOW")
+    print(TENSES_ONE_SENT_PER_VERB_SHUF_GZ)
+    tenses.to_csv("%s.csv.gz"%(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip', index = False, encoding="utf-8")
 
 def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
         #######################################################################
@@ -523,7 +519,6 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
 
     # Remove them
     tenses = tenses[~tenses['Position'].isnull()]
-
     tenses['Tense'].value_counts()
     # present.simple       3201494
     # past.simple          2639252
@@ -542,7 +537,6 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
 
     pd.set_option('display.width', 150)
     pd.set_option('display.max_columns', 9)
-    tenses.iloc[:3]
     #    SentenceID                                                                                              Sentence  SentenceLength  NumOfVerbs  \
     # 0           1                                                                                factsheet what is aids               4         1.0   
     # 1           2  immune deficiency syndrome is a condition caused by a virus called hiv human immuno deficiency virus              16         1.0   
@@ -555,7 +549,6 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
 
     # Remove the modals and imperatives
     tenses = tenses[~tenses['Tense'].isin(['modal', 'imperative'])]
-
     print(tenses['Tense'].value_counts())
     # present.simple       3201494
     # past.simple          2639252
@@ -572,40 +565,12 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
 
     # Export the dataset
     tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
-    # Test
-    i = 71
-    sent_i = tenses.iloc[i]['Sentence']
-    # 'strathclyde regional council may provide further funding and consideration is being given to the possible employment of a part time nurse'
-    verbform_i = tenses.iloc[i]['VerbForm']
-    # 'is being given'
-    pos_i = tenses.iloc[i]['Position']
-    # 12
-    inf_i = tenses.iloc[i]['Infinitive']
-    extract_context(sent_i, verbform_i, pos_i, inf_i)
-    # 'strathclyde regional council may provide further funding and consideration give to the possible employment of a part time nurse'
 
     ### Add ContextWithInfinitive column
-    tenses["ContextWithInfinitive"] = tenses.apply(lambda x: extract_context(x.loc['Sentence'],
-                                                                            x.loc['VerbForm'], 
-                                                                            x.loc['Position'],
-                                                                            x.loc['Infinitive']), axis=1)
-
-    # Test
-    i = 71
-    sent_i = tenses.iloc[i]['Sentence']
-    # 'strathclyde regional council may provide further funding and consideration is being given to the possible employment of a part time nurse'
-    verbform_i = tenses.iloc[i]['VerbForm']
-    # 'is being given'
-    pos_i = tenses.iloc[i]['Position']
-    # 12
-    inf_i = tenses.iloc[i]['Infinitive']
-    remove_verb_form(sent_i, verbform_i, pos_i)
-    # 'strathclyde regional council may provide further funding and consideration to the possible employment of a part time nurse'
+    tenses["ContextWithInfinitive"] = tenses.apply(lambda x: extract_context(x), axis=1)
 
     ### Add ContextNoInfinitive column
-    tenses["ContextNoInfinitive"] = tenses.apply(lambda x: remove_verb_form(x.loc['Sentence'],
-                                                                            x.loc['VerbForm'], 
-                                                                            x.loc['Position']), axis=1)
+    tenses["ContextNoInfinitive"] = tenses.apply(lambda x: remove_verb_form(x), axis=1)
     # Export the dataset
     tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
 
@@ -619,9 +584,7 @@ def run(TENSES, PREPDAT_FILES):
     convert_to_inf("%s.csv"%(TENSES), TENSES_WITH_INF)
     add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW)
     remove_sen(TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB_WITH_MODALS)
-    convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST)
-
-    tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB, keep_default_na = False, encoding="utf-8")
+    tenses = convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST)
     remove_modals(tenses, TENSES_ONE_SENT_PER_VERB)
 
     ######################
@@ -645,12 +608,6 @@ def run(TENSES, PREPDAT_FILES):
 
     # Export the dataset
     tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
-    # Test
-    sent1 = 'the boy went to school for the first time'
-    create_ngram_cues(sent1, 4)
-    # 'the_boy_went_to_school_for_the_first_time_the#boy_boy#went_went#to_to#school_school#for_for#the_the#first
-    # _first#time_the#boy#went_boy#went#to_went#to#school_to#school#for_school#for#the_for#the#first_the#first#time
-    # _the#boy#went#to_boy#went#to#school_went#to#school#for_to#school#for#the_school#for#the#first_for#the#first#time'
 
     # Add n-gram cues without infinitives
     tenses["NgramCuesNoInfinitive"] = tenses["WordCuesNoInfinitive"].apply(lambda s: create_ngram_cues(s, n = 4, sep_s = "_"))
