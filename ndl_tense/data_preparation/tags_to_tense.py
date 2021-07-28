@@ -12,7 +12,7 @@ def get_vect_tenses(vect_tags):
     ### Define tense of the first verb 
     vect_tenses = {"Sentence": vect_tags['Sentence']}
     i = 0 # Counter for the number of tenses extracted so far
-    vect_tags = vect_tags.to_frame().T.iloc[:,1:]
+    vect_tags = vect_tags.to_frame().T
     while(vect_tags.iloc[0]['Verb1'] != ""):
         # One round of tense extraction
         vect_tenses_1round = row_tenses.get_tenses(vect_tags)

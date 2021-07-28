@@ -10,8 +10,7 @@ from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
 import pandas as pd
 
-def clean_sents(SENTS, SENTS_CLEAN):
-  bnc_tenses =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
+def clean_sents(bnc_tenses):
 
   ### Reorder the columns
   nC = len(bnc_tenses.columns)
@@ -36,17 +35,12 @@ def clean_sents(SENTS, SENTS_CLEAN):
   # Remove empty sentences
   bnc_tenses.dropna(subset=["sentence"], inplace=True)
 
-  # Check dim
-  print(bnc_tenses.shape) # 4267590 453
-
   ##########################
   # Remove lengthy sentences
   ##########################
 
   ### Remove sentences with more than 60 words or with less than 3 words
   bnc_tenses = bnc_tenses[(bnc_tenses["sentence_length"] < 61) & (bnc_tenses["sentence_length"] > 2)] 
-  # Check dim
-  print(bnc_tenses.shape) # 4227346 453
 
   ### Remove empty columns
   bnc_tenses.dropna(how='all', axis=1, inplace=True)
@@ -55,7 +49,7 @@ def clean_sents(SENTS, SENTS_CLEAN):
   print(bnc_tenses.shape) # 4227346 81
 
   ### Save resulting dataset
-  bnc_tenses.to_csv("%s.csv"%(SENTS_CLEAN), encoding="utf-8")
+  return(bnc_tenses)
 
 #################
 # Annotation
@@ -64,12 +58,12 @@ def run(ANNOTATE_FILES):
   SENTS, SENTS_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
   TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[2], ANNOTATE_FILES[3]
   TENSES_ANNOTATED_CLEAN_N = ANNOTATE_FILES[4]
-
-  clean_sents(SENTS, SENTS_CLEAN)
+  
   ### Basic data preparation
-  # Reload the data
-  bnc_tenses = pd.read_csv("%s.csv"%(SENTS_CLEAN), encoding="utf-8")
+  bnc_tenses =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
 
+  bnc_tenses = clean_sents(bnc_tenses)
+  
   # Remove 'sentence_length' and 'num_verb_tags' columns
   bnc_tenses.drop(columns= ["sentence_length", "num_verb_tags"], inplace=True)
   (nR, nC) = bnc_tenses.shape #nR=  number of rows, nC = number of columns
@@ -96,10 +90,6 @@ def run(ANNOTATE_FILES):
   for j in range(0, tenses_annotated.shape[0]):
     tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(bnc_tenses.iloc[j,:])
 
-  ### Save resulting dataset
-  #print(tenses_annotated)
-  tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF), encoding="utf-8", index=False)
-
   ##################################
   # Remove unnecessery empty columns
   ##################################
@@ -113,21 +103,20 @@ def run(ANNOTATE_FILES):
   for j in range(non_empty_verb_col):
     tenses_annotated["Infinitive%s"%(j+1)] = np.nan
 
-  print(TENSES_ANNOTATED_NOINF_CLEAN)
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   
   ### Divide the full set into smaller subsets
-  n_div = 6
-  nR = tenses_annotated.shape[0] # number of rows
-  nR_div = int(nR/n_div) # number of rows in rach subset (except the last subset which would contain all the remaining rows)
+  #n_div = 6
+  #nR = tenses_annotated.shape[0] # number of rows
+  #nR_div = int(nR/n_div) # number of rows in rach subset (except the last subset which would contain all the remaining rows)
   
   ##############
   # File saving
   ##############
 
-  for n in range(n_div):
-    filename_n = "%s%s.csv"%(TENSES_ANNOTATED_CLEAN_N,n)
-    if (n < n_div):
-      tenses_annotated.iloc[(1+(n-1)*nR_div):(n*nR_div), ].to_csv(filename_n)
-    else:
-      tenses_annotated.iloc[(1+(n-1)*nR_div):nR, ].to_csv(filename_n)
+  #for n in range(n_div):
+  #  filename_n = "%s%s.csv"%(TENSES_ANNOTATED_CLEAN_N,n)
+  #  if (n < n_div):
+  #    tenses_annotated.iloc[(1+(n-1)*nR_div):(n*nR_div), ].to_csv(filename_n)
+  #  else:
+  #    tenses_annotated.iloc[(1+(n-1)*nR_div):nR, ].to_csv(filename_n)

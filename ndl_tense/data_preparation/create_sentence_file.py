@@ -159,7 +159,7 @@ def extract_sentences(file, to_remove):
 
     ### Useful variables
     # End of sentence marks
-    end_sent_marks = (".", "!", "?", "</s>")
+    end_sent_marks = (".", "!", "?", "</s>", "</u>")
 
     #all_sents = [] # Current list of all extracted sentences  
     all_sents = OrderedDict()
@@ -222,7 +222,7 @@ def extract_sentences(file, to_remove):
 
 def run(EXTRACT_SENTENCES_FILES, TO_REMOVE):
     TAGGED_FILE,RESULTS_TSV, RESULTS_CSV, SEP_CSV_FILES = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1], EXTRACT_SENTENCES_FILES[2], EXTRACT_SENTENCES_FILES[3]
-    sentences = extract_sentences(TAGGED_FILE, TO_REMOVE) # 43264 with ambiguous verb tags / 40436 without
+    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
     sentences_dict = dict()

@@ -7,7 +7,12 @@ import pandas as pd
 import time
 import sys
 
-def extract_infinitives(TENSES_GZ, COOC_FREQ_CSV, INFINITIVES_CSV):
+def run(EXTRACT_INFINITIVE_FILES):
+    
+    TENSES_GZ = EXTRACT_INFINITIVE_FILES[0]
+    COOC_FREQ_CSV = EXTRACT_INFINITIVE_FILES[1]
+    INFINITIVES_CSV =  EXTRACT_INFINITIVE_FILES[2]
+    
     ### Set the max width of a column
     pd.set_option('display.max_colwidth', 200)
     pd.set_option('display.max_columns', 10)
@@ -18,10 +23,9 @@ def extract_infinitives(TENSES_GZ, COOC_FREQ_CSV, INFINITIVES_CSV):
 
     ### Load the data
     start = time.time()
-    tenses = pd.read_csv(TENSES_GZ, compression='gzip', usecols = ['Infinitive', 'Tense'])
+    tenses = pd.read_csv("%s.csv.gz"%(TENSES_GZ), compression='gzip', usecols = ['Infinitive', 'Tense'])
     _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
 
-    print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7041928
 
     tenses['Tense'].value_counts()

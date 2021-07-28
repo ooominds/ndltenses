@@ -31,4 +31,5 @@ ndl_tense/data_preparation/ngram_prep_data/one_verb/ngrams_touse.csv
 test_location/Data_shared
 test_location/data_preparation
 BNC.tagged.txt
-BNC.tagged.null.txt 
+BNC.tagged.null.txt
+BNC.spoken.clean.txt

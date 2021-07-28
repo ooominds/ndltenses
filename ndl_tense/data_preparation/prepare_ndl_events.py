@@ -76,8 +76,6 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
     start = time.time()
     tenses = pd.read_csv("%s.csv.gz"%(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip')
     _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
-
-    print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7041930
 
     tenses['Tense'].value_counts()
@@ -118,7 +116,6 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
 
     # Split the list of keys into train, valid and test keys
     count_keys =  list(count_sentid.keys())
-    print(count_keys)
     count_keys_train, count_keys_hold = train_test_split(count_keys, test_size = (prop_test+prop_valid), random_state=1)
     count_keys_valid, count_keys_test = train_test_split(count_keys_hold, test_size = 0.5, random_state=1)
 
@@ -129,7 +126,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
     tenses_valid.to_csv(TENSES_VALID_GZ, compression='gzip', index = False) # Export the validation dataset
     tenses_test.to_csv(TENSES_TEST_GZ, compression='gzip', index = False) # Export the test dataset
     del tenses_valid, tenses_test
-    tenses = prepare_subset_df(count_keys_train)
+    tenses = prepare_subset_df(tenses, count_keys_train, count_sentid)
     tenses_train = tenses
     tenses_train.to_csv(TENSES_TRAIN_GZ, compression='gzip', index = False) # Export the train dataset
     del tenses_train
@@ -143,7 +140,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
     tenses = pd.read_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip')
     _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
 
-    print(f'Number of examples: {len(tenses)}')
+    #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 1853675
 
     tenses['Tense'].value_counts()
@@ -191,9 +188,9 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
 def ngram_event_files(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test,
                       NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST):
 
-    print(f'Number of examples: {len(tenses_multiverbs_train)}') # Number of examples: 6343547
-    print(f'Number of examples: {len(tenses_multiverbs_valid)}') # Number of examples: 352168
-    print(f'Number of examples: {len(tenses_multiverbs_test)}') # Number of examples: 351408
+    #print(f'Number of examples: {len(tenses_multiverbs_train)}') # Number of examples: 6343547
+    #print(f'Number of examples: {len(tenses_multiverbs_valid)}') # Number of examples: 352168
+    #print(f'Number of examples: {len(tenses_multiverbs_test)}') # Number of examples: 351408
 
     ### Rename cue and outcome columns and reorder
     tenses_multiverbs_train.rename(columns = {'NgramCuesWithInfinitive': 'cues',
@@ -202,7 +199,7 @@ def ngram_event_files(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_m
                                         'Tense': 'outcomes'}, inplace = True)
     tenses_multiverbs_test.rename(columns = {'NgramCuesWithInfinitive': 'cues',
                                         'Tense': 'outcomes'}, inplace = True)
-
+                                        
     tenses_multiverbs_train = tenses_multiverbs_train[['cues', 'outcomes']]
     tenses_multiverbs_valid = tenses_multiverbs_valid[['cues', 'outcomes']]
     tenses_multiverbs_test = tenses_multiverbs_test[['cues', 'outcomes']]
@@ -211,31 +208,6 @@ def ngram_event_files(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_m
     tenses_multiverbs_train.to_csv(NGRAM_EVENTS_MULTI_VERBS_TRAIN, sep='\t' , index = False, compression='gzip')
     tenses_multiverbs_valid.to_csv(NGRAM_EVENTS_MULTI_VERBS_VALID, sep='\t', index = False, compression='gzip')
     tenses_multiverbs_test.to_csv(NGRAM_EVENTS_MULTI_VERBS_TEST, sep='\t', index = False, compression='gzip')
-
-    del tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test
-
-def word_cues(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test,
-              WORD_EVENTS_MULTI_VERBS_TRAIN, WORD_EVENTS_MULTI_VERBS_VALID, WORD_EVENTS_MULTI_VERBS_TEST):
-    #####################################################
-    # word cue based event files for the multi verbs set
-    #####################################################
-
-    ### Rename cue and outcome columns and reorder
-    tenses_multiverbs_train.rename(columns = {'WordCuesWithInfinitive': 'cues',
-                                        'Tense': 'outcomes'}, inplace = True)
-    tenses_multiverbs_valid.rename(columns = {'WordCuesWithInfinitive': 'cues',
-                                        'Tense': 'outcomes'}, inplace = True)
-    tenses_multiverbs_test.rename(columns = {'WordCuesWithInfinitive': 'cues',
-                                        'Tense': 'outcomes'}, inplace = True)
-
-    tenses_multiverbs_train = tenses_multiverbs_train[['cues', 'outcomes']]
-    tenses_multiverbs_valid = tenses_multiverbs_valid[['cues', 'outcomes']]
-    tenses_multiverbs_test = tenses_multiverbs_test[['cues', 'outcomes']]
-
-    # Export the ngram-based event files
-    tenses_multiverbs_train.to_csv(WORD_EVENTS_MULTI_VERBS_TRAIN, sep='\t' , index = False, compression='gzip')
-    tenses_multiverbs_valid.to_csv(WORD_EVENTS_MULTI_VERBS_VALID, sep='\t', index = False, compression='gzip')
-    tenses_multiverbs_test.to_csv(WORD_EVENTS_MULTI_VERBS_TEST, sep='\t', index = False, compression='gzip')
 
     del tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test
 
@@ -253,6 +225,18 @@ def run(PREPARE_TRAIN_VALID_TEST_FILES):
     tenses_multiverbs_train = pd.read_csv(TENSES_MULTI_VERBS_TRAIN_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
     tenses_multiverbs_valid = pd.read_csv(TENSES_MULTI_VERBS_VALID_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
     tenses_multiverbs_test = pd.read_csv(TENSES_MULTI_VERBS_TEST_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
+    
+    tenses_multiverbs_train.rename(columns = {'WordCuesWithInfinitive': 'cues',
+                                        'Tense': 'outcomes'}, inplace = True)
+    tenses_multiverbs_valid.rename(columns = {'WordCuesWithInfinitive': 'cues',
+                                        'Tense': 'outcomes'}, inplace = True)
+    tenses_multiverbs_test.rename(columns = {'WordCuesWithInfinitive': 'cues',
+                                        'Tense': 'outcomes'}, inplace = True)
+
+    tenses_multiverbs_train = tenses_multiverbs_train[['cues', 'outcomes']]
+    tenses_multiverbs_valid = tenses_multiverbs_valid[['cues', 'outcomes']]
+    tenses_multiverbs_test = tenses_multiverbs_test[['cues', 'outcomes']]
+    
     ngram_event_files(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test,
                       NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST)
     _ = sys.stdout.write('Loading the data sets took %ds' %((time.time()-start)))

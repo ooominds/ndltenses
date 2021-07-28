@@ -5,3 +5,5 @@ proportion of test/valid in prepare_ndl_events needs to be editable by the user
 clean up random print statements
 
 cut down on the number of files
+
+remove BNC references

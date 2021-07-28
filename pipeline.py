@@ -1,4 +1,4 @@
-from ndl_tense.data_preparation import create_sentence_file, annotate_tenses, prepare_data, prepare_ndl_events
+from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
 from ndl_tense import file_tools
 from param_file import *
 from os import chdir
@@ -15,6 +15,7 @@ def step_2():
     chdir(WD_ANNOTATE)
     file_tools.manage_directories(ANNOTATE_FILES, True)
     annotate_tenses.run(ANNOTATE_FILES)
+    print("Step 2 complete")
 
 def step_3():
     file_tools.manage_directories(PREPDAT_DIRS, False)
@@ -24,25 +25,38 @@ def step_3():
     file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, True)
     #for one verb per sent, so this is optional
     prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:])
+    chdir(WD_PREPDAT)
     prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES)
     prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES)
+    print("Step 3 complete")
 
-#def step_4():
-    #chdir(WD_EXTRACT_INF)
-    #ndlt.data_preparation.extract_infinitives(TENSES_GZ, COOC_FREQ_CSV, INFINITIVES_CSV)
+def step_4():
+    file_tools.manage_directories(EXTRACT_SENTENCES_FOLDERS, False)
+    file_tools.manage_directories(EXTRACT_INFINITIVE_FILES, True)
+    chdir(WD_EXTRACT_INF)
+    extract_infinitive.run(EXTRACT_INFINITIVE_FILES)
+    print("Step 4 complete")
 
-#def step_5():
-#    os.chdir(WD_EXTRACT_NGRAM)
-#    ndlt.data_preparation.extract_ngrams(TENSES_GZ,NGRAM,NGRAM1,NGRAM2,NGRAM3,NGRAM4,TEMP_DIR, NUM_THREADS)
-#    ndlt.data_preparation.prepare_ngrams(TARGETS,NGRAM,NGRAM1,NGRAM2,NGRAM3,NGRAM4,TEMP_DIR, NGRAMN)
+def step_5():
+    file_tools.manage_directories(NGRAM_FOLDERS, False)
+    chdir(WD_EXTRACT_NGRAM)
+    file_tools.manage_directories(NGRAM_FILES, True)
+    file_tools.manage_directories(TARGETS_FILES, True)
+    extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS)
+    prepare_ngrams.run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES)
 
-#def step_6():
-#    os.chdir(WD_CUES)
-#    ndlt.data_preparation.prepare_cues(NGRAMS, INFINITIVES, ALL_CUES)
+def step_6():
+    file_tools.manage_directories([WD_CUES], False)
+    chdir(WD_CUES)
+    prepare_cues.run(NGRAMS, INFINITIVES, ALL_CUES)
+
 def main():
-    step_1()
-    step_2()
-    step_3()
+    #step_1()
+    #step_2()
+    #step_3()
+    #step_4()
+    #step_5()
+    #step_6()
 
 if __name__ == "__main__":
     main()

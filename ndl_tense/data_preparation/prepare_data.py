@@ -36,7 +36,7 @@ def convert_to_inf(TENSES, TENSES_WITH_INF):
 
     ### Load the data
     tenses = pd.read_csv(TENSES, encoding="utf-8")
-    print(f'Number of examples: {len(tenses)}')
+    #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 4227346
 
     # Columns
@@ -505,8 +505,6 @@ def shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ):
     tenses = SentID_df.merge(tenses)
 
     # Export the dataset
-    print("DOING IT RIGHT NOW")
-    print(TENSES_ONE_SENT_PER_VERB_SHUF_GZ)
     tenses.to_csv("%s.csv.gz"%(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip', index = False, encoding="utf-8")
 
 def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
@@ -549,7 +547,7 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
 
     # Remove the modals and imperatives
     tenses = tenses[~tenses['Tense'].isin(['modal', 'imperative'])]
-    print(tenses['Tense'].value_counts())
+    #print(tenses['Tense'].value_counts())
     # present.simple       3201494
     # past.simple          2639252
     # present.perf          370457
@@ -631,7 +629,7 @@ def run(TENSES, PREPDAT_FILES):
     tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")
     _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
 
-    print(f'Number of examples: {len(tenses)}')
+    #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7047168
 
     tenses.columns
@@ -650,7 +648,7 @@ def run(TENSES, PREPDAT_FILES):
     ### Data set containing only sentences with one verb
     tenses1 = tenses[tenses.NumOfVerbs == 1]
 
-    print(tenses1['Tense'].value_counts())
+    #print(tenses1['Tense'].value_counts())
 
     # Export the dataset
     tenses1.to_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")

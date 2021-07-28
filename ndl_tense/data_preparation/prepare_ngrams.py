@@ -8,16 +8,25 @@
 import pandas as pd
 
 ### Set working directory
-def prepare_ngrams(TARGETS,FREQ_1G_PATH,FREQ_2G_PATH,FREQ_3G_PATH,FREQ_4G_PATH, N,
-                   TARGETS_1G, TARGETS_2G, TARGETS_3G, TARGETS_4G):
+def run(NGRAM_FILES, N, TARGETS_FILES):
 
+    FREQ_1G_PATH = NGRAM_FILES[1]
+    FREQ_2G_PATH = NGRAM_FILES[2]
+    FREQ_3G_PATH = NGRAM_FILES[3]
+    FREQ_4G_PATH = NGRAM_FILES[4]
+
+    TARGETS = TARGETS_FILES[0]
+    TARGETS_1G = TARGETS_FILES[1]
+    TARGETS_2G = TARGETS_FILES[2]
+    TARGETS_3G = TARGETS_FILES[3]
+    TARGETS_4G = TARGETS_FILES[4]
     #################################################################
     # Load the frequency files as dictionaries prior to band-sampling
     #################################################################
 
     ########## 1-grams ##########
     # Load as dataframe and retain only 10k ngrams whose freq >= 10
-    Freq_1G_df = pd.read_csv(FREQ_1G_PATH)
+    Freq_1G_df = pd.read_csv("%s.csv"%(FREQ_1G_PATH))
     Freq_1G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
     Freq_1G_df = Freq_1G_df[Freq_1G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_1G_df = Freq_1G_df.sample(frac=1) # Shuffle ngrams with the same frequency
@@ -26,7 +35,7 @@ def prepare_ngrams(TARGETS,FREQ_1G_PATH,FREQ_2G_PATH,FREQ_3G_PATH,FREQ_4G_PATH, 
 
     ########## 2-grams ##########
     # Load as dataframe and retain only 10k ngrams whose freq >= 10
-    Freq_2G_df = pd.read_csv(FREQ_2G_PATH)
+    Freq_2G_df = pd.read_csv("%s.csv"%(FREQ_2G_PATH))
     Freq_2G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
     Freq_2G_df = Freq_2G_df[Freq_2G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_2G_df = Freq_2G_df.sample(frac=1) # Shuffle ngrams with the same frequency
@@ -35,7 +44,7 @@ def prepare_ngrams(TARGETS,FREQ_1G_PATH,FREQ_2G_PATH,FREQ_3G_PATH,FREQ_4G_PATH, 
 
     ########## 3-grams ##########
     # Load as dataframe and retain only 10k ngrams whose freq >= 10
-    Freq_3G_df = pd.read_csv(FREQ_3G_PATH)
+    Freq_3G_df = pd.read_csv("%s.csv"%(FREQ_3G_PATH))
     Freq_3G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
     Freq_3G_df = Freq_3G_df[Freq_3G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_3G_df = Freq_3G_df.sample(frac=1) # Shuffle ngrams with the same frequency
@@ -45,7 +54,7 @@ def prepare_ngrams(TARGETS,FREQ_1G_PATH,FREQ_2G_PATH,FREQ_3G_PATH,FREQ_4G_PATH, 
 
     ########## 4-grams ##########
     # Load as dataframe and retain only 10k ngrams whose freq >= 10
-    Freq_4G_df = pd.read_csv(FREQ_4G_PATH)
+    Freq_4G_df = pd.read_csv("%s.csv"%(FREQ_4G_PATH))
     Freq_4G_df.dropna(inplace = True) # Remove the row corresponding to the empty n-gram
     Freq_4G_df = Freq_4G_df[Freq_4G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_4G_df = Freq_4G_df.sample(frac=1) # Shuffle ngrams with the same frequency

@@ -8,7 +8,7 @@
 import numpy as np
 import pandas as pd
 
-def prepare_cues(NGRAMS, INFINITIVES, ALL_CUES):
+def run(NGRAMS, INFINITIVES, ALL_CUES):
 
     #################
     # Load the data 
@@ -35,4 +35,4 @@ def prepare_cues(NGRAMS, INFINITIVES, ALL_CUES):
     all_cues_df['index'] = np.arange(1, (len(all_cues_df)+1))
 
     # Save a separate dataframe for each group
-    all_cues_df.to_csv(ALL_CUES, sep = ',', index = False)
+    all_cues_df.to_csv("%s.csv"%(ALL_CUES), sep = ',', index = False)
