@@ -67,12 +67,8 @@ def prepare_subset_df(tenses, ct_sentid_keys, count_sentid):
 
 ### Load the data
 def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
-    
-    TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_ONE_VERB_SHUF_GZ = CREATE_TRAIN_VALID_TEST_FILES[0], CREATE_TRAIN_VALID_TEST_FILES[1]
-    TENSES_TRAIN_GZ,TENSES_VALID_GZ,TENSES_TEST_GZ = CREATE_TRAIN_VALID_TEST_FILES[2], CREATE_TRAIN_VALID_TEST_FILES[3], CREATE_TRAIN_VALID_TEST_FILES[4]
-    TENSES_ONE_VERB_TRAIN_GZ, TENSES_ONE_VERB_VALID_GZ = CREATE_TRAIN_VALID_TEST_FILES[5], CREATE_TRAIN_VALID_TEST_FILES[6]
-    TENSES_ONE_VERB_TEST_GZ = CREATE_TRAIN_VALID_TEST_FILES[7]
-
+    TENSES_ONE_SENT_PER_VERB_SHUF_GZ = CREATE_TRAIN_VALID_TEST_FILES[0]
+    TENSES_TRAIN_GZ,TENSES_VALID_GZ,TENSES_TEST_GZ = CREATE_TRAIN_VALID_TEST_FILES[1], CREATE_TRAIN_VALID_TEST_FILES[2], CREATE_TRAIN_VALID_TEST_FILES[3]
     start = time.time()
     tenses = pd.read_csv("%s.csv.gz"%(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip')
     _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
@@ -136,14 +132,14 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
     ###########################################################
 
     ### Load the data
-    start = time.time()
-    tenses = pd.read_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip')
-    _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
+    #start = time.time()
+    #tenses = pd.read_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip')
+    #_ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
 
     #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 1853675
 
-    tenses['Tense'].value_counts()
+    #tenses['Tense'].value_counts()
     # present.simple       810895
     # past.simple          702786
     # present.perf         114764
@@ -158,28 +154,28 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES):
     # future.perf.prog          9
 
     ### Remove future.perf.prog
-    tenses = tenses[tenses['Tense'] != 'future.perf.prog']
+    #tenses = tenses[tenses['Tense'] != 'future.perf.prog']
 
     # Create a counter of sent ids
-    SentID_list = list(tenses["SentenceID"])
-    count_sentid = Counter()
-    for id in SentID_list:
-        count_sentid[id] += 1
+    #SentID_list = list(tenses["SentenceID"])
+    #count_sentid = Counter()
+    #for id in SentID_list:
+    #    count_sentid[id] += 1
 
     # Split the list of keys into train, valid and test keys
-    count_keys =  list(count_sentid.keys())
-    count_keys_train, count_keys_hold = train_test_split(count_keys, test_size = (prop_test+prop_valid), random_state=1)
-    count_keys_valid, count_keys_test = train_test_split(count_keys_hold, test_size = 0.5, random_state=1)
+    #count_keys =  list(count_sentid.keys())
+    #count_keys_train, count_keys_hold = train_test_split(count_keys, test_size = (prop_test+prop_valid), random_state=1)
+    #count_keys_valid, count_keys_test = train_test_split(count_keys_hold, test_size = 0.5, random_state=1)
 
     ### Prepare the train, valid and test sets and save them
-    tenses_valid = prepare_subset_df(tenses, count_keys_valid, count_sentid)
-    tenses_test = prepare_subset_df(tenses, count_keys_test, count_sentid)
-    tenses_valid.to_csv(TENSES_ONE_VERB_VALID_GZ, compression='gzip', index = False) # Export the validation dataset
-    tenses_test.to_csv(TENSES_ONE_VERB_TEST_GZ, compression='gzip', index = False) # Export the test dataset
-    del tenses_valid, tenses_test
-    tenses = prepare_subset_df(tenses, count_keys_train, count_sentid)
-    tenses_train = tenses
-    tenses_train.to_csv(TENSES_ONE_VERB_TRAIN_GZ, compression='gzip', index = False) # Export the train dataset
+    #tenses_valid = prepare_subset_df(tenses, count_keys_valid, count_sentid)
+    #tenses_test = prepare_subset_df(tenses, count_keys_test, count_sentid)
+    #tenses_valid.to_csv(TENSES_ONE_VERB_VALID_GZ, compression='gzip', index = False) # Export the validation dataset
+    #tenses_test.to_csv(TENSES_ONE_VERB_TEST_GZ, compression='gzip', index = False) # Export the test dataset
+    #del tenses_valid, tenses_test
+    #tenses = prepare_subset_df(tenses, count_keys_train, count_sentid)
+    #tenses_train = tenses
+    #tenses_train.to_csv(TENSES_ONE_VERB_TRAIN_GZ, compression='gzip', index = False) # Export the train dataset
 
 
 ##################################################
@@ -205,16 +201,19 @@ def ngram_event_files(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_m
     tenses_multiverbs_test = tenses_multiverbs_test[['cues', 'outcomes']]
 
     # Export the ngram-based event files
-    tenses_multiverbs_train.to_csv(NGRAM_EVENTS_MULTI_VERBS_TRAIN, sep='\t' , index = False, compression='gzip')
-    tenses_multiverbs_valid.to_csv(NGRAM_EVENTS_MULTI_VERBS_VALID, sep='\t', index = False, compression='gzip')
-    tenses_multiverbs_test.to_csv(NGRAM_EVENTS_MULTI_VERBS_TEST, sep='\t', index = False, compression='gzip')
+    print(NGRAM_EVENTS_MULTI_VERBS_TRAIN)
+    print(NGRAM_EVENTS_MULTI_VERBS_VALID)
+    print(NGRAM_EVENTS_MULTI_VERBS_TEST)
+    tenses_multiverbs_train.to_csv("%s.gz"%(NGRAM_EVENTS_MULTI_VERBS_TRAIN), sep='\t' , index = False, compression='gzip')
+    tenses_multiverbs_valid.to_csv("%s.gz"%(NGRAM_EVENTS_MULTI_VERBS_VALID), sep='\t', index = False, compression='gzip')
+    tenses_multiverbs_test.to_csv("%s.gz"%(NGRAM_EVENTS_MULTI_VERBS_TEST), sep='\t', index = False, compression='gzip')
 
     del tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test
 
 def run(PREPARE_TRAIN_VALID_TEST_FILES):
-    TENSES_MULTI_VERBS_TRAIN_GZ = PREPARE_TRAIN_VALID_TEST_FILES[0]
-    TENSES_MULTI_VERBS_VALID_GZ = PREPARE_TRAIN_VALID_TEST_FILES[1]
-    TENSES_MULTI_VERBS_TEST_GZ = PREPARE_TRAIN_VALID_TEST_FILES[2]
+    TENSES_TRAIN_GZ = PREPARE_TRAIN_VALID_TEST_FILES[0]
+    TENSES_VALID_GZ = PREPARE_TRAIN_VALID_TEST_FILES[1]
+    TENSES_TEST_GZ = PREPARE_TRAIN_VALID_TEST_FILES[2]
 
     NGRAM_EVENTS_MULTI_VERBS_TRAIN = PREPARE_TRAIN_VALID_TEST_FILES[3]
     NGRAM_EVENTS_MULTI_VERBS_VALID = PREPARE_TRAIN_VALID_TEST_FILES[4]
@@ -222,9 +221,9 @@ def run(PREPARE_TRAIN_VALID_TEST_FILES):
     
     ### Load the data
     start = time.time()
-    tenses_multiverbs_train = pd.read_csv(TENSES_MULTI_VERBS_TRAIN_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
-    tenses_multiverbs_valid = pd.read_csv(TENSES_MULTI_VERBS_VALID_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
-    tenses_multiverbs_test = pd.read_csv(TENSES_MULTI_VERBS_TEST_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
+    tenses_multiverbs_train = pd.read_csv(TENSES_TRAIN_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
+    tenses_multiverbs_valid = pd.read_csv(TENSES_VALID_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
+    tenses_multiverbs_test = pd.read_csv(TENSES_TEST_GZ, compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
     
     tenses_multiverbs_train.rename(columns = {'WordCuesWithInfinitive': 'cues',
                                         'Tense': 'outcomes'}, inplace = True)

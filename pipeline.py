@@ -1,4 +1,5 @@
 from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
+from ndl_tense.simulations import ndl_model
 from ndl_tense import file_tools
 from param_file import *
 from os import chdir
@@ -42,13 +43,18 @@ def step_5():
     chdir(WD_EXTRACT_NGRAM)
     file_tools.manage_directories(NGRAM_FILES, True)
     file_tools.manage_directories(TARGETS_FILES, True)
-    extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS)
+    extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR_EXT, NUM_THREADS)
     prepare_ngrams.run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES)
 
 def step_6():
     file_tools.manage_directories([WD_CUES], False)
     chdir(WD_CUES)
     prepare_cues.run(NGRAMS, INFINITIVES, ALL_CUES)
+
+def step_7():
+    file_tools.manage_directories(SIM_DIR, False)
+    chdir(WD_SIM)
+    ndl_model.run(SIM_FILES)
 
 def main():
     #step_1()
@@ -57,6 +63,7 @@ def main():
     #step_4()
     #step_5()
     #step_6()
+    #step_7()
 
 if __name__ == "__main__":
     main()

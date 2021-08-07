@@ -1,0 +1,28 @@
+----------------------------------------------------
+Step-by-step guide to run the code for training NDL
+
+by Adnane Ez-zizi, 06/08/2020
+----------------------------------------------------
+
+Here I show the steps for simulating NDL on the 'multiverbs' data set. The same steps apply for 
+the 'oneverb' data set
+
+Folder: /NDL_ngram_multiverbs/ (for the oneverb dataset, use: /NDL_ngram_oneverb/)
+
+################ Step I: Parameter tuning ##############
+
+- Main file: NDL_paramsearch.py (can be run on the server using the corresponding .sh file)
+
+-> After completion of the simulations, I chose the learning rate and number of epochs that maximised 
+   validation accuracy (using grid_search_NDL_ngram_multiverbs.csv)
+
+################ Step II: Run final model (after selecting the best parameters) ##############
+
+- Main file: NDL_finalmodel.py.py (can be run on the server using the corresponding .sh file)
+
+-> This prepare the final results on the test set:
+   - Calculate the activations for the test events
+   - Generate tense predictions 
+   - Prepare the results and export them as a csv file (Results_testset_ngrams_multiverbs.csv)
+
+

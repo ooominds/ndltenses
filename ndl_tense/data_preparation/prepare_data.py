@@ -575,8 +575,7 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
 def run(TENSES, PREPDAT_FILES):
     TENSES_WITH_INF, TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB, = PREPDAT_FILES[0], PREPDAT_FILES[1], PREPDAT_FILES[2] 
     TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_READY_GZ = PREPDAT_FILES[3], PREPDAT_FILES[4]
-    TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_ONE_VERB, TENSES_ONE_VERB_READY_GZ = PREPDAT_FILES[5], PREPDAT_FILES[6], PREPDAT_FILES[7]
-    TENSES_ONE_VERB_SHUF_GZ, AE2BE_LIST, INFINITIVE_CORR_LIST = PREPDAT_FILES[8], PREPDAT_FILES[9], PREPDAT_FILES[10]
+    TENSES_ONE_SENT_PER_VERB_SHUF_GZ, AE2BE_LIST, INFINITIVE_CORR_LIST= PREPDAT_FILES[5], PREPDAT_FILES[6], PREPDAT_FILES[7]
     #tenses = pd.read_csv(TENSES, keep_default_na = False, encoding="utf-8")
     #print(tenses)
     convert_to_inf("%s.csv"%(TENSES), TENSES_WITH_INF)
@@ -621,8 +620,7 @@ def run(TENSES, PREPDAT_FILES):
     # Add new NumOfVerbs that doesn't take into account modals and imperatives 
     ###########################################################################
 
-    add_info(tenses, TENSES_ONE_VERB_READY_GZ)
-    shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ)
+    #add_info(tenses, TENSES_ONE_VERB_READY_GZ)
 
     ### Load the data
     start = time.time()
@@ -641,14 +639,16 @@ def run(TENSES, PREPDAT_FILES):
     cols = list(tenses.columns)
     cols.insert(3,cols.pop(cols.index('NumOfVerbs')))
     tenses = tenses.loc[:, cols]
+
+    shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ)
     ##################################################
     # Extract sentences with one verb only (shuffeled)
     ##################################################
 
     ### Data set containing only sentences with one verb
-    tenses1 = tenses[tenses.NumOfVerbs == 1]
+    #tenses1 = tenses[tenses.NumOfVerbs == 1]
 
     #print(tenses1['Tense'].value_counts())
 
     # Export the dataset
-    tenses1.to_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")
+    #tenses1.to_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")
