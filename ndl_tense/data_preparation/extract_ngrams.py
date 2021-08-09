@@ -119,7 +119,6 @@ def compute_cue_freqs(data, temp_dir, num_threads, verbose = False):
 ####################
 def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
 
-    NGRAM = NGRAM_FILES[0]
     NGRAM1 = NGRAM_FILES[1]
     NGRAM2 = NGRAM_FILES[2]
     NGRAM3 = NGRAM_FILES[3]

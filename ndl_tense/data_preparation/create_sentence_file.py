@@ -220,8 +220,8 @@ def extract_sentences(file, to_remove):
         return all_sents
 
 
-def run(EXTRACT_SENTENCES_FILES, TO_REMOVE):
-    TAGGED_FILE,RESULTS_TSV, RESULTS_CSV, SEP_CSV_FILES = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1], EXTRACT_SENTENCES_FILES[2], EXTRACT_SENTENCES_FILES[3]
+def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV):
+    TAGGED_FILE, RESULTS = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1]
     sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
@@ -244,14 +244,10 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE):
     sys.stdout.write('Dataframe constructed in %.3fs\n' % ((time.time()- start)))
     sys.stdout.flush()
 
-    # write to tsv file
-    with open("%s.tsv"%(RESULTS_TSV), "w", encoding="utf-8") as res_tsv:
-        sentences_df.to_csv(res_tsv, sep = "\t", index = False, encoding="utf-8")
-
+    if TO_TSV:
+        file_type = "tsv"
+    else:
+        file_type = "csv"
     # write to csv file
-    with open("%s.csv"%(RESULTS_CSV), "w", encoding="utf-8") as res_csv:
+    with open("%s.%s"%(RESULTS, file_type), "w", encoding="utf-8") as res_csv:
         sentences_df.to_csv(res_csv, sep = ",", index = False, encoding="utf-8")
-
-    # write to seperate csv files
-    for ii, df_i in  enumerate(np.array_split(sentences_df, 6)):
-        df_i.to_csv("%s{%s}.csv"%(SEP_CSV_FILES,ii+1), index = False, encoding="utf-8")

@@ -8,7 +8,7 @@ def step_1():
     file_tools.manage_directories(EXTRACT_SENTENCES_DIRS, False)
     chdir(WD_EXTRACT)
     file_tools.manage_directories(EXTRACT_SENTENCES_FILES, True)
-    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"})
+    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False)
     print("Step 1 complete")
 
 def step_2():
@@ -27,7 +27,7 @@ def step_3():
     #for one verb per sent, so this is optional
     prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:])
     chdir(WD_PREPDAT)
-    prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES)
+    prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID)
     prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES)
     print("Step 3 complete")
 
@@ -43,8 +43,10 @@ def step_5():
     chdir(WD_EXTRACT_NGRAM)
     file_tools.manage_directories(NGRAM_FILES, True)
     file_tools.manage_directories(TARGETS_FILES, True)
-    extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR_EXT, NUM_THREADS)
+    # extracting ngrams is optional
+    # extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR_EXT, NUM_THREADS)
     prepare_ngrams.run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES)
+    print("Step 5 complete")
 
 def step_6():
     file_tools.manage_directories([WD_CUES], False)
@@ -57,11 +59,11 @@ def step_7():
     ndl_model.run(SIM_FILES)
 
 def main():
-    #step_1()
-    #step_2()
-    #step_3()
-    #step_4()
-    #step_5()
+    step_1()
+    step_2()
+    step_3()
+    step_4()
+    step_5()
     #step_6()
     #step_7()
 

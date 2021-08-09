@@ -55,10 +55,7 @@ def clean_sents(bnc_tenses):
 # Annotation
 #################
 def run(ANNOTATE_FILES):
-  SENTS, SENTS_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
-  TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[2], ANNOTATE_FILES[3]
-  TENSES_ANNOTATED_CLEAN_N = ANNOTATE_FILES[4]
-  
+  SENTS, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
   ### Basic data preparation
   bnc_tenses =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
 

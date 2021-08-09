@@ -23,7 +23,7 @@ from collections import Counter
 #nltk.download('wordnet')
 #tqdm.pandas()
 
-def convert_to_inf(TENSES, TENSES_WITH_INF):
+def convert_to_inf(TENSES):
     lemmatizer = WordNetLemmatizer() # Initialise the lemmatizer
 
     ### Set the max width of a column
@@ -38,28 +38,6 @@ def convert_to_inf(TENSES, TENSES_WITH_INF):
     tenses = pd.read_csv(TENSES, encoding="utf-8")
     #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 4227346
-
-    # Columns
-    tenses.columns
-    # Index(['Sentence', 'Tense1', 'VerbForm1', 'MainVerb1', 'Position1',
-    #        'Infinitive1', 'Tense2', 'VerbForm2', 'MainVerb2', 'Position2',
-    #        'Infinitive2', 'Tense3', 'VerbForm3', 'MainVerb3', 'Position3',
-    #        'Infinitive3', 'Tense4', 'VerbForm4', 'MainVerb4', 'Position4',
-    #        'Infinitive4', 'Tense5', 'VerbForm5', 'MainVerb5', 'Position5',
-    #        'Infinitive5', 'Tense6', 'VerbForm6', 'MainVerb6', 'Position6',
-    #        'Infinitive6', 'Tense7', 'VerbForm7', 'MainVerb7', 'Position7',
-    #        'Infinitive7', 'Tense8', 'VerbForm8', 'MainVerb8', 'Position8',
-    #        'Infinitive8', 'Tense9', 'VerbForm9', 'MainVerb9', 'Position9',
-    #        'Infinitive9', 'Tense10', 'VerbForm10', 'MainVerb10', 'Position10',
-    #        'Infinitive10', 'Tense11', 'VerbForm11', 'MainVerb11', 'Position11',
-    #        'Infinitive11', 'Tense12', 'VerbForm12', 'MainVerb12', 'Position12',
-    #        'Infinitive12', 'Tense13', 'VerbForm13', 'MainVerb13', 'Position13',
-    #        'Infinitive13', 'Tense14', 'VerbForm14', 'MainVerb14', 'Position14',
-    #        'Infinitive14', 'Tense15', 'VerbForm15', 'MainVerb15', 'Position15',
-    #        'Infinitive15', 'Tense16', 'VerbForm16', 'MainVerb16', 'Position16',
-    #        'Infinitive16', 'Tense17', 'VerbForm17', 'MainVerb17', 'Position17',
-    #        'Infinitive17'],
-    #       dtype='object')
 
     # Remove words containing digits
     #tenses["Sentence"] = tenses["Sentence"].progress_apply(lambda s: ' '.join([w for w in s.split() if not any(l.isdigit() for l in w)]))
@@ -93,15 +71,13 @@ def convert_to_inf(TENSES, TENSES_WITH_INF):
                 tenses.at[tenses.index[i], "".join(['Infinitive', str(j)])] = lemmatizer.lemmatize(tenses.loc[tenses.index[i], "".join(['MainVerb', str(j)])], 'v')
             else:
                 tenses.at[tenses.index[i], "".join(['Infinitive', str(j)])] = np.nan
-    tenses.to_csv(TENSES_WITH_INF, index = False, encoding="utf-8")
+    return(tenses)
 
 ##############################################
 # Adding Sentence lengths and number of verbs
 ##############################################
-def add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW):
+def add_sen_length(tenses):
     ### Load the data
-    tenses = pd.read_csv(TENSES_WITH_INF)
-
     nC = tenses.shape[1] # number of columns 
     nR = tenses.shape[0] # number of rows
     nV = int((nC-1)/5)  # number of verbs 
@@ -144,19 +120,18 @@ def add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW):
     tenses = tenses.loc[:, cols]
 
     # Export the dataset
-    tenses.to_csv(TENSES_WITH_INF_NEW, index = False, encoding="utf-8")
+    return(tenses)
 
 ######################################
 # Remove sentences with no tense/verb
 ######################################
 
-def remove_sen(TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB_WITH_MODALS):
+def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS):
     #####################################
     # New dataset with one verb per row
     #####################################
 
     ### Load the data
-    tenses = pd.read_csv(TENSES_WITH_INF_NEW)
     ### Extract all verbs from each sentence and put them in seperate rows (these will be the bases of our events)
     nC = tenses.shape[1] # number of columns 
     nR = tenses.shape[0] # number of rows
@@ -507,7 +482,7 @@ def shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ):
     # Export the dataset
     tenses.to_csv("%s.csv.gz"%(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip', index = False, encoding="utf-8")
 
-def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
+def remove_modals(tenses):
         #######################################################################
     # Remove modals and imperatives from the dataset with one verb per row
     #######################################################################
@@ -562,7 +537,7 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
     # future.perf.prog          30
 
     # Export the dataset
-    tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
+    #tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
 
     ### Add ContextWithInfinitive column
     tenses["ContextWithInfinitive"] = tenses.apply(lambda x: extract_context(x), axis=1)
@@ -570,26 +545,21 @@ def remove_modals(tenses, TENSES_ONE_SENT_PER_VERB):
     ### Add ContextNoInfinitive column
     tenses["ContextNoInfinitive"] = tenses.apply(lambda x: remove_verb_form(x), axis=1)
     # Export the dataset
-    tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
+    return(tenses)
 
 def run(TENSES, PREPDAT_FILES):
-    TENSES_WITH_INF, TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB, = PREPDAT_FILES[0], PREPDAT_FILES[1], PREPDAT_FILES[2] 
-    TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_READY_GZ = PREPDAT_FILES[3], PREPDAT_FILES[4]
-    TENSES_ONE_SENT_PER_VERB_SHUF_GZ, AE2BE_LIST, INFINITIVE_CORR_LIST= PREPDAT_FILES[5], PREPDAT_FILES[6], PREPDAT_FILES[7]
-    #tenses = pd.read_csv(TENSES, keep_default_na = False, encoding="utf-8")
-    #print(tenses)
-    convert_to_inf("%s.csv"%(TENSES), TENSES_WITH_INF)
-    add_sen_length(TENSES_WITH_INF, TENSES_WITH_INF_NEW)
-    remove_sen(TENSES_WITH_INF_NEW, TENSES_ONE_SENT_PER_VERB_WITH_MODALS)
+    TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_SHUF_GZ = PREPDAT_FILES[0], PREPDAT_FILES[1]
+    AE2BE_LIST, INFINITIVE_CORR_LIST= PREPDAT_FILES[2], PREPDAT_FILES[3]
+
+    tenses = convert_to_inf("%s.csv"%(TENSES))
+    tenses = add_sen_length(tenses)
+    remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS)
     tenses = convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST)
-    remove_modals(tenses, TENSES_ONE_SENT_PER_VERB)
+    tenses = remove_modals(tenses)
 
     ######################
     # Creating word cues
     ######################
-
-    # Load the data
-    tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB, keep_default_na = False, encoding="utf-8")
 
     # Remove sentences with only the verb (no context)
     tenses = tenses[~tenses["ContextNoInfinitive"].isin([""])]
@@ -604,7 +574,7 @@ def run(TENSES, PREPDAT_FILES):
     tenses.drop(columns = ['ContextNoInfinitive', 'ContextWithInfinitive'], inplace = True)
 
     # Export the dataset
-    tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
+    #tenses.to_csv(TENSES_ONE_SENT_PER_VERB, index = False, encoding="utf-8")
 
     # Add n-gram cues without infinitives
     tenses["NgramCuesNoInfinitive"] = tenses["WordCuesNoInfinitive"].apply(lambda s: create_ngram_cues(s, n = 4, sep_s = "_"))
@@ -614,7 +584,7 @@ def run(TENSES, PREPDAT_FILES):
                                                                         x.loc["Infinitive"].upper()]), axis = 1)
 
     # Export the dataset
-    tenses.to_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', index = False, encoding="utf-8")
+    #tenses.to_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', index = False, encoding="utf-8")
 
     ###########################################################################
     # Add new NumOfVerbs that doesn't take into account modals and imperatives 
@@ -623,14 +593,14 @@ def run(TENSES, PREPDAT_FILES):
     #add_info(tenses, TENSES_ONE_VERB_READY_GZ)
 
     ### Load the data
-    start = time.time()
-    tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")
-    _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
+    
+    #IF VERBOSE
+    #start = time.time()
+    #tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")
+    #_ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
 
     #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7047168
-
-    tenses.columns
 
     ### Rename the column of original num of verbs
     tenses.rename(columns = {'NumOfVerbs': 'NumOfVerbsOriginal'}, inplace = True)

@@ -20,6 +20,7 @@ def run(NGRAM_FILES, N, TARGETS_FILES):
     TARGETS_2G = TARGETS_FILES[2]
     TARGETS_3G = TARGETS_FILES[3]
     TARGETS_4G = TARGETS_FILES[4]
+    
     #################################################################
     # Load the frequency files as dictionaries prior to band-sampling
     #################################################################
