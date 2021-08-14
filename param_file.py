@@ -181,12 +181,12 @@ WD_SIM = 'D:\\work\\OoOM\\ndl\\test_location\\simulations\\'
 ### Define file paths
 #TENSE_SET_WITH_PRED = TOP + "Data_preparation/Data_shared/tenses_multiverbs_test_withpreds.csv.gz"
 CUE_INDEX = ALL_CUES
-OUTCOME_INDEX = NF + "\\outcome_index_ngram_multiverbs.csv" #user defined to determine what the possible outcomes are
+OUTCOME_INDEX = NF + "\\outcome_index_ngram_multiverbs" #user defined csv to determine what the possible outcomes are
 TEMP_DIR_SIM = WD_SIM + "data\\"
 MODEL_PATH = WD_SIM + 'NDL_model_ngrams_multiverbs' #h5 file (h5py)
 WEIGHTS_PATH = WD_SIM + 'NDL_weights_ngrams_multiverbs' #.nc file (netCDF)
-RESULTS_TEST = WD_SIM + "results_testset_ngrams_multiverbs.csv"
-ACTIVATION_TEST = WD_SIM + "Activations_testset_ngrams_multiverbs.csv"
+RESULTS_TEST = WD_SIM + "results_testset_ngrams_multiverbs" #.csv
+ACTIVATION_TEST = WD_SIM + "Activations_testset_ngrams_multiverbs" #.csv
 
 SIM_DIR = [WD_SIM, TEMP_DIR_SIM]
 SIM_FILES = [NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST,

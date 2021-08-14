@@ -23,7 +23,7 @@ from collections import Counter
 #nltk.download('wordnet')
 #tqdm.pandas()
 
-def convert_to_inf(TENSES):
+def convert_to_inf(TENSES, VERBOSE):
     lemmatizer = WordNetLemmatizer() # Initialise the lemmatizer
 
     ### Set the max width of a column
@@ -61,7 +61,7 @@ def convert_to_inf(TENSES):
     for i in range(0, nR):
 
         # Progress message
-        if (i+1) % 100000 == 0:
+        if (i+1) % 100000 == 0 and VERBOSE:
             now = time.time()
             sys.stdout.write('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
             sys.stdout.flush()
@@ -76,7 +76,7 @@ def convert_to_inf(TENSES):
 ##############################################
 # Adding Sentence lengths and number of verbs
 ##############################################
-def add_sen_length(tenses):
+def add_sen_length(tenses, VERBOSE):
     ### Load the data
     nC = tenses.shape[1] # number of columns 
     nR = tenses.shape[0] # number of rows
@@ -94,7 +94,7 @@ def add_sen_length(tenses):
     start = time.time()
     for i in range(0, nR):
         # Progress message
-        if (i+1) % 100000 == 0:
+        if (i+1) % 100000 == 0 and VERBOSE:
             now = time.time()
             sys.stdout.write('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
             sys.stdout.flush()
@@ -126,7 +126,7 @@ def add_sen_length(tenses):
 # Remove sentences with no tense/verb
 ######################################
 
-def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS):
+def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
     #####################################
     # New dataset with one verb per row
     #####################################
@@ -149,7 +149,7 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS):
         for i in range(0, nR):
 
             # Progress message
-            if (i+1) % 100000 == 0:
+            if (i+1) % 100000 == 0 and VERBOSE:
                 now = time.time()
                 sys.stdout.write('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
                 sys.stdout.flush()
@@ -547,13 +547,13 @@ def remove_modals(tenses):
     # Export the dataset
     return(tenses)
 
-def run(TENSES, PREPDAT_FILES):
+def run(TENSES, PREPDAT_FILES, VERBOSE):
     TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_SHUF_GZ = PREPDAT_FILES[0], PREPDAT_FILES[1]
     AE2BE_LIST, INFINITIVE_CORR_LIST= PREPDAT_FILES[2], PREPDAT_FILES[3]
 
-    tenses = convert_to_inf("%s.csv"%(TENSES))
-    tenses = add_sen_length(tenses)
-    remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS)
+    tenses = convert_to_inf("%s.csv"%(TENSES), VERBOSE)
+    tenses = add_sen_length(tenses, VERBOSE)
+    remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE)
     tenses = convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST)
     tenses = remove_modals(tenses)
 
@@ -622,3 +622,5 @@ def run(TENSES, PREPDAT_FILES):
 
     # Export the dataset
     #tenses1.to_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")
+    if VERBOSE:
+        sys.stdout.write("STEP 2.5: Preparing data is compliete\n")

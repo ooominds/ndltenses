@@ -142,7 +142,7 @@ def process_token(line, end_sent_marks, to_remove):
     else:
         return token, tag
 
-def extract_sentences(file, to_remove):
+def extract_sentences(file, to_remove, VERBOSE):
 
     """ Extract a cleaned list of all sentences in a tagged BNC file
 
@@ -211,18 +211,18 @@ def extract_sentences(file, to_remove):
             else:
                 if token in end_sent_marks:
                     keep_sen = True     
-            if (ii+1) % 1000000 == 0:
+            if (ii+1) % 1000000 == 0 and VERBOSE:
                 sys.stdout.write('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
                 sys.stdout.flush()
-
-        sys.stdout.write('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
-        sys.stdout.flush()
+        if VERBOSE:
+            sys.stdout.write('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
+            sys.stdout.flush()
         return all_sents
 
 
-def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV):
+def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, VERBOSE):
     TAGGED_FILE, RESULTS = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1]
-    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE) # 43264 with ambiguous verb tags / 40436 without
+    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
     sentences_dict = dict()
@@ -235,14 +235,16 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV):
             sentences_dict[i]["verb_{}".format(j+1)] = verb
             sentences_dict[i]["verb_{}_tag".format(j+1)] = tag
             sentences_dict[i]["verb_{}_position".format(j+1)] = position + 1
-    sys.stdout.write('Dictionary of dictionary constructed in %.3fs\n' % ((time.time()- start)))
-    sys.stdout.flush()
+    if VERBOSE:
+        sys.stdout.write('Dictionary of dictionary constructed in %.3fs\n' % ((time.time()- start)))
+        sys.stdout.flush()
 
     # turn into data frame
     start = time.time()
     sentences_df = pd.DataFrame.from_dict(sentences_dict, orient="index")
-    sys.stdout.write('Dataframe constructed in %.3fs\n' % ((time.time()- start)))
-    sys.stdout.flush()
+    if VERBOSE:
+        sys.stdout.write('Dataframe constructed in %.3fs\n' % ((time.time()- start)))
+        sys.stdout.flush()
 
     if TO_TSV:
         file_type = "tsv"
@@ -251,3 +253,6 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV):
     # write to csv file
     with open("%s.%s"%(RESULTS, file_type), "w", encoding="utf-8") as res_csv:
         sentences_df.to_csv(res_csv, sep = ",", index = False, encoding="utf-8")
+    if VERBOSE:
+        sys.stdout.write('STEP 1: Creating the sentences file is complete')
+        sys.stdout.flush()

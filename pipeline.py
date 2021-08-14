@@ -8,35 +8,32 @@ def step_1():
     file_tools.manage_directories(EXTRACT_SENTENCES_DIRS, False)
     chdir(WD_EXTRACT)
     file_tools.manage_directories(EXTRACT_SENTENCES_FILES, True)
-    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False)
-    print("Step 1 complete")
+    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, False)
 
 def step_2():
     file_tools.manage_directories(ANNOTATE_DIRS, False)
     chdir(WD_ANNOTATE)
     file_tools.manage_directories(ANNOTATE_FILES, True)
-    annotate_tenses.run(ANNOTATE_FILES)
-    print("Step 2 complete")
+    annotate_tenses.run(ANNOTATE_FILES, False)
 
 def step_3():
     file_tools.manage_directories(PREPDAT_DIRS, False)
     chdir(WD_PREPDAT)
     file_tools.manage_directories(PREPDAT_FILES, True)
-    file_tools.manage_directories(PREPARE_TRAIN_VALID_TEST_FILES, True)
-    file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, True)
+    file_tools.manage_directories(PREPARE_TRAIN_VALID_TEST_FILES, False)
+    file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, False)
+
     #for one verb per sent, so this is optional
-    prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:])
+    prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:], True)
     chdir(WD_PREPDAT)
-    prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID)
-    prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES)
-    print("Step 3 complete")
+    prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID, False)
+    prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES, False)
 
 def step_4():
     file_tools.manage_directories(EXTRACT_SENTENCES_FOLDERS, False)
     file_tools.manage_directories(EXTRACT_INFINITIVE_FILES, True)
     chdir(WD_EXTRACT_INF)
-    extract_infinitive.run(EXTRACT_INFINITIVE_FILES)
-    print("Step 4 complete")
+    extract_infinitive.run(EXTRACT_INFINITIVE_FILES, True)
 
 def step_5():
     file_tools.manage_directories(NGRAM_FOLDERS, False)
@@ -45,13 +42,12 @@ def step_5():
     file_tools.manage_directories(TARGETS_FILES, True)
     # extracting ngrams is optional
     # extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR_EXT, NUM_THREADS)
-    prepare_ngrams.run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES)
-    print("Step 5 complete")
+    prepare_ngrams.run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES, True)
 
 def step_6():
     file_tools.manage_directories([WD_CUES], False)
     chdir(WD_CUES)
-    prepare_cues.run(NGRAMS, INFINITIVES, ALL_CUES)
+    prepare_cues.run(NGRAMS, INFINITIVES, ALL_CUES, True)
 
 def step_7():
     file_tools.manage_directories(SIM_DIR, False)
@@ -64,7 +60,7 @@ def main():
     step_3()
     step_4()
     step_5()
-    #step_6()
+    step_6()
     #step_7()
 
 if __name__ == "__main__":

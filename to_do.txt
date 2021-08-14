@@ -2,10 +2,12 @@ Find a way to make nV consistent across the entire pipeline
 
 clean up random print statements
 
-cut down on the number of files
+cut down on the number of files - done tentatively
 
 remove BNC references
 
-remove file endings in paramfiles
+remove file endings in paramfiles - done tentatively
+
+create default paramfile
 
 add IF VERBOSE for all potential output sections

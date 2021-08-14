@@ -7,7 +7,7 @@ import pandas as pd
 import time
 import sys
 
-def run(EXTRACT_INFINITIVE_FILES):
+def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
     
     TENSES_GZ = EXTRACT_INFINITIVE_FILES[0]
     COOC_FREQ_CSV = EXTRACT_INFINITIVE_FILES[1]
@@ -24,7 +24,8 @@ def run(EXTRACT_INFINITIVE_FILES):
     ### Load the data
     start = time.time()
     tenses = pd.read_csv("%s.csv.gz"%(TENSES_GZ), compression='gzip', usecols = ['Infinitive', 'Tense'])
-    _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
+    if VERBOSE:
+        sys.stdout.write('Loading the data took %ds\n'%((time.time()-start)))
 
     # Number of examples: 7041928
 
@@ -83,3 +84,5 @@ def run(EXTRACT_INFINITIVE_FILES):
     ### Export the co-occurence and infinitives datasets
     cooc_freqs.to_csv(COOC_FREQ_CSV, sep = ',')
     infinitives.to_csv(INFINITIVES_CSV, sep = ',', header = False, index = False)
+    if VERBOSE:
+        sys.stdout.write('STEP 4: Extracting infinitives is complete\n')

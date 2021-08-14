@@ -6,6 +6,7 @@
 
 ### Libraries
 import os
+import sys
 from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
 import pandas as pd
@@ -54,7 +55,7 @@ def clean_sents(bnc_tenses):
 #################
 # Annotation
 #################
-def run(ANNOTATE_FILES):
+def run(ANNOTATE_FILES, VERBOSE):
   SENTS, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
   ### Basic data preparation
   bnc_tenses =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
@@ -101,6 +102,9 @@ def run(ANNOTATE_FILES):
     tenses_annotated["Infinitive%s"%(j+1)] = np.nan
 
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
+  if VERBOSE:
+    sys.stdout.write("STEP 2: Annotating tenses complete")
+    sys.stdout.flush()
   
   ### Divide the full set into smaller subsets
   #n_div = 6

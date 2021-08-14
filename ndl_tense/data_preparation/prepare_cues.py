@@ -7,8 +7,9 @@
 ### Import necessary packages
 import numpy as np
 import pandas as pd
+import sys
 
-def run(NGRAMS, INFINITIVES, ALL_CUES):
+def run(NGRAMS, INFINITIVES, ALL_CUES, VERBOSE):
 
     #################
     # Load the data 
@@ -36,3 +37,6 @@ def run(NGRAMS, INFINITIVES, ALL_CUES):
 
     # Save a separate dataframe for each group
     all_cues_df.to_csv("%s.csv"%(ALL_CUES), sep = ',', index = False, header=False)
+    if VERBOSE:
+        sys.stdout.write("STEP 6: Preparing cues is complete")
+        sys.stdout.flush()

@@ -88,7 +88,7 @@ def train_model(NGRAM_FILT_EVENTS_MULTI_VERBS_TRAIN, NGRAM_FILT_EVENTS_MULTI_VER
                             #remove_temp_dir = False,
                             #chunksize = chunk_size,
                             num_threads = no_threads, 
-                            verbose = 2,
+                            verbose = 0,
                             params = p)
 
     # Save the weights and training history
@@ -249,9 +249,9 @@ def run(SIM_FILES):
     NGRAM_EVENTS_MULTI_VERBS_TRAIN = "%s.gz"%(SIM_FILES[0])
     NGRAM_EVENTS_MULTI_VERBS_VALID = "%s.gz"%(SIM_FILES[1])
     NGRAM_EVENTS_MULTI_VERBS_TEST = "%s.gz"%(SIM_FILES[2])
-    TENSE_SET, CUE_INDEX, OUTCOME_INDEX = SIM_FILES[3], SIM_FILES[4], SIM_FILES[5]
+    TENSE_SET, CUE_INDEX, OUTCOME_INDEX = "%s.csv.gz"%(SIM_FILES[3]), SIM_FILES[4], "%s.csv"%(SIM_FILES[5])
     TEMP_DIR, WEIGHTS_PATH, MODEL_PATH = SIM_FILES[6], SIM_FILES[7], SIM_FILES[8]
-    RESULTS_TEST, ACTIVATION_TEST = SIM_FILES[9], SIM_FILES[10]
+    RESULTS_TEST, ACTIVATION_TEST = "%s.csv"%(SIM_FILES[9]), "%s.csv"%(SIM_FILES[10])
 
     cue_to_index = pr.import_index_system("%s.csv"%(CUE_INDEX))
     pr.display_dictionary(cue_to_index, start = 0, end = 5)
