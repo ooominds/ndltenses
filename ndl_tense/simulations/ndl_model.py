@@ -10,6 +10,8 @@ import numpy as np
 import xarray as xr
 import sys
 import time
+import itertools
+
 from pyndl.ndl import ndl
 from keras.models import Sequential, load_model, save_model
 from pyndl.activation import activation

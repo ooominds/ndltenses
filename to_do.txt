@@ -1,6 +1,6 @@
 Find a way to make nV consistent across the entire pipeline
 
-clean up random print statements
+clean up random print statements - done
 
 cut down on the number of files - done tentatively
 
@@ -10,4 +10,6 @@ remove file endings in paramfiles - done tentatively
 
 create default paramfile
 
-add IF VERBOSE for all potential output sections
+add IF VERBOSE for all potential output sections - done
+
+N_cues, N_outcomes, no_threads in ndl_model.py need to be made into adjustable variables

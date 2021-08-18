@@ -24,7 +24,7 @@ def step_3():
     file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, False)
 
     #for one verb per sent, so this is optional
-    prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:], True)
+    prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:], False)
     chdir(WD_PREPDAT)
     prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID, False)
     prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES, False)
@@ -33,7 +33,7 @@ def step_4():
     file_tools.manage_directories(EXTRACT_SENTENCES_FOLDERS, False)
     file_tools.manage_directories(EXTRACT_INFINITIVE_FILES, True)
     chdir(WD_EXTRACT_INF)
-    extract_infinitive.run(EXTRACT_INFINITIVE_FILES, True)
+    extract_infinitive.run(EXTRACT_INFINITIVE_FILES, False)
 
 def step_5():
     file_tools.manage_directories(NGRAM_FOLDERS, False)
@@ -42,12 +42,12 @@ def step_5():
     file_tools.manage_directories(TARGETS_FILES, True)
     # extracting ngrams is optional
     # extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR_EXT, NUM_THREADS)
-    prepare_ngrams.run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES, True)
+    prepare_ngrams.run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES, False)
 
 def step_6():
     file_tools.manage_directories([WD_CUES], False)
     chdir(WD_CUES)
-    prepare_cues.run(NGRAMS, INFINITIVES, ALL_CUES, True)
+    prepare_cues.run(NGRAMS, INFINITIVES, ALL_CUES, False)
 
 def step_7():
     file_tools.manage_directories(SIM_DIR, False)
