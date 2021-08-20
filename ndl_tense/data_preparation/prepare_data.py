@@ -134,11 +134,11 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
     -----
     PARAMETERS
     -----
-    tenses: pandas DataFrame
+    tenses:Pandas DataFrame
         the dataset with the relevant information processed so far in the pipeline
-    TENSES_ONE_SENT_PER_VERB_WITH_MODALS:
+    TENSES_ONE_SENT_PER_VERB_WITH_MODALS: str/path
         location to save the outcome of this function
-    VERBOSE:
+    VERBOSE: boolean
         whether to log the process
     -----
     RETURN: does not return anything
@@ -258,6 +258,20 @@ def convert_word_AE2BE(word, AE_to_BE):
         return word
 
 def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST):
+    """
+        Convert sentences from American English to British English
+    -----        
+    PARAMETERS
+    -----
+    TENSES_ONE_SENT_PER_VERB_WITH_MODALS: str/path
+    AE2BE_LIST: str/path
+        location of the file with information about the British English equivalents of American English words
+    INFINITIVE_CORR_LIST: str/path
+        location of a handcrafted conversion of British English equivalents of American English words
+    -----
+    RETURN: Does not return anything
+    -----
+    """
     # Load the data
     tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, encoding="utf-8")
     # Load the dictionary that can convert AE to BE
@@ -339,10 +353,7 @@ def correct_infinitive(inf_corrections, verb):
 ########################################################
                                                                                                                 
 ### Function that create context with infinitive replacing the verb form. 
-#def extract_context(sent, verb_form, pos, inf):
 def extract_context(row):
-    ''' Add a description
-    '''
     sent = row.loc['Sentence']
     verb_form = row.loc['VerbForm']
     pos = row.loc['Position']
@@ -378,8 +389,7 @@ def remove_verb_form(row):
     sent = row.loc['Sentence']
     verb_form = row.loc['VerbForm'] 
     pos = row.loc['Position']
-    ''' Add a description
-    '''
+
     # Create list of words that makes up the verb form
     words_to_remove = verb_form.split(" ") 
     num_to_remove = len(words_to_remove)
@@ -436,7 +446,6 @@ def create_ngram_cues(s, n, sep_s = " ", sep_words = "#", sep_ngrams = '_'):
 # Add information about the order of each verb within a sentence 
 #################################################################
 def add_info(tenses, TENSES_ONE_VERB_READY_GZ):
-    #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7047168
 
     ### Tests on a small sample of 10k sentences
@@ -497,7 +506,7 @@ def shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ):
     tenses.to_csv("%s.csv.gz"%(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip', index = False, encoding="utf-8")
 
 def remove_modals(tenses):
-        #######################################################################
+    #######################################################################
     # Remove modals and imperatives from the dataset with one verb per row
     #######################################################################
 
