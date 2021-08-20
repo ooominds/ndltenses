@@ -127,6 +127,23 @@ def add_sen_length(tenses, VERBOSE):
 ######################################
 
 def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
+    """
+    Creates a new dataset with additional informative columns, each row now focuses on one verb from
+    the sentence
+
+    -----
+    PARAMETERS
+    -----
+    tenses: pandas DataFrame
+        the dataset with the relevant information processed so far in the pipeline
+    TENSES_ONE_SENT_PER_VERB_WITH_MODALS:
+        location to save the outcome of this function
+    VERBOSE:
+        whether to log the process
+    -----
+    RETURN: does not return anything
+    -----
+    """
     #####################################
     # New dataset with one verb per row
     #####################################
@@ -200,8 +217,6 @@ def import_dict(dict_path):
 
 # Function that can convert a string of words
 def convert_string_AE2BE(string, AE_to_BE):
-    
-
     """convert a text from American English to British English
 
     Parameters
@@ -221,7 +236,6 @@ def convert_string_AE2BE(string, AE_to_BE):
 
 # Function that can convert verbs in the MainVerb column from American English to British English
 def convert_word_AE2BE(word, AE_to_BE):
-
     """convert a word from American English to British English
 
     Parameters

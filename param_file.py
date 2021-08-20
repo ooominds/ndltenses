@@ -22,7 +22,7 @@ EXTRACT_SENTENCES_FILES = [TAGGED_FILE, RESULTS] # list of files that need to be
 # ANNOTATE TENSES                    
 ######################################
 
-WD_ANNOTATE = TOP + "annotate_complex_sentences" # directory to store the results of this step
+WD_ANNOTATE = TOP + "\\annotate_complex_sentences\\" # directory to store the results of this step
 SENTS = RESULTS
 TENSES_ANNOTATED_NOINF_CLEAN = WD_ANNOTATE + "tenses_annotated_noinf_clean" #csv
 

@@ -16,8 +16,7 @@ def paste(a,b):
   return(b.join(a))
 
 
-def get_tenses(vect_tags):
-    
+def get_tenses(vect_tags):    
     # Function that accepts a row vector containing verbs, tags, and positions then convert it
     # to a row vector that includes the same variables as well as verb form, main verb and tense   
   

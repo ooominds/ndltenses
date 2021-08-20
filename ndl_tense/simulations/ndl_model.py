@@ -77,6 +77,17 @@ no_threads = 15 # Number of CPU cores to use
 
 def train_model(NGRAM_FILT_EVENTS_MULTI_VERBS_TRAIN, NGRAM_FILT_EVENTS_MULTI_VERBS_VALID, TEMP_DIR,
                 MODEL_PATH, WEIGHTS_PATH, cue_to_index, outcome_to_index):
+    """
+    
+    ----
+    PARAMETERS
+    ----
+
+    ----
+    RETURN
+    ----
+    """
+
     ### Build a simple NDL
     p = {'epochs': 10, # number of iterations on the full set 
         'lr': 0.0001}
@@ -131,6 +142,17 @@ def train_model(NGRAM_FILT_EVENTS_MULTI_VERBS_TRAIN, NGRAM_FILT_EVENTS_MULTI_VER
 
 def evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
              NDL_model, outcome_to_index, index_to_outcome):
+    """
+    
+    ----
+    PARAMETERS
+    ----
+
+    ----
+    RETURN
+    ----
+    """
+
     # ### Load the model and training history
     # NDL_model = md.import_model(MODEL_PATH)
     # # NDL_history_dict = md.import_history(path = HISTORY_PATH)
@@ -208,6 +230,17 @@ def evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
     return(tenses_test, y_pred)
 
 def save_results(RESULTS_TEST, tenses_test, cue_to_index, y_pred):
+    """
+    
+    ----
+    PARAMETERS
+    ----
+
+    ----
+    RETURN
+    ----
+    """
+
     #### Data set containing the final results
 
     # Load dataset containing test indices
@@ -232,6 +265,17 @@ def save_results(RESULTS_TEST, tenses_test, cue_to_index, y_pred):
     results_test.to_csv(RESULTS_TEST, sep = ',', index = False)
 
 def read_model(NGRAM_EVENTS_MULTI_VERBS_TEST, TENSE_SET, MODEL_PATH):
+    """
+    
+    ----
+    PARAMETERS
+    ----
+
+    ----
+    RETURN
+    ----
+    """
+
     NDL_model = md.import_model("%s.h5"%(MODEL_PATH))
     activ_test = activation(events = NGRAM_EVENTS_MULTI_VERBS_TEST, 
                             weights = NDL_model.weights,
@@ -245,7 +289,18 @@ def read_model(NGRAM_EVENTS_MULTI_VERBS_TEST, TENSE_SET, MODEL_PATH):
     y_pred = ev.activations_to_predictions(activ_test)
 
     return(tenses_test, y_pred)
+
 def run(SIM_FILES):
+    """
+    Runs this stage of the processsing. This includes training an NDL model and producing accuracy scores
+    ----
+    PARAMETERS
+    ----
+
+    ----
+    RETURN
+    ----
+    """
 
     # Import the cue index system
     NGRAM_EVENTS_MULTI_VERBS_TRAIN = "%s.gz"%(SIM_FILES[0])

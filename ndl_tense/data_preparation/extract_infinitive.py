@@ -8,6 +8,21 @@ import time
 import sys
 
 def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
+    """
+    Extract the infinitives from the file as well as their co-occurence frequencies
+
+    ----
+    PARAMETERS
+    ----
+    EXTRACT_INFINITIVE_FILES: list
+        a list of file paths required by this step of the process
+    VERBOSE: boolean
+        whether to log the process
+    ----
+    RETURN: does not return anything,
+        it produces a file with a list of infinitves and a file with their co-occurence frequencies
+    ----
+    """
     
     TENSES_GZ = EXTRACT_INFINITIVE_FILES[0]
     COOC_FREQ_CSV = EXTRACT_INFINITIVE_FILES[1]

@@ -22,12 +22,14 @@ def process_token(line, end_sent_marks, to_remove):
 
     """Skip or extract a cleaned token from a tagged line from a written COCA file
 
-    Parameters
+    ----------
+    PARAMETERS
     ----------
     line: str
         one line from a COCA file
 
-    Returns
+    -------
+    RETURNS
     -------
     str or None
         cleaned token or nothing
@@ -221,6 +223,29 @@ def extract_sentences(file, to_remove, VERBOSE):
 
 
 def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, VERBOSE):
+    
+    """
+    Carry out this step of processing and create a file of sentences with
+    verbs, verb tags, verb tags, sentences and sentence length
+
+    ----
+    PARAMETERS
+    ----
+    EXTRACT_SENTENCES_FILES: list
+        files needed to complete this stage of the processing,
+        these can be found in the parameter file
+
+    TO_REMOVE: list
+        A list of tags of types of words to remove from the processing. This could be useful for removing
+        unclear words or colloqual terms.
+    TO_TSV: boolean
+        whether to also save .tsv files of the results of this step
+    VERBOSE: boolean
+        whether to log the process
+    ----
+    RETURN: Does not return anything, creates an annotated file
+    ----
+    """  
     TAGGED_FILE, RESULTS = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1]
     sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation

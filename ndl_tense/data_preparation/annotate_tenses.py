@@ -11,10 +11,25 @@ from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
 import pandas as pd
 
-def clean_sents(bnc_tenses):
+def clean_sents(tenses_df):
+  """
+  Remove empty and lengthy sentences from the dataframe
+
+  ----
+  PARAMETERS
+  ----
+  
+  tenses_df: pd.DataFrame
+    dataframe of the tenses, sentences, sentence lengths and location of verb tags
+  ----
+  RETURN
+  ----
+  tenses_df: pd.DataFrame
+    The same as the input but with empty and lengthy sentences removed
+  """  
 
   ### Reorder the columns
-  nC = len(bnc_tenses.columns)
+  nC = len(tenses_df.columns)
   nV = ((nC-3)/3)  # number of verbs 
 
   ## Order column names 
@@ -31,53 +46,70 @@ def clean_sents(bnc_tenses):
     col_order.append(verb_j_position)
 
   #set column order
-  bnc_tenses = bnc_tenses.reindex(columns=col_order)
+  tenses_df = tenses_df.reindex(columns=col_order)
 
   # Remove empty sentences
-  bnc_tenses.dropna(subset=["sentence"], inplace=True)
+  tenses_df.dropna(subset=["sentence"], inplace=True)
 
   ##########################
   # Remove lengthy sentences
   ##########################
 
   ### Remove sentences with more than 60 words or with less than 3 words
-  bnc_tenses = bnc_tenses[(bnc_tenses["sentence_length"] < 61) & (bnc_tenses["sentence_length"] > 2)] 
+  tenses_df = tenses_df[(tenses_df["sentence_length"] < 61) & (tenses_df["sentence_length"] > 2)] 
 
   ### Remove empty columns
-  bnc_tenses.dropna(how='all', axis=1, inplace=True)
+  tenses_df.dropna(how='all', axis=1, inplace=True)
 
   # Check dim
-  print(bnc_tenses.shape) # 4227346 81
+  print(tenses_df.shape) # 4227346 81
 
   ### Save resulting dataset
-  return(bnc_tenses)
+  return(tenses_df)
 
 #################
 # Annotation
 #################
 def run(ANNOTATE_FILES, VERBOSE):
+  """
+  Carry out this stage of processing and annotate the input csv file for tense
+
+  ----
+  PARAMETERS
+  ----
+  ANNOTATE_FILES: list
+    files needed to complete this stage of the processing,
+    these can be found in the parameter file
+
+  VERBOSE: boolean
+    whether to log the process
+  ----
+  RETURN: Does not return anything, creates an annotated file
+  ----
+  """  
+  
   SENTS, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
   ### Basic data preparation
-  bnc_tenses =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
+  tenses_df =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
 
-  bnc_tenses = clean_sents(bnc_tenses)
+  tenses_df = clean_sents(tenses_df)
   
   # Remove 'sentence_length' and 'num_verb_tags' columns
-  bnc_tenses.drop(columns= ["sentence_length", "num_verb_tags"], inplace=True)
-  (nR, nC) = bnc_tenses.shape #nR=  number of rows, nC = number of columns
+  tenses_df.drop(columns= ["sentence_length", "num_verb_tags"], inplace=True)
+  (nR, nC) = tenses_df.shape #nR=  number of rows, nC = number of columns
   nV = int((nC-1)/3)  # number of verbs 
 
   ## Rename column names (remove "_" and start from verb1)
 
   for j in range(1,int(nV)+1):
-    bnc_tenses.rename(columns={"verb_%s"%(j):"Verb%s"%(j)}, inplace=True)
-    bnc_tenses.rename(columns={"verb_%s_position"%(j):"Position%s"%(j)}, inplace=True)
-    bnc_tenses.rename(columns={"verb_%s_tag"%(j):"Tag%s"%(j)}, inplace=True)
+    tenses_df.rename(columns={"verb_%s"%(j):"Verb%s"%(j)}, inplace=True)
+    tenses_df.rename(columns={"verb_%s_position"%(j):"Position%s"%(j)}, inplace=True)
+    tenses_df.rename(columns={"verb_%s_tag"%(j):"Tag%s"%(j)}, inplace=True)
   # Change the name of the Sentence column
-  #colnames(bnc_tenses)[colnames(bnc_tenses) == "sentence"] = "Sentence"
-  bnc_tenses.rename(columns={"sentence":"Sentence"}, inplace=True)
+  #colnames(tenses_df)[colnames(tenses_df) == "sentence"] = "Sentence"
+  tenses_df.rename(columns={"sentence":"Sentence"}, inplace=True)
   ### Initialise the data.table that will contain the tense annotations
-  tenses_annotated_mat = np.full((bnc_tenses.shape[0], 1+nV*4), "")
+  tenses_annotated_mat = np.full((tenses_df.shape[0], 1+nV*4), "")
   tenses_annotated = pd.DataFrame(tenses_annotated_mat)
 
   col_names = ['Sentence']
@@ -86,7 +118,7 @@ def run(ANNOTATE_FILES, VERBOSE):
   tenses_annotated.columns=col_names
 
   for j in range(0, tenses_annotated.shape[0]):
-    tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(bnc_tenses.iloc[j,:])
+    tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(tenses_df.iloc[j,:])
 
   ##################################
   # Remove unnecessery empty columns
@@ -106,18 +138,3 @@ def run(ANNOTATE_FILES, VERBOSE):
     sys.stdout.write("STEP 2: Annotating tenses complete")
     sys.stdout.flush()
   
-  ### Divide the full set into smaller subsets
-  #n_div = 6
-  #nR = tenses_annotated.shape[0] # number of rows
-  #nR_div = int(nR/n_div) # number of rows in rach subset (except the last subset which would contain all the remaining rows)
-  
-  ##############
-  # File saving
-  ##############
-
-  #for n in range(n_div):
-  #  filename_n = "%s%s.csv"%(TENSES_ANNOTATED_CLEAN_N,n)
-  #  if (n < n_div):
-  #    tenses_annotated.iloc[(1+(n-1)*nR_div):(n*nR_div), ].to_csv(filename_n)
-  #  else:
-  #    tenses_annotated.iloc[(1+(n-1)*nR_div):nR, ].to_csv(filename_n)
