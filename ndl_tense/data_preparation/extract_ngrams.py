@@ -125,7 +125,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     NGRAM2 = NGRAM_FILES[2]
     NGRAM3 = NGRAM_FILES[3]
     NGRAM4 = NGRAM_FILES[4]
-    EVENT_FILE = NGRAM_FILES[5]
+    EVENT_FILE = "%s.gz"%(NGRAM_FILES[5])
 
     ### Load the data
     start = time.time()

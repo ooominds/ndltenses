@@ -151,7 +151,7 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
     nV = int((nC-4)/5)  # number of verbs 
 
     # Write to the csv file that encodes the results
-    with open(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, mode = 'w', encoding="utf-8") as o:
+    with open("%s.csv"%(TENSES_ONE_SENT_PER_VERB_WITH_MODALS), mode = 'w', encoding="utf-8") as o:
         csv_writer = csv.writer(o, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         heading = list(tenses.columns[0:4])
         heading.extend(['Tense', 'VerbForm', 'MainVerb', 'Position', 'Infinitive'])
@@ -273,7 +273,7 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
     AE_to_BE = import_dict(dict_path = AE2BE_LIST)
 
     # Load the dictionary that Laurence prepared to convert AE to BE
-    inf_corrections = import_dict(dict_path = INFINITIVE_CORR_LIST)
+    inf_corrections = import_dict(dict_path = "%s.csv"%(INFINITIVE_CORR_LIST))
 
     # Correct the infinitives in the dataframe
     tenses["Infinitive_BE"] = tenses["Infinitive"].apply(lambda s: correct_infinitive(inf_corrections, s))

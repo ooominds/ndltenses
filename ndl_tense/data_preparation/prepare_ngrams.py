@@ -18,11 +18,11 @@ def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
     FREQ_3G_PATH = NGRAM_FILES[3]
     FREQ_4G_PATH = NGRAM_FILES[4]
 
-    TARGETS = TARGETS_FILES[0]
-    TARGETS_1G = TARGETS_FILES[1]
-    TARGETS_2G = TARGETS_FILES[2]
-    TARGETS_3G = TARGETS_FILES[3]
-    TARGETS_4G = TARGETS_FILES[4]
+    TARGETS = "%s.csv"%(TARGETS_FILES[0])
+    TARGETS_1G = "%s.csv"%(TARGETS_FILES[1])
+    TARGETS_2G = "%s.csv"%(TARGETS_FILES[2])
+    TARGETS_3G = "%s.csv"%(TARGETS_FILES[3])
+    TARGETS_4G = "%s.csv"%(TARGETS_FILES[4])
     
     #################################################################
     # Load the frequency files as dictionaries prior to band-sampling

@@ -98,7 +98,7 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
     infinitives = cooc_freqs.index.to_frame()
 
     ### Export the co-occurence and infinitives datasets
-    cooc_freqs.to_csv(COOC_FREQ_CSV, sep = ',')
-    infinitives.to_csv(INFINITIVES_CSV, sep = ',', header = False, index = False)
+    cooc_freqs.to_csv("%s.csv"%(COOC_FREQ_CSV), sep = ',')
+    infinitives.to_csv("%s.csv"%(INFINITIVES_CSV), sep = ',', header = False, index = False)
     if VERBOSE:
         logging.info('STEP 4: Extracting infinitives is complete\n')

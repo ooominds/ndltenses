@@ -40,13 +40,13 @@ WD_PREPDAT = TOP + '\\prepare_events\\' # directory to store the results of this
 
 ### Define file paths
 TENSES = TENSES_ANNOTATED_NOINF_CLEAN
-TENSES_ONE_SENT_PER_VERB_WITH_MODALS = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_with_modals.csv"
-TENSES_ONE_SENT_PER_VERB_SHUF_GZ = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_shuffeled"
+TENSES_ONE_SENT_PER_VERB_WITH_MODALS = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_with_modals" #.csv
+TENSES_ONE_SENT_PER_VERB_SHUF_GZ = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_shuffeled" #.csv.gz
 #TENSES_ONE_VERB = WD_PREPDAT + "\\tenses_annotated_oneverb.csv"
 #TENSES_ONE_VERB_READY_GZ = WD_PREPDAT + "\\tenses_annotated_oneverb_ready.csv.gz"
 #TENSES_ONE_VERB_SHUF_GZ = WD_PREPDAT + "\\tenses_annotated_oneverb_shuffeled.csv.gz"
 AE2BE_LIST = NF + "\\List_AE2BE.csv" #this file has to be created or obtained from the repository
-INFINITIVE_CORR_LIST = NF + "\\Infinitive_corrections_freq10.csv" 
+INFINITIVE_CORR_LIST = NF + "\\Infinitive_corrections_freq10" #.csv file
 
 PREPDAT_DIRS = [WD_PREPDAT]
 PREPDAT_FILES = [TENSES,TENSES_ONE_SENT_PER_VERB_WITH_MODALS,TENSES_ONE_SENT_PER_VERB_SHUF_GZ,
@@ -100,8 +100,8 @@ CREATE_TRAIN_VALID_TEST_FILES = [TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_TRAIN_
 WD_EXTRACT_INF = TOP + "\\extract_infinitives"
 ### Define file paths
 TENSES_GZ = TENSES_ONE_SENT_PER_VERB_SHUF_GZ
-COOC_FREQ_CSV = WD_EXTRACT_INF + "\\Cooc_freq.csv" #co-occurence frequencies
-INFINITIVES_CSV = WD_EXTRACT_INF + "\\infinitives_freq10.csv" #top 10 most frequent infinitives
+COOC_FREQ_CSV = WD_EXTRACT_INF + "\\Cooc_freq" #co-occurence frequencies, a .csv file
+INFINITIVES_CSV = WD_EXTRACT_INF + "\\infinitives_freq10" #top 10 most frequent infinitives, a .csv file
 
 EXTRACT_SENTENCES_FOLDERS = [WD_EXTRACT_INF]
 EXTRACT_INFINITIVE_FILES =  [TENSES_GZ, COOC_FREQ_CSV, INFINITIVES_CSV]
@@ -135,13 +135,13 @@ TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "data"
 
 
 # Final list of ngrams to use in training (5000)
-TARGETS = WD_EXTRACT_NGRAM + "ngrams_touse.csv" #.csv file
+TARGETS = WD_EXTRACT_NGRAM + "ngrams_touse" #.csv file
 # Separate lists of chunks
-TARGETS_1G = WD_EXTRACT_NGRAM + "1grams_touse.csv"
-TARGETS_2G = WD_EXTRACT_NGRAM + "2grams_touse.csv"
-TARGETS_3G = WD_EXTRACT_NGRAM + "3grams_touse.csv"
-TARGETS_4G = WD_EXTRACT_NGRAM + "4grams_touse.csv"
-EVENT_FILE = WD_EXTRACT_NGRAM + "events_4grams.gz"
+TARGETS_1G = WD_EXTRACT_NGRAM + "1grams_touse"
+TARGETS_2G = WD_EXTRACT_NGRAM + "2grams_touse"
+TARGETS_3G = WD_EXTRACT_NGRAM + "3grams_touse"
+TARGETS_4G = WD_EXTRACT_NGRAM + "4grams_touse"
+EVENT_FILE = WD_EXTRACT_NGRAM + "events_4grams"
 
 NGRAM_FOLDERS = [WD_EXTRACT_NGRAM]
 NGRAM_FILES = [NGRAM, NGRAM1, NGRAM2, NGRAM3, NGRAM4, EVENT_FILE]
