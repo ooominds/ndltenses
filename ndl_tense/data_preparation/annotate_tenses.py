@@ -6,7 +6,9 @@
 
 ### Libraries
 import os
-import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
 import pandas as pd
@@ -135,6 +137,5 @@ def run(ANNOTATE_FILES, VERBOSE):
 
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   if VERBOSE:
-    sys.stdout.write("STEP 2: Annotating tenses complete")
-    sys.stdout.flush()
+    logging.info("STEP 2: Annotating tenses complete\n")
   

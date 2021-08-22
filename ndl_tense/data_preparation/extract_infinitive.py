@@ -5,7 +5,8 @@
 ### Import necessary packages
 import pandas as pd
 import time
-import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
     """
@@ -40,7 +41,7 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
     start = time.time()
     tenses = pd.read_csv("%s.csv.gz"%(TENSES_GZ), compression='gzip', usecols = ['Infinitive', 'Tense'])
     if VERBOSE:
-        sys.stdout.write('Loading the data took %ds\n'%((time.time()-start)))
+        logging.info('Loading the data took %ds\n'%((time.time()-start)))
 
     # Number of examples: 7041928
 
@@ -100,4 +101,4 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
     cooc_freqs.to_csv(COOC_FREQ_CSV, sep = ',')
     infinitives.to_csv(INFINITIVES_CSV, sep = ',', header = False, index = False)
     if VERBOSE:
-        sys.stdout.write('STEP 4: Extracting infinitives is complete\n')
+        logging.info('STEP 4: Extracting infinitives is complete\n')

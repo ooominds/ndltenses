@@ -8,9 +8,10 @@
 import pandas as pd
 import numpy as np
 import xarray as xr
-import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 import time
-import itertools
 
 from pyndl.ndl import ndl
 from keras.models import Sequential, load_model, save_model
@@ -127,8 +128,7 @@ def train_model(NGRAM_FILT_EVENTS_MULTI_VERBS_TRAIN, NGRAM_FILT_EVENTS_MULTI_VER
 #               remove_duplicates = True,
 #               temporary_directory = TEMP_DIR,
 #               verbose = False)
-# sys.stdout.write('Weight mat estimated in %.0fs\n' % ((time.time() - start_weight)))
-# sys.stdout.flush()
+# logging.info('Weight mat estimated in %.0fs\n' % ((time.time() - start_weight)))
 
 # ### Model object
 # NDL_model = md.NDLmodel(weights)
@@ -188,8 +188,7 @@ def evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
                             number_of_threads = 1,
                             remove_duplicates = True,
                             ignore_missing_cues = True)
-    sys.stdout.write('Activations calculated in %.0fs\n' % ((time.time() - start_activ)))
-    sys.stdout.flush()
+    logging.info('Activations calculated in %.0fs\n' % ((time.time() - start_activ)))
 
     activ_test2 = activ_test.transpose()
     activ_test_df = activ_test2.to_pandas()
@@ -206,16 +205,14 @@ def evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
     # Predicted outcomes from the activations
     start_pred = time.time()
     y_pred = ev.activations_to_predictions(activ_test)
-    sys.stdout.write('Predictions generated in %.0fs\n' % ((time.time() - start_pred)))
-    sys.stdout.flush()
+    logging.info('Predictions generated in %.0fs\n' % ((time.time() - start_pred)))
 
     # start_pred = time.time()
     # y_pred = ev.predict_outcomes_NDL(model = NDL_model,
     #                                  data_test = NGRAM_EVENTS_MULTI_VERBS_TEST,  
     #                                  temp_dir = TEMP_DIR, 
     #                                  num_threads = no_threads)
-    # sys.stdout.write('Predictions generated in %.0fs\n' % ((time.time() - start_pred)))
-    # sys.stdout.flush()
+    # logging.info('Predictions generated in %.0fs\n' % ((time.time() - start_pred)))
 
     # Overall test accuracy
     #test_accuracy = accuracy_score(y_test, y_pred)

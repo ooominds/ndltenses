@@ -1,10 +1,10 @@
 
 ####################################
-# EXTRACT SENTENCES
+# EXTRACT and create SENTENCES
 ####################################
 
 NF = 'D:\\work\\OoOM\\ndl\\necessary_files' # necessary files that are user defined
-TOP = 'D:\\work\\OoOM\\ndl\\test_location\\data_preparation'
+TOP = 'D:\\work\\OoOM\\ndl\\test_location\\data_preparation' #the top level directory to place files created by the process in
 
 WD_EXTRACT = TOP + "\\extract\\" # directory to store the results of this step
 #TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.txt'

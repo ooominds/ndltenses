@@ -5,10 +5,12 @@
 ### Import necessary libraries
 import os
 import re
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 from collections import OrderedDict
 import pandas as pd
 import numpy as np
-import sys
 import time
 #from nltk.stem.wordnet import WordNetLemmatizer
 
@@ -214,11 +216,9 @@ def extract_sentences(file, to_remove, VERBOSE):
                 if token in end_sent_marks:
                     keep_sen = True     
             if (ii+1) % 1000000 == 0 and VERBOSE:
-                sys.stdout.write('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
-                sys.stdout.flush()
+                logging.info('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
         if VERBOSE:
-            sys.stdout.write('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
-            sys.stdout.flush()
+            logging.info('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
         return all_sents
 
 
@@ -261,15 +261,13 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, VERBOSE):
             sentences_dict[i]["verb_{}_tag".format(j+1)] = tag
             sentences_dict[i]["verb_{}_position".format(j+1)] = position + 1
     if VERBOSE:
-        sys.stdout.write('Dictionary of dictionary constructed in %.3fs\n' % ((time.time()- start)))
-        sys.stdout.flush()
+        logging.info('Dictionary of dictionary constructed in %.3fs\n' % ((time.time()- start)))
 
     # turn into data frame
     start = time.time()
     sentences_df = pd.DataFrame.from_dict(sentences_dict, orient="index")
     if VERBOSE:
-        sys.stdout.write('Dataframe constructed in %.3fs\n' % ((time.time()- start)))
-        sys.stdout.flush()
+        logging.info('Dataframe constructed in %.3fs\n' % ((time.time()- start)))
 
     if TO_TSV:
         file_type = "tsv"
@@ -279,5 +277,4 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, VERBOSE):
     with open("%s.%s"%(RESULTS, file_type), "w", encoding="utf-8") as res_csv:
         sentences_df.to_csv(res_csv, sep = ",", index = False, encoding="utf-8")
     if VERBOSE:
-        sys.stdout.write('STEP 1: Creating the sentences file is complete')
-        sys.stdout.flush()
+        logging.info('STEP 1: Creating the sentences file is complete')

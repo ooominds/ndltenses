@@ -5,7 +5,9 @@
 ### Import necessary packages
 import os
 import time
-import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 import csv
 import gc
 import pandas as pd
@@ -128,7 +130,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     ### Load the data
     start = time.time()
     tenses_full = pd.read_csv("%s.csv.gz"%(TENSES_GZ), compression='gzip', usecols = ['WordCuesNoInfinitive', 'Tense'])
-    _ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
+    logging.info('Loading the data took %ds' %((time.time()-start)))
     #print(f'Number of examples: {len(tenses_full)}')
     # Number of examples: 7047168
 
@@ -211,7 +213,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     n_events, cue_freqs, outcome_freqs = cues_outcomes(EVENT_FILE,
                                                     number_of_processes = 1,
                                                     verbose = True)
-    sys.stdout.write('Frequency counts completed in %.3fs\n' % ((time.time()- start)))  
+    logging.info('Frequency counts completed in %.3fs\n' % ((time.time()- start)))  
 
     # save cue frequencies to file
     with open("%s.csv"%(NGRAM4), mode = 'w') as o:

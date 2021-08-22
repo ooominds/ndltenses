@@ -6,9 +6,11 @@
 
 ### Import necessary packages
 import pandas as pd
-import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 ### Set working directory
+
 def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
 
     FREQ_1G_PATH = NGRAM_FILES[1]
@@ -75,5 +77,4 @@ def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
     Freq_4G_df.to_csv(TARGETS_4G, sep = ',', index = False)
     Freq_all_df.to_csv(TARGETS, sep = ',', index = False)
     if VERBOSE:
-        sys.stdout.write("STEP 5: Preparing ngrams is complete\n")
-        sys.stdout.flush()
+        logging.info("STEP 5: Preparing ngrams is complete\n")

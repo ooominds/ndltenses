@@ -7,7 +7,8 @@
 ### Import necessary packages
 import numpy as np
 import pandas as pd
-import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 def run(NGRAMS, INFINITIVES, ALL_CUES, VERBOSE):
 
@@ -38,5 +39,4 @@ def run(NGRAMS, INFINITIVES, ALL_CUES, VERBOSE):
     # Save a separate dataframe for each group
     all_cues_df.to_csv("%s.csv"%(ALL_CUES), sep = ',', index = False, header=False)
     if VERBOSE:
-        sys.stdout.write("STEP 6: Preparing cues is complete")
-        sys.stdout.flush()
+        logging.info("STEP 6: Preparing cues is complete")

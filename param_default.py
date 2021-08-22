@@ -1,72 +1,95 @@
 
 ####################################
-# EXTRACT SENTENCES
+# EXTRACT and create SENTENCES
 ####################################
 
+NF = 'D:\\work\\OoOM\\ndl\\necessary_files' # necessary files that are user defined
+TOP = 'D:\\work\\OoOM\\ndl\\test_location\\data_preparation' #the top level directory to place files created by the process in
 
-NF = "necessary_files\\" # Where necessary files downloaded from the repo are stored
-TOP = "" # Top level directory from which each subsequent process and file is run and saved
+WD_EXTRACT = TOP + "\\extract\\" # directory to store the results of this step
+#TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.txt'
+TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.spoken.clean' # should be a .txt file
+RESULTS = WD_EXTRACT + "example_sentences" # this should be a csv file
 
-WD_EXTRACT = "" # The directory from which the sentence extraction takes place
-TAGGED_FILE = "" # location of the tagged .txt file from which sentences are extracted
-RESULTS_TSV = "" # Saved results of the sentence extraction as a .tsv
-RESULTS_CSV = "" # Saved results of the sentence extraction as a .csv
-SEP_CSV_FILES = "" # Saved results of the sentence extraction as a .csv to be used by other processes
+EXTRACT_SENTENCES_DIRS = [WD_EXTRACT] # main directory in which the results of this step are stored
+EXTRACT_SENTENCES_FILES = [TAGGED_FILE, RESULTS] # list of files that need to be created (potentially with sub-directories)
 
-EXTRACT_SENTENCES = [WD_EXTRACT, TAGGED_FILE, RESULTS_TSV, RESULTS_CSV, SEP_CSV_FILES]
+
+#--------------------------------------------------------
+
+
 ######################################
 # ANNOTATE TENSES                    
 ######################################
 
-WD_ANNOTATE = "" # the directory from which sentence annotation takes place
-SENTS = "" # the same as RESULTS_CSV
-
-SENTS_CLEAN = "" # should be a csv file, the sentences are "cleaned" and then saved here
-TENSES_ANNOTATED_NOINF = "" # a .csv file that holds the results of the annotation process on the sentences
-TENSES_ANNOTATED_NOINF_CLEAN = "" # a .csv file that holds the results of the annotation process on the sentences but with unecessary columns removed
-TENSES_ANNOTATED_CLEAN_N = "" # a .csv file that holds the results of the annotation process on the sentences but with unecessary columns removed
+WD_ANNOTATE = TOP + "\\annotate_complex_sentences\\" # directory to store the results of this step
+SENTS = RESULTS
+TENSES_ANNOTATED_NOINF_CLEAN = WD_ANNOTATE + "tenses_annotated_noinf_clean" #csv
 
 ANNOTATE_DIRS = [WD_ANNOTATE]
-ANNOTATE_FILES = [SENTS, SENTS_CLEAN, TENSES_ANNOTATED_NOINF, TENSES_ANNOTATED_NOINF_CLEAN, TENSES_ANNOTATED_CLEAN_N]
+ANNOTATE_FILES = [SENTS, TENSES_ANNOTATED_NOINF_CLEAN]
+
+
+#--------------------------------------------------------
 
 ######################################
 # PREPARE DATA
 ######################################
 
-WD_PREPDAT = TOP + '\\prepare_events'
+WD_PREPDAT = TOP + '\\prepare_events\\' # directory to store the results of this step
 
 ### Define file paths
 TENSES = TENSES_ANNOTATED_NOINF_CLEAN
-TENSES_WITH_INF = TOP + "\\Data_shared\\NoDoparallel\\tenses_annotated_withinf.csv"
+TENSES_ONE_SENT_PER_VERB_WITH_MODALS = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_with_modals.csv"
+TENSES_ONE_SENT_PER_VERB_SHUF_GZ = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_shuffeled"
+#TENSES_ONE_VERB = WD_PREPDAT + "\\tenses_annotated_oneverb.csv"
+#TENSES_ONE_VERB_READY_GZ = WD_PREPDAT + "\\tenses_annotated_oneverb_ready.csv.gz"
+#TENSES_ONE_VERB_SHUF_GZ = WD_PREPDAT + "\\tenses_annotated_oneverb_shuffeled.csv.gz"
+AE2BE_LIST = NF + "\\List_AE2BE.csv" #this file has to be created or obtained from the repository
+INFINITIVE_CORR_LIST = NF + "\\Infinitive_corrections_freq10.csv" 
 
-TENSES_WITH_INF_NEW = TOP + "\\Data_shared\\tenses_annotated_withinf_new.csv"
-TENSES_ONE_SENT_PER_VERB = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb.csv"
-TENSES_ONE_SENT_PER_VERB_WITH_MODALS = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_with_modals.csv"
-TENSES_ONE_SENT_PER_VERB_READY = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_ready.csv"
-TENSES_ONE_SENT_PER_VERB_READY_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_ready.csv.gz"
-TENSES_ONE_SENT_PER_VERB_SHUF_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_shuffeled.csv.gz"
-TENSES_ONE_VERB = TOP + "\\Data_shared\\tenses_annotated_oneverb.csv"
-TENSES_ONE_VERB_READY_GZ = TOP + "\\Data_shared\\tenses_annotated_oneverb_ready.csv.gz"
-TENSES_ONE_VERB_SHUF_GZ = TOP + "\\Data_shared\\tenses_annotated_oneverb_shuffeled.csv.gz"
-AE2BE_LIST = WD_PREPDAT +  "\\Data\\List_AE2BE.csv"
-INFINITIVE_CORR_LIST = WD_PREPDAT +  "\\Data\\Infinitive_corrections_freq10.csv" 
+PREPDAT_DIRS = [WD_PREPDAT]
+PREPDAT_FILES = [TENSES,TENSES_ONE_SENT_PER_VERB_WITH_MODALS,TENSES_ONE_SENT_PER_VERB_SHUF_GZ,
+                 AE2BE_LIST, INFINITIVE_CORR_LIST]
+
+#--------------------------------------------------------
+
 
 ######################################
 # PREPARE TRAIN VALID TEST
 ######################################
 
 ### Define file paths
-TENSES_MULTI_VERBS_TRAIN_GZ = TOP + "\\Data_shared\\tenses_one_sent_per_verb_train.csv.gz"
-TENSES_MULTI_VERBS_VALID_GZ = TOP + "\\Data_shared\\tenses_one_sent_per_verb_valid.csv.gz"
-TENSES_MULTI_VERBS_TEST_GZ = TOP + "\\Data_shared\\tenses_one_sent_per_verb_test.csv.gz"
+WD_PREPTRAIN = TOP + "\\prep_train"
+TENSES_TRAIN_GZ = WD_PREPTRAIN + "\\tenses_one_sent_per_verb_train" # will be saved as csv.gz, the file path to the training set
+TENSES_VALID_GZ = WD_PREPTRAIN + "\\tenses_one_sent_per_verb_valid" # will be saved as csv.gz, the file path to the validation set
+TENSES_TEST_GZ = WD_PREPTRAIN + "\\tenses_one_sent_per_verb_test" # will be saved as csv.gz, the file path to the test set
+
+PROP_VALID = 1/20 # proportion of validation data
+PROP_TEST = 1/20 # proportion of test data
+
+#TENSES_ONE_VERB_TRAIN_GZ = WD_PREPTRAIN + "\\tenses_oneverb_train.csv.gz"
+#TENSES_ONE_VERB_VALID_GZ = WD_PREPTRAIN + "\\tenses_oneverb_valid.csv.gz"
+#TENSES_ONE_VERB_TEST_GZ = WD_PREPTRAIN + "\\tenses_oneverb_test.csv.gz"
+
 # n-gram based event files ready for training NDL (verb infinitives included as cues)
-NGRAM_EVENTS_MULTI_VERBS_TRAIN = TOP + "\\Data_shared\\Eventfiles_forNDL\\ngram_eventfile_multiverbs_train.gz"
-NGRAM_EVENTS_MULTI_VERBS_VALID = TOP + "\\Data_shared\\Eventfiles_forNDL\\ngram_eventfile_multiverbs_valid.gz"
-NGRAM_EVENTS_MULTI_VERBS_TEST = TOP + "\\Data_shared\\Eventfiles_forNDL\\ngram_eventfile_multiverbs_test.gz"
+NGRAM_EVENTS_MULTI_VERBS_TRAIN = WD_PREPTRAIN + "\\ngram_eventfile_multiverbs_train" # will be a .gz
+NGRAM_EVENTS_MULTI_VERBS_VALID = WD_PREPTRAIN + "\\ngram_eventfile_multiverbs_valid" # will be a .gz
+NGRAM_EVENTS_MULTI_VERBS_TEST = WD_PREPTRAIN + "\\ngram_eventfile_multiverbs_test" # will be a .gz
+
 # word cue based event files ready for training NDL (verb infinitives included as cues)
-WORD_EVENTS_MULTI_VERBS_TRAIN = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eventfile_multiverbs_train.gz"
-WORD_EVENTS_MULTI_VERBS_VALID = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eventfile_multiverbs_valid.gz"
-WORD_EVENTS_MULTI_VERBS_TEST = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eventfile_multiverbs_test.gz"
+#WORD_EVENTS_MULTI_VERBS_TRAIN = WD_PREPTRAIN + "\\word_eventfile_multiverbs_train.gz"
+#WORD_EVENTS_MULTI_VERBS_VALID = WD_PREPTRAIN + "\\word_eventfile_multiverbs_valid.gz"
+#WORD_EVENTS_MULTI_VERBS_TEST = WD_PREPTRAIN + "\\word_eventfile_multiverbs_test.gz"
+
+PREPARE_TRAIN_VALID_TEST_FILES = [TENSES_TRAIN_GZ, TENSES_VALID_GZ, TENSES_TEST_GZ,
+                                  NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST]
+
+CREATE_TRAIN_VALID_TEST_FILES = [TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_TRAIN_GZ,TENSES_VALID_GZ,TENSES_TEST_GZ]
+
+
+#--------------------------------------------------------
+
 
 ######################################
 # EXTRACT INFINITIVES FOR TRAINING
@@ -74,43 +97,66 @@ WORD_EVENTS_MULTI_VERBS_TEST = TOP + "\\Data_shared\\Eventfiles_forNDL\\word_eve
 
 WD_EXTRACT_INF = TOP + "\\extract_infinitives"
 ### Define file paths
-TENSES_GZ = TOP + "\\Data_shared\\tenses_annotated_one_sent_per_verb_shuffeled.csv.gz"
-COOC_FREQ_CSV = WD_EXTRACT + "\\Results\\multi_verbs\\Cooc_freq.csv"
-INFINITIVES_CSV = WD_EXTRACT + "\\Data\\multi_verbs\\infinitives_freq10.csv"
+TENSES_GZ = TENSES_ONE_SENT_PER_VERB_SHUF_GZ
+COOC_FREQ_CSV = WD_EXTRACT_INF + "\\Cooc_freq.csv" #co-occurence frequencies
+INFINITIVES_CSV = WD_EXTRACT_INF + "\\infinitives_freq10.csv" #top 10 most frequent infinitives
+
+EXTRACT_SENTENCES_FOLDERS = [WD_EXTRACT_INF]
+EXTRACT_INFINITIVE_FILES =  [TENSES_GZ, COOC_FREQ_CSV, INFINITIVES_CSV]
+
+
+#--------------------------------------------------------
+
 
 ######################################
-# EXTRACT NGRAM WITH FREQ
+# OPTIONAL: EXTRACT NGRAM WITH FREQ
 ######################################
 
-WD_EXTRACT_NGRAM = TOP + '\\Prepare_ngrams'
-
-### Define file paths
-NGRAM1 = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\1grams.csv"
-NGRAM2 = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\2grams.csv"
-NGRAM3 = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\3grams.csv"
-NGRAM4 = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\4grams.csv"
-NGRAM = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\ngrams.csv"
-TEMP_DIR = WD_EXTRACT_NGRAM + "\\Data"
-
-# Final list of ngrams to use in training (5000)
-TARGETS = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\ngrams_touse.csv"
-# Separate lists of chunks
-TARGETS_1G = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\1grams_touse.csv"
-TARGETS_2G = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\2grams_touse.csv"
-TARGETS_3G = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\3grams_touse.csv"
-TARGETS_4G = WD_EXTRACT_NGRAM + "\\Data\\multi_verbs\\4grams_touse.csv"
+WD_EXTRACT_NGRAM = TOP + '\\prepare_ngrams\\'
 
 ### Parameters to use
 NUM_THREADS = 4
-
 ### Get up to N ngrams from each ngram group such as all extracted ngrams have freq>=10
 NGRAMN = 10000
+
+### Define file paths
+NGRAM1 = WD_EXTRACT_NGRAM + "1grams" #csv
+NGRAM2 = WD_EXTRACT_NGRAM + "2grams" #csv
+NGRAM3 = WD_EXTRACT_NGRAM + "3grams" #csv
+NGRAM4 = WD_EXTRACT_NGRAM + "4grams" #csv
+NGRAM = WD_EXTRACT_NGRAM + "ngrams" #csv
+TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "data"
+
+######################################
+# NGRAMs TO USE
+######################################
+
+
+# Final list of ngrams to use in training (5000)
+TARGETS = WD_EXTRACT_NGRAM + "ngrams_touse.csv" #.csv file
+# Separate lists of chunks
+TARGETS_1G = WD_EXTRACT_NGRAM + "1grams_touse.csv" #.csv file
+TARGETS_2G = WD_EXTRACT_NGRAM + "2grams_touse.csv" #.csv file
+TARGETS_3G = WD_EXTRACT_NGRAM + "3grams_touse.csv" #.csv file
+TARGETS_4G = WD_EXTRACT_NGRAM + "4grams_touse.csv" #.csv file
+EVENT_FILE = WD_EXTRACT_NGRAM + "events_4grams.gz" #.gz file
+
+NGRAM_FOLDERS = [WD_EXTRACT_NGRAM]
+NGRAM_FILES = [NGRAM, NGRAM1, NGRAM2, NGRAM3, NGRAM4, EVENT_FILE]
+TARGETS_FILES = [TARGETS, TARGETS_1G, TARGETS_2G, TARGETS_3G, TARGETS_4G]
+K_NGRAMS = 10000
+
+
+
+#--------------------------------------------------------
+
+
 
 ######################################
 # PREPARE CUES
 ######################################
 
-WD_CUES = TOP + '\\Prepare_events'
+WD_CUES = TOP + '\\prepare_events'
 
 ### File paths
 # list of ngrams to use in training (10k n-grams from each n level with 1<= n< =4)
@@ -118,4 +164,32 @@ NGRAMS = TARGETS
 # list of ngrams to use in training (4681)
 INFINITIVES = INFINITIVES_CSV
 # final list of all cues
-ALL_CUES = WD_CUES + '\\Data\\multi_verbs\\cues_touse.csv'
+ALL_CUES = WD_CUES + '\\cues_touse'
+
+
+
+#--------------------------------------------------------
+
+######################################
+#SIMULATIONS
+######################################
+
+WD_SIM = 'D:\\work\\OoOM\\ndl\\test_location\\simulations\\'
+
+### Define file paths
+#TENSE_SET_WITH_PRED = TOP + "Data_preparation/Data_shared/tenses_multiverbs_test_withpreds.csv.gz"
+CUE_INDEX = ALL_CUES
+OUTCOME_INDEX = NF + "\\outcome_index_ngram_multiverbs" #user defined csv to determine what the possible outcomes are
+TEMP_DIR_SIM = WD_SIM + "data\\"
+MODEL_PATH = WD_SIM + 'NDL_model_ngrams_multiverbs' #h5 file (h5py)
+WEIGHTS_PATH = WD_SIM + 'NDL_weights_ngrams_multiverbs' #.nc file (netCDF)
+RESULTS_TEST = WD_SIM + "results_testset_ngrams_multiverbs" #.csv
+ACTIVATION_TEST = WD_SIM + "Activations_testset_ngrams_multiverbs" #.csv
+
+SIM_DIR = [WD_SIM, TEMP_DIR_SIM]
+SIM_FILES = [NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST,
+             TENSES_TEST_GZ, CUE_INDEX, OUTCOME_INDEX, TEMP_DIR_SIM,
+             WEIGHTS_PATH, MODEL_PATH, RESULTS_TEST, ACTIVATION_TEST]
+
+
+#--------------------------------------------------------             

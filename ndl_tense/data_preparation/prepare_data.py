@@ -5,13 +5,11 @@
 ####################
 
 ### Import necessary packages
-import os
-from param_file import PREPDAT_DIRS
 import pandas as pd
 import numpy as np
-import re
 import time
-import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
 import csv 
 import random
 import string
@@ -63,8 +61,7 @@ def convert_to_inf(TENSES, VERBOSE):
         # Progress message
         if (i+1) % 100000 == 0 and VERBOSE:
             now = time.time()
-            sys.stdout.write('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
-            sys.stdout.flush()
+            logging.info('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
 
         for j in range(1, (nV+1)):
             if str(tenses.at[i, "".join(['MainVerb', str(j)])]) != 'nan':
@@ -96,8 +93,7 @@ def add_sen_length(tenses, VERBOSE):
         # Progress message
         if (i+1) % 100000 == 0 and VERBOSE:
             now = time.time()
-            sys.stdout.write('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
-            sys.stdout.flush()
+            logging.info('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
         for j in range(1, (nV+1)):
             if str(tenses.at[i, "".join(['Tense', str(j)])]) != 'nan':
                 continue
@@ -168,8 +164,7 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
             # Progress message
             if (i+1) % 100000 == 0 and VERBOSE:
                 now = time.time()
-                sys.stdout.write('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
-                sys.stdout.flush()
+                logging.info('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
 
             for j in range(1, (nV+1)):
                 if str(tenses.at[i, "".join(['Tense', str(j)])]) != 'nan':
@@ -617,10 +612,10 @@ def run(TENSES, PREPDAT_FILES, VERBOSE):
 
     ### Load the data
     
-    #IF VERBOSE
-    #start = time.time()
-    #tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")
-    #_ = sys.stdout.write('Loading the data took %ds' %((time.time()-start)))
+    #IF VERBOSE:
+    # start = time.time()
+    # tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")
+    # logging.info('Loading the data took %ds' %((time.time()-start)))
 
     #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7047168
@@ -646,4 +641,4 @@ def run(TENSES, PREPDAT_FILES, VERBOSE):
     # Export the dataset
     #tenses1.to_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")
     if VERBOSE:
-        sys.stdout.write("STEP 2.5: Preparing data is compliete\n")
+        logging.info("STEP 2.5: Preparing data is compliete\n")
