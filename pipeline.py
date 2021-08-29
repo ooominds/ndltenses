@@ -52,15 +52,15 @@ def step_6():
 def step_7():
     file_tools.manage_directories(SIM_DIR, False)
     chdir(WD_SIM)
-    ndl_model.run(SIM_FILES)
+    ndl_model.run(SIM_FILES, SIM_PARAMS)
 
 def main():
-    step_1()
-    step_2()
-    step_3()
-    step_4()
-    step_5()
-    step_6()
+    #step_1()
+    #step_2()
+    #step_3()
+    #step_4()
+    #step_5()
+    #step_6()
     #step_7()
 
 if __name__ == "__main__":

@@ -77,7 +77,7 @@ no_threads = 15 # Number of CPU cores to use
 ############
 
 def train_model(NGRAM_FILT_EVENTS_MULTI_VERBS_TRAIN, NGRAM_FILT_EVENTS_MULTI_VERBS_VALID, TEMP_DIR,
-                MODEL_PATH, WEIGHTS_PATH, cue_to_index, outcome_to_index):
+                MODEL_PATH, WEIGHTS_PATH, cue_to_index, outcome_to_index, no_threads):
     """
     
     ----
@@ -287,7 +287,7 @@ def read_model(NGRAM_EVENTS_MULTI_VERBS_TEST, TENSE_SET, MODEL_PATH):
 
     return(tenses_test, y_pred)
 
-def run(SIM_FILES):
+def run(SIM_FILES, SIM_PARAMS):
     """
     Runs this stage of the processsing. This includes training an NDL model and producing accuracy scores
     ----
@@ -306,6 +306,9 @@ def run(SIM_FILES):
     TENSE_SET, CUE_INDEX, OUTCOME_INDEX = "%s.csv.gz"%(SIM_FILES[3]), SIM_FILES[4], "%s.csv"%(SIM_FILES[5])
     TEMP_DIR, WEIGHTS_PATH, MODEL_PATH = SIM_FILES[6], SIM_FILES[7], SIM_FILES[8]
     RESULTS_TEST, ACTIVATION_TEST = "%s.csv"%(SIM_FILES[9]), "%s.csv"%(SIM_FILES[10])
+
+    ### Parameters to use
+    no_threads = SIM_PARAMS[11] # Number of CPU cores to use
 
     cue_to_index = pr.import_index_system("%s.csv"%(CUE_INDEX))
     pr.display_dictionary(cue_to_index, start = 0, end = 5)
@@ -326,7 +329,7 @@ def run(SIM_FILES):
     # Reverse the outcome dictionary
     index_to_outcome = pr.reverse_dictionary(outcome_to_index)
     NDL_model = train_model(NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, TEMP_DIR,
-                MODEL_PATH, WEIGHTS_PATH, cue_to_index, outcome_to_index)
+                MODEL_PATH, WEIGHTS_PATH, cue_to_index, outcome_to_index, no_threads)
     #NDL_model = md.load_NDL_model("%s.nc"%(WEIGHTS_PATH))
     tenses_test, y_pred = evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
              NDL_model, outcome_to_index, index_to_outcome)

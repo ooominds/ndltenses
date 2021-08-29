@@ -4,14 +4,12 @@ clean up random print statements - done
 
 cut down on the number of files - done tentatively
 
-remove BNC references
+remove BNC references - done I think
 
 remove file endings in paramfiles - done tentatively
 
-create default paramfile
+create default paramfile - done
 
 add IF VERBOSE for all potential output sections - done
-
-N_cues, N_outcomes, no_threads in ndl_model.py need to be made into adjustable variables
 
 A function "Check_lengthy_sentences.R" used to find the 99% quantile of sentence lengths, to define sentence lengths will be added.

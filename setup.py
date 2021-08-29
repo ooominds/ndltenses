@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="ndl_tense-tukkvwa",
+    name="ndl_tense",
     version="0.0.1",
     license = 'MIT',
     author="Tekevwe Kwakpovwe",
@@ -35,8 +35,6 @@ setup(
     #    "License :: OSI Approved :: MIT License",
     #    "Operating System :: OS Independent",
     #],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    packages=["ndl_tense"],
     python_requires=">=3.6",
 )
-setuptools._install_setup_requires()
