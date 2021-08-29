@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",
-    download_url= "https://github.com/ooominds/ndltenses/archive/refs/tags/test_1.tar.gz",
+    download_url= "https://github.com/ooominds/ndltenses/archive/refs/tags/test_2.tar.gz",
     keywords=["NDL", "Tense", "NLP"],
     install_requires=[            # I get to this in a second
           'numpy',
