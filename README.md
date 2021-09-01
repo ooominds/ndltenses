@@ -1,10 +1,10 @@
 # ndltenses
 
-A package for training an NDL model to learn tenses using the pyndl
+A package for training an NDL model to learn tenses using pyndl
 
 ## installation
 
-This should be installable from PyPi so this means it requires pip
+This should be installable from PyPi so this means it requires pip. 
 You can install the latest pip by typing "pip install pip".
 From a terminal, type "pip install ndl=tense".
 ":$ pip install ndl-tense"
@@ -14,7 +14,7 @@ From a terminal, type "pip install ndl=tense".
 This file is what's used to tailor the execution of the processing to your needs. In the future I hope to create a GUI interface to avoid this.
 In the GitHub repository there is an already created parameter file with example values set and default parameter file that you should use.
 
-There are some necessary files (NF) that need to be created by yourself and stored in a directory referenced by the NF variable
+There are some necessary files (NF) that need to be created by yourself and stored in a directory referenced by the NF variable. 
 
 
 ## pipeline
@@ -22,7 +22,7 @@ There are some necessary files (NF) that need to be created by yourself and stor
 The pipeline.py file (found in the GitHub repository) acts as a step-by-step guide to run the code for preparing
 the data (including annotation) of the English tense project and training an NDL model on this data.
 
-Based on code by Adnane Ez-zizi dated 06/08/2020; updated and adapted as a python package by Tekevwe Kwakpovwe, 08/2021
+Based on code by Adnane Ez-zizi dated 06/08/2020; updated and adapted as a python package by Tekevwe Kwakpovwe, 08/2021. 
 Changes listed in ![changes file](changes.txt)
 ---------------------------------------------------
 
