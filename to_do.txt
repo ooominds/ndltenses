@@ -1,12 +1,12 @@
-Find a way to make nV consistent across the entire pipeline
+Find a way to make nV consistent across the entire pipeline - no need
 
 clean up random print statements - done
 
 cut down on the number of files - done tentatively
 
-remove BNC references - done I think
+remove BNC references - done
 
-remove file endings in paramfiles - done tentatively
+remove file endings in paramfiles - done
 
 create default paramfile - done
 

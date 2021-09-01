@@ -71,6 +71,7 @@ def step_7():
     ndl_model.run(SIM_FILES, SIM_PARAMS)
 
 def main():
+    #uncomment each step you wish to complete
     #step_1()
     #step_2()
     #step_3()
