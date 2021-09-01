@@ -1,0 +1,12 @@
+ndl_tense:
+Changed the annotation to python instead of R
+- The option of removing certain tags from being annotated
+- Change the annotation's handling of colloquial tags
+Added logging and "verbose" parameters and removed stdout and print statements as they are now optional
+Changed python code to be split up into various functions within classes
+Restructured folder creation and file creation so each stage is contained in its own folder for clarity
+Make sure each file is saved as the appropriate type by removing file endings and hard coding the file type
+Create a pipeline.py file from which to handle every stage of the pipeline
+Parameters files (param_default.py and param_file.py) for handling the folders, file names and hyperparameters at each stage of the pipeline
+Tense/aspect counts
+packaged on PyPi
