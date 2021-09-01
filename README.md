@@ -19,11 +19,9 @@ There are some necessary files (NF) that need to be created by yourself and stor
 
 ## pipeline
 ---------------------------------------------------
-The pipeline.py file (found in the GitHub repository) acts as a step-by-step guide to run the code for preparing
-the data (including annotation) of the English tense project and training an NDL model on this data.
+The pipeline.py file (found in the GitHub repository) acts as a step-by-step guide to run the code from preparing the data (including annotation) of the English tense project to training an NDL model on this data.
 
-Based on code by Adnane Ez-zizi on 06/08/2020, updated and adapted as a python package by Tekevwe Kwakpovwe, 08/2021
-Changes found in the ![changes file](changes.txt)
+Based on code by Adnane Ez-zizi on 06/08/2020, updated and adapted as a python package by Tekevwe Kwakpovwe, 08/2021. Changes found in the ![changes file](changes.txt)
 ---------------------------------------------------
 
 #### Step I: Create sentences file from corpus file with verb tags 
