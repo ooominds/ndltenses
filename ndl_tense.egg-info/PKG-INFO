@@ -1,3 +1,21 @@
+Metadata-Version: 2.1
+Name: ndl-tense
+Version: 0.0.2
+Summary: A package for training NDL models
+Home-page: https://github.com/pypa/sampleproject
+Author: Tekevwe Kwakpovwe
+Author-email: t.kwakpovwe@gmail.com
+License: MIT
+Download-URL: https://github.com/ooominds/ndltenses/archive/refs/tags/test_1.tar.gz
+Keywords: NDL,Tense,NLP
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
 # ndltenses
 
 A package for training an NDL model to learn tenses using the pyndl
@@ -6,8 +24,8 @@ A package for training an NDL model to learn tenses using the pyndl
 
 This should be installable from PyPi so this means it requires pip
 You can install the latest pip by typing "pip install pip".
-From a terminal, type "pip install ndl=tense".
-":$ pip install ndl-tense"
+From a terminal, type "pip install ndl_tense".
+":$ pip install ndl_tense"
 
 ## parameter file
 
@@ -19,8 +37,8 @@ There are some necessary files (NF) that need to be created by yourself and stor
 
 ## pipeline
 ---------------------------------------------------
-The pipeline.py file (found in the GitHub repository) acts as a step-by-step guide to run the code for preparing
-the data (including annotation) of the English tense project and training an NDL model on this data.
+Step-by-step guide to run the code for preparing 
+the data of the English tense project
 
 Originally by Adnane Ez-zizi, 06/08/2020,
 Adapted by Tekevwe Kwakpovwe, 08/2021
@@ -93,3 +111,4 @@ Adapted by Tekevwe Kwakpovwe, 08/2021
 - Folder variable: WD_SIM
 - File 1: ndl_model
 -> Train an NDL model
+

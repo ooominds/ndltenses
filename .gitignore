@@ -34,3 +34,5 @@ BNC.tagged.null.txt
 ndl_tense/simulations/NDL_ngram_oneverb
 ndl_tense/simulations/NDL_ngram_multiverbs
 to_do.txt
+setup.cfg
+setup.py

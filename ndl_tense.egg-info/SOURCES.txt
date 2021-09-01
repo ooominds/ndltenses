@@ -1,0 +1,13 @@
+LICENSE.txt
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+ndl_tense/__init__.py
+ndl_tense/file_tools.py
+ndl_tense/setup.py
+ndl_tense.egg-info/PKG-INFO
+ndl_tense.egg-info/SOURCES.txt
+ndl_tense.egg-info/dependency_links.txt
+ndl_tense.egg-info/requires.txt
+ndl_tense.egg-info/top_level.txt

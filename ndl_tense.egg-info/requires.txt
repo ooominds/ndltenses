@@ -1,0 +1,8 @@
+numpy
+h5py
+pandas
+pyndl
+sklearn
+keras
+xarray
+matplotlib
