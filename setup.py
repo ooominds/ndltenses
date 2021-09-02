@@ -25,6 +25,7 @@ setup(
           'keras',
           'xarray',
           'matplotlib',
+          'nltk'
     ],
     #project_urls={
     #    "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
