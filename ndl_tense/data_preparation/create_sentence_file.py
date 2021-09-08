@@ -20,7 +20,7 @@ import time
 ###################
     
 
-def process_token(line, end_sent_marks, to_remove):
+def process_token(line, end_sent_marks, to_remove, NORMALISE=True):
 
     """Skip or extract a cleaned token from a tagged line from a written COCA file
 
@@ -53,7 +53,8 @@ def process_token(line, end_sent_marks, to_remove):
     line_elements = line.strip('\n').split('\t')
     try: 
         token, tag = line_elements
-        token = token.lower()
+        if NORMALISE:
+            token = token.lower()
     # skip lines with no token or tag
     except(ValueError):
             return None 
@@ -95,7 +96,10 @@ def process_token(line, end_sent_marks, to_remove):
         return 'will', tag    
     # Split words seperated with a dash
     elif seq_dash_pattern.search(token):
-        words = token.lower().split('-')
+        if NORMALISE:
+            words = token.lower().split('-')
+        else:
+            words = token.split('-')
         for word in words:
             if special_char_pattern.search(word):
                 words.remove(word)
@@ -108,7 +112,10 @@ def process_token(line, end_sent_marks, to_remove):
     
     # Split words seperated with a slash
     elif seq_slash_pattern.search(token):
-        words = token.lower().split('/')
+        if NORMALISE:
+            words = token.lower().split('/')
+        else:
+            words = token.split('/')
         for word in words:
             if special_char_pattern.search(word):
                 words.remove(word)
@@ -146,7 +153,7 @@ def process_token(line, end_sent_marks, to_remove):
     else:
         return token, tag
 
-def extract_sentences(file, to_remove, VERBOSE):
+def extract_sentences(file, to_remove, VERBOSE, NORMALISE):
 
     """ Extract a cleaned list of all sentences in a tagged BNC file
 
@@ -177,7 +184,7 @@ def extract_sentences(file, to_remove, VERBOSE):
         keep_sen = True
         for ii, line in enumerate(f):
             try:
-                token, tag = process_token(line, end_sent_marks, to_remove)
+                token, tag = process_token(line, end_sent_marks, to_remove, False)
             except:
                 continue
             if token == "CTBD":
@@ -186,8 +193,11 @@ def extract_sentences(file, to_remove, VERBOSE):
             if keep_sen:
                 # For sequence of tokens
                 if isinstance(token, list): 
-                    if (token[-1] == '.'): 
-                        current_sent.extend(token[:-1])
+                    if (token[-1] == '.'):
+                        if NORMALISE: 
+                            current_sent.extend(token[:-1])
+                        else:
+                            current_sent.extend(token)
                         if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
                             current_sent_str = " ".join(current_sent)
                             # only if sentence is new, add to dictionary
@@ -247,7 +257,7 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, VERBOSE):
     ----
     """  
     TAGGED_FILE, RESULTS = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1]
-    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
+    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, VERBOSE, False) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
     sentences_dict = dict()

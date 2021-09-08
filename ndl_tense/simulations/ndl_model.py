@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import xarray as xr
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 import time
 

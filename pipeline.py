@@ -1,5 +1,5 @@
 from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
-from ndl_tense.simulations import ndl_model
+#from ndl_tense.simulations import ndl_model
 from ndl_tense import file_tools
 from param_file import *
 from os import chdir
@@ -12,7 +12,8 @@ def step_1():
     
     # we remove colloquial spelling tokens like "gon", "wan" and "innit" here
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
-    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, False)
+    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, False)
+    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, False, False)
 
 def step_2():
     file_tools.manage_directories(ANNOTATE_DIRS, False)
@@ -72,8 +73,8 @@ def step_7():
 
 def main():
     #uncomment each step you wish to complete
-    #step_1()
-    #step_2()
+    step_1()
+    step_2()
     #step_3()
     #step_4()
     #step_5()

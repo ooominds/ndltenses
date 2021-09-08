@@ -31,9 +31,11 @@ test_location/Data_shared
 test_location/data_preparation
 BNC.tagged.txt
 BNC.tagged.null.txt
+BNC.tagged.null.short.txt
 ndl_tense/simulations/NDL_ngram_oneverb
 ndl_tense/simulations/NDL_ngram_multiverbs
 to_do.txt
 setup.cfg
 setup.py
 test_param.py
+ndl_paramsearch.py
