@@ -13,7 +13,8 @@ def step_1():
     # we remove colloquial spelling tokens like "gon", "wan" and "innit" here
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
     #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, False)
-    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, False, False)
+    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, False, True, False)
+    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, True, False)
 
 def step_2():
     file_tools.manage_directories(ANNOTATE_DIRS, False)
@@ -29,11 +30,22 @@ def step_3():
     file_tools.manage_directories(PREPDAT_FILES, True)
     file_tools.manage_directories(PREPARE_TRAIN_VALID_TEST_FILES, False)
 
+    #optional
+    # keys = ["present.simple","past.simple",
+    #        "present.perf","future.simple",
+    #        "present.prog","past.perf",
+    #        "present.perf.prog","future.prog",
+    #        "past.perf.prog","future.perf",
+    #        "future.perf.prog"]
+
+    # ratios = [655438,610475,100503,67433,46884,45191,26264,3398,2336,1288,660,9]
+    #sample_sentences.run(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, kets, ratios, 500, False)
+
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
     file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, False)
 
     #for one verb per sent, so this is optional
-    prepare_data.run(PREPDAT_FILES[0], PREPDAT_FILES[1:], False)
+    prepare_data.run(PREPDAT_FILES, False)
     chdir(WD_PREPDAT)
     prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID, False)
 
@@ -73,9 +85,9 @@ def step_7():
 
 def main():
     #uncomment each step you wish to complete
-    step_1()
+    #step_1()
     step_2()
-    #step_3()
+    step_3()
     #step_4()
     #step_5()
     #step_6()

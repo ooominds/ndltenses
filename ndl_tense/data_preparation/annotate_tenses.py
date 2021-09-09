@@ -35,7 +35,10 @@ def clean_sents(tenses_df):
   nV = ((nC-3)/3)  # number of verbs 
 
   ## Order column names 
-  col_order = ["sentence", "sentence_length", "num_verb_tags"]
+  if "O_sentence" in tenses_df.columns:
+    col_order = ["sentence", "O_sentence", "sentence_length", "num_verb_tags"]
+  else:
+    col_order = ["sentence", "sentence_length", "num_verb_tags"]
 
   for j in range(1,int(nV)+1):
     verb_j = "verb_%s"%(j)
@@ -62,9 +65,6 @@ def clean_sents(tenses_df):
 
   ### Remove empty columns
   tenses_df.dropna(how='all', axis=1, inplace=True)
-
-  # Check dim
-  print(tenses_df.shape) # 4227346 81
 
   ### Save resulting dataset
   return(tenses_df)
@@ -134,6 +134,9 @@ def run(ANNOTATE_FILES, VERBOSE):
   non_empty_verb_col = len([col for col in tenses_annotated.columns if "MainVerb" in col])
   for j in range(non_empty_verb_col):
     tenses_annotated["Infinitive%s"%(j+1)] = np.nan
+  
+  if "O_sentence" in tenses_df.columns:
+    tenses_annotated["O_Sentence"] = tenses_df['O_sentence']
 
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   if VERBOSE:

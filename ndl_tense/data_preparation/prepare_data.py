@@ -5,11 +5,12 @@
 ####################
 
 ### Import necessary packages
+from param_file import PREPARE_TRAIN_VALID_TEST_FILES
 import pandas as pd
 import numpy as np
 import time
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 import csv 
 import random
 import string
@@ -154,6 +155,8 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
     with open("%s.csv"%(TENSES_ONE_SENT_PER_VERB_WITH_MODALS), mode = 'w', encoding="utf-8") as o:
         csv_writer = csv.writer(o, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         heading = list(tenses.columns[0:4])
+        if "O_Sentence" in tenses.columns:
+            heading.append("O_Sentence")
         heading.extend(['Tense', 'VerbForm', 'MainVerb', 'Position', 'Infinitive'])
         csv_writer.writerow(heading)
 
@@ -169,7 +172,10 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
             for j in range(1, (nV+1)):
                 if str(tenses.at[i, "".join(['Tense', str(j)])]) != 'nan':
                     # Write the row
-                    colnames_touse = ['SentenceID', 'Sentence', 'SentenceLength', 'NumOfVerbs']
+                    if "O_Sentence" in tenses.columns:
+                        colnames_touse = ['SentenceID', 'Sentence', 'SentenceLength', 'NumOfVerbs', "O_Sentence"]
+                    else:
+                        colnames_touse = ['SentenceID', 'Sentence', 'SentenceLength', 'NumOfVerbs']
                     colnames_touse.extend([colname + str(j) for colname in ['Tense', 'VerbForm', 'MainVerb', 'Position', 'Infinitive']])
                     _ = csv_writer.writerow(list(tenses.iloc[i][colnames_touse]))
                     o.flush()
@@ -268,7 +274,8 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
     -----
     """
     # Load the data
-    tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, encoding="utf-8")
+    tenses = pd.read_csv("%s.csv"%(TENSES_ONE_SENT_PER_VERB_WITH_MODALS), encoding="utf-8")
+
     # Load the dictionary that can convert AE to BE
     AE_to_BE = import_dict(dict_path = AE2BE_LIST)
 
@@ -310,7 +317,8 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
             'VerbForm', 
             'MainVerb',
             'Position',    
-            'Infinitive']]
+            'Infinitive',
+            'O_Sentence']]
     return(tenses)
 
 ########################################################################
@@ -565,9 +573,10 @@ def remove_modals(tenses):
     # Export the dataset
     return(tenses)
 
-def run(TENSES, PREPDAT_FILES, VERBOSE):
-    TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_SHUF_GZ = PREPDAT_FILES[0], PREPDAT_FILES[1]
-    AE2BE_LIST, INFINITIVE_CORR_LIST= PREPDAT_FILES[2], PREPDAT_FILES[3]
+def run(PREPDAT_FILES, VERBOSE):
+    TENSES = PREPDAT_FILES[0]
+    TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_SHUF_GZ = PREPDAT_FILES[1], PREPDAT_FILES[2]
+    AE2BE_LIST, INFINITIVE_CORR_LIST= PREPDAT_FILES[3], PREPDAT_FILES[4]
 
     tenses = convert_to_inf("%s.csv"%(TENSES), VERBOSE)
     tenses = add_sen_length(tenses, VERBOSE)
