@@ -14,7 +14,8 @@ def sample_sens(sen_df, sample_sizes):
     return(new_frame)
 
 def simple_band_sample(ratios, sample_size):
-    while(sum(ratios) > 2*sample_size):
+    while(sum(ratios) > sample_size):
+        print(ratios)
         ratios = [ceil(i/2) for i in ratios]
         denom = reduce(gcd,ratios)
         ratios = [ceil(i/denom) for i in ratios]
@@ -39,6 +40,7 @@ def run(file_path, keys, ratios, sample_size, VERBOSE):
     sen_df = pd.read_csv(file_path)
     ratios = simple_band_sample(ratios,sample_size)
     ta_sample_sizes = dict(zip(keys,ratios))
-    sample_sens(sen_df, ta_sample_sizes)
+    sample_sentences_df = sample_sens(sen_df, ta_sample_sizes)
     if VERBOSE:
         logging.info("sentence sampling complete")
+    return(sample_sentences_df)

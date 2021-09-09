@@ -9,4 +9,3 @@ from . import extract_infinitive
 from . import extract_ngrams
 from . import chunk_sentences
 from . import add_null
-from . import sentences_ta

@@ -120,8 +120,6 @@ def process_token(line, end_sent_marks, to_remove, KEEP_ORIGINAL_TOKEN, NORMALIS
         for word in words:
             if special_char_pattern.search(word):
                 words.remove(word)
-            else:
-                print(word)
         if len(words) == 1:
             return words[0], tag
         elif len(words) > 1:
@@ -218,7 +216,6 @@ def extract_sentences(file, to_remove, NORMALISE, KEEP_ORIGINAL_SEN, VERBOSE):
                             current_sent_str = " ".join(current_sent)
                             if KEEP_ORIGINAL_SEN:
                                 o_current_sent_str = " ".join(o_current_sent)
-                                o_current_sent_str += token
                             # only if sentence is new, add to dictionary
                             if current_sent_str not in all_sents:
                                 all_sents[current_sent_str] = current_verbs

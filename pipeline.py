@@ -1,5 +1,6 @@
 from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
 #from ndl_tense.simulations import ndl_model
+from ndl_tense.post_processing import top_cues_for_sen
 from ndl_tense import file_tools
 from param_file import *
 from os import chdir
@@ -86,12 +87,14 @@ def step_7():
 def main():
     #uncomment each step you wish to complete
     #step_1()
-    step_2()
-    step_3()
+    #step_2()
+    #step_3()
     #step_4()
     #step_5()
     #step_6()
     #step_7()
+    #chdir('D:\\work\\OoOM\\ndl\\test_location\\test')
+    top_cues_for_sen.run("tenses_file", "cue_weights.csv", "result_file", [30, 14, 10, 6], 5, 500)
 
 if __name__ == "__main__":
     main()
