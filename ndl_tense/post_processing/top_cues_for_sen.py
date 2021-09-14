@@ -64,15 +64,18 @@ def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
     -----
         Creates an excel file.
     """
-    cue_weights = pd.read_csv("%s.csv"%(CUE_WEIGHT_FILE))
+    #cue_weights = pd.read_csv("%s.csv"%(CUE_WEIGHT_FILE))
     
     keys = ["present.simple",
             "past.simple",
             "present.perf",
             "future.simple"]
-    #cue_weights = unique_cues(sample_sentences_df, keys)
     
     sample_sentences_df = sample_sentences.run("%s.csv"%(TENSES_FILE), keys, ratios, sample_size, False)
+    print(sample_sentences_df.columns)
+    sample_sentences_df.sort_values(by = "SentenceID", inplace=True)
+
+    cue_weights = unique_cues(sample_sentences_df, keys)
     top_n_cues_list, top_n_cue_strengths_list = [], []
     
     # getting index (an integer represnetation) of wanted columns
@@ -82,12 +85,24 @@ def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
     for row in range(sample_sentences_df.shape[0]):
         ta = sample_sentences_df.iloc[row, ta_index]
         cues = sample_sentences_df.iloc[row, cues_index].split('_')
+        
+        #print("sentence: " + str(sample_sentences_df.iloc[row,2]) + "\n")
+        #print("cues in table: " + str(sample_sentences_df.iloc[row, cues_index]) + "\n")
+        #print("cues created: " + str(cues) + "\n")
+
         top_n_cues, top_n_cue_strengths = (find_top_n_cues(cues, ta, cue_weights, n_cues))
+
+        #print("top N cues: " + str(top_n_cues) + "\n")
         top_n_cues_list.append(top_n_cues)
         top_n_cue_strengths_list.append(top_n_cue_strengths)
     
-    new_df = sample_sentences_df[["SentenceID", "O_Sentence", "Tense"]]
+    new_df = sample_sentences_df[["SentenceID", "Tense", "O_Sentence", "MainVerb"]].copy()
+    new_df.sort_values(by = "SentenceID", inplace=True)
     new_df["Cues"] = top_n_cues_list
+
+    #print("SENTENCE: " + str(new_df.iloc[0,1]))
+    #print("sentence: " + str(sample_sentences_df.iloc[0,2]) + "\n")
+    #print("CUES: " + str(new_df.iloc[0,3]))
 
     # Adding additional columns that represnt each cue's strength
     for i in range(0,n_cues-1):
@@ -97,6 +112,7 @@ def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
         new_df["StrongCue%s_Strength"%(i+1)] = column_vals
 
     new_df.rename(columns = {"O_Sentence": "Sentence", 
-                            "Tense": "TA"}, inplace = True)
+                            "Tense": "TA",
+                            "MainVerb": "TargetVerb"}, inplace = True)
     new_df.to_excel("%s.xlsx"%(save_path))
         

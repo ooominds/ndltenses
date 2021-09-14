@@ -93,8 +93,8 @@ def main():
     #step_5()
     #step_6()
     #step_7()
-    #chdir('D:\\work\\OoOM\\ndl\\test_location\\test')
-    top_cues_for_sen.run("tenses_file", "cue_weights.csv", "result_file", [30, 14, 10, 6], 5, 500)
+    chdir('D:\\work\\OoOM\\ndl\\test_location\\test')
+    top_cues_for_sen.run("tenses_file", "cue_weights", "result_file", [30, 14, 10, 6], 5, 500)
 
 if __name__ == "__main__":
     main()
