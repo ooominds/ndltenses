@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 ### Set working directory
 
-def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
+def run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES, VERBOSE):
 
     FREQ_1G_PATH = NGRAM_FILES[1]
     FREQ_2G_PATH = NGRAM_FILES[2]
@@ -35,7 +35,7 @@ def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
     Freq_1G_df = Freq_1G_df[Freq_1G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_1G_df = Freq_1G_df.sample(frac=1) # Shuffle ngrams with the same frequency
     Freq_1G_df = Freq_1G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
-    Freq_1G_df = Freq_1G_df.iloc[0:N] # Extract N ngrams 
+    Freq_1G_df = Freq_1G_df.iloc[0:K_NGRAMS] # Extract N ngrams 
 
     ########## 2-grams ##########
     # Load as dataframe and retain only 10k ngrams whose freq >= 10
@@ -44,7 +44,7 @@ def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
     Freq_2G_df = Freq_2G_df[Freq_2G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_2G_df = Freq_2G_df.sample(frac=1) # Shuffle ngrams with the same frequency
     Freq_2G_df = Freq_2G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
-    Freq_2G_df = Freq_2G_df.iloc[0:N] # Extract N ngrams 
+    Freq_2G_df = Freq_2G_df.iloc[0:K_NGRAMS] # Extract N ngrams 
 
     ########## 3-grams ##########
     # Load as dataframe and retain only 10k ngrams whose freq >= 10
@@ -53,7 +53,7 @@ def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
     Freq_3G_df = Freq_3G_df[Freq_3G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_3G_df = Freq_3G_df.sample(frac=1) # Shuffle ngrams with the same frequency
     Freq_3G_df = Freq_3G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
-    Freq_3G_df = Freq_3G_df.iloc[0:N] # Extract N ngrams 
+    Freq_3G_df = Freq_3G_df.iloc[0:K_NGRAMS] # Extract N ngrams 
 
 
     ########## 4-grams ##########
@@ -63,7 +63,7 @@ def run(NGRAM_FILES, N, TARGETS_FILES, VERBOSE):
     Freq_4G_df = Freq_4G_df[Freq_4G_df['frequency']>=10] # Remove ngrams whose freq < 10
     Freq_4G_df = Freq_4G_df.sample(frac=1) # Shuffle ngrams with the same frequency
     Freq_4G_df = Freq_4G_df.sort_values(by = ['frequency'], ascending = False).reset_index(drop=True) # Sort in a descending order by the frequency
-    Freq_4G_df = Freq_4G_df.iloc[0:N] # Extract N ngrams 
+    Freq_4G_df = Freq_4G_df.iloc[0:K_NGRAMS] # Extract N ngrams 
 
     ########## All n-grams ##########
     # Append all datasets

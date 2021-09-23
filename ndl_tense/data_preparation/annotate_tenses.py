@@ -121,6 +121,7 @@ def run(ANNOTATE_FILES, VERBOSE):
 
   for j in range(0, tenses_annotated.shape[0]):
     tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(tenses_df.iloc[j,:])
+    #print(tenses_annotated.iloc[j,4:8])
 
   ##################################
   # Remove unnecessery empty columns
@@ -129,8 +130,11 @@ def run(ANNOTATE_FILES, VERBOSE):
   ### Remove empty columns (except infinitive columns of non-empty verb columns)
 
   # Drop these columns from the dataframe
-  names2remove = [col for col in tenses_annotated.columns if (tenses_annotated[col].isnull().all())]
+  print(tenses_annotated.iloc[:10,:])
+  names2remove = [col for col in tenses_annotated.columns if (tenses_annotated[col].isnull().values.all())]
+  
   tenses_annotated.drop(names2remove, axis=1, inplace=True)
+
   non_empty_verb_col = len([col for col in tenses_annotated.columns if "MainVerb" in col])
   for j in range(non_empty_verb_col):
     tenses_annotated["Infinitive%s"%(j+1)] = np.nan

@@ -10,7 +10,7 @@ WD_EXTRACT = TOP + "\\extract\\" # directory to store the results of this step
 #TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.null'
 #TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.null.short'
 #TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\colloquial_full_sen' # should be a .txt file
-TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.spoken.clean' # should be a .txt file
+TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\necessary_files\\BNC.tagged.supershort' # should be a .txt file
 RESULTS = WD_EXTRACT + "example_sentences" # this should be a csv file
 
 EXTRACT_SENTENCES_DIRS = [WD_EXTRACT] # main directory in which the results of this step are stored
@@ -129,7 +129,7 @@ NGRAM2 = WD_EXTRACT_NGRAM + "2grams" #csv
 NGRAM3 = WD_EXTRACT_NGRAM + "3grams" #csv
 NGRAM4 = WD_EXTRACT_NGRAM + "4grams" #csv
 NGRAM = WD_EXTRACT_NGRAM + "ngrams" #csv
-TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "data"
+TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "ngrams_with_freq"
 
 ######################################
 # NGRAMs TO USE
@@ -188,7 +188,7 @@ TEMP_DIR_SIM = WD_SIM + "data\\"
 MODEL_PATH = WD_SIM + 'NDL_model_ngrams_multiverbs' #h5 file (h5py)
 WEIGHTS_PATH = WD_SIM + 'NDL_weights_ngrams_multiverbs' #.nc file (netCDF)
 RESULTS_TEST = WD_SIM + "results_testset_ngrams_multiverbs" #.csv
-ACTIVATION_TEST = WD_SIM + "Activations_testset_ngrams_multiverbs" #.csv
+ACTIVATION_TEST = WD_SIM + "activations_testset_ngrams_multiverbs" #.csv
 NO_THREADS = 15
 
 SIM_DIR = [WD_SIM, TEMP_DIR_SIM]

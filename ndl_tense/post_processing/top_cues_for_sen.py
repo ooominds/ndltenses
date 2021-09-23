@@ -1,10 +1,9 @@
-from enum import unique
 import pandas as pd
 import numpy as np
 from ndl_tense.post_processing import sample_sentences
 
 
-def unique_cues(sample_df,keys):
+def unique_cues(sample_df, cues_index, keys):
     """
         Create a dummy weight matrix for different cues
     -----
@@ -21,16 +20,22 @@ def unique_cues(sample_df,keys):
             a dataframe with cues as indexes and keys (tense/aspect pairs) as columns and random weights as cell entries
     """
     unique_cues_set = set()
-    cues = sample_df.columns.get_loc('NgramCuesWithInfinitive')
     for row in range(sample_df.shape[0]):
         # to avoid repeated cues, use sets
-        unique_cues_set = unique_cues_set.union(sample_df.iloc[row, cues].split('_'))
+        unique_cues_set = unique_cues_set.union(sample_df.iloc[row, cues_index].split('_'))
     # random weights
     dummy_data = np.random.rand(len(unique_cues_set), len(keys))
     cues_df = pd.DataFrame(dummy_data, index = list(unique_cues_set), columns =keys)
     cues_df.to_csv("cue_weights.csv")
     return(cues_df)
 
+def sentences_in_cues(sens_filepath, cue_weights, n_cues):
+    sens_df = pd.read_csv(sens_filepath)
+    sens_df['SplitCols'] = sens_df['NgramCuesWithInfinitive'].apply(lambda x: set(x.split('_')))
+
+    trained_sens = sens_df[sens_df['SplitCols'].apply(lambda x: x.issubset(list(cue_weights.index)))]
+    print(trained_sens.columns)
+    trained_sens.to_csv("reduced_sentences.csv")
 
 # Find the top n cues and their associated weights
 def find_top_n_cues(cues, ta, cue_weights, n_cues):
@@ -64,32 +69,37 @@ def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
     -----
         Creates an excel file.
     """
-    #cue_weights = pd.read_csv("%s.csv"%(CUE_WEIGHT_FILE))
-    
-    keys = ["present.simple",
-            "past.simple",
-            "present.perf",
-            "future.simple"]
-    
-    sample_sentences_df = sample_sentences.run("%s.csv"%(TENSES_FILE), keys, ratios, sample_size, False)
-    print(sample_sentences_df.columns)
+
+    # present.simple       1410
+    # past.simple           441
+    # present.prog          133
+    # present.perf          132
+    # future.simple          91
+    # past.prog              30
+    # present.perf.prog       5
+    # future.prog             5
+    # past.perf               5
+
+    cue_weights = pd.read_csv("%s.csv"%(CUE_WEIGHT_FILE), index_col=0)
+    keys = list(cue_weights.columns)
+    #keys = ["present.simple",
+    #        "past.simple",
+    #        "present.prog",
+    #        "present.perf"]
+    sentences_in_cues("%s.csv"%(TENSES_FILE), cue_weights, n_cues)
+    sample_sentences_df = sample_sentences.run("reduced_sentences.csv", keys, ratios, sample_size, False)
     sample_sentences_df.sort_values(by = "SentenceID", inplace=True)
 
-    cue_weights = unique_cues(sample_sentences_df, keys)
-    top_n_cues_list, top_n_cue_strengths_list = [], []
-    
     # getting index (an integer represnetation) of wanted columns
     cues_index = sample_sentences_df.columns.get_loc('NgramCuesWithInfinitive')
     ta_index = sample_sentences_df.columns.get_loc('Tense')
-    
+
+    #cue_weights = unique_cues(sample_sentences_df, keys, cues_index)
+    top_n_cues_list, top_n_cue_strengths_list = [], []    
+
     for row in range(sample_sentences_df.shape[0]):
         ta = sample_sentences_df.iloc[row, ta_index]
         cues = sample_sentences_df.iloc[row, cues_index].split('_')
-        
-        #print("sentence: " + str(sample_sentences_df.iloc[row,2]) + "\n")
-        #print("cues in table: " + str(sample_sentences_df.iloc[row, cues_index]) + "\n")
-        #print("cues created: " + str(cues) + "\n")
-
         top_n_cues, top_n_cue_strengths = (find_top_n_cues(cues, ta, cue_weights, n_cues))
 
         #print("top N cues: " + str(top_n_cues) + "\n")
@@ -99,10 +109,6 @@ def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
     new_df = sample_sentences_df[["SentenceID", "Tense", "O_Sentence", "MainVerb"]].copy()
     new_df.sort_values(by = "SentenceID", inplace=True)
     new_df["Cues"] = top_n_cues_list
-
-    #print("SENTENCE: " + str(new_df.iloc[0,1]))
-    #print("sentence: " + str(sample_sentences_df.iloc[0,2]) + "\n")
-    #print("CUES: " + str(new_df.iloc[0,3]))
 
     # Adding additional columns that represnt each cue's strength
     for i in range(0,n_cues-1):

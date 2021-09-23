@@ -13,7 +13,7 @@ def step_1():
     
     # we remove colloquial spelling tokens like "gon", "wan" and "innit" here
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
-    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, False)
+    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False,True, False)
     create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, False, True, False)
     #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, True, False)
 
@@ -32,14 +32,6 @@ def step_3():
     file_tools.manage_directories(PREPARE_TRAIN_VALID_TEST_FILES, False)
 
     #optional
-    # keys = ["present.simple","past.simple",
-    #        "present.perf","future.simple",
-    #        "present.prog","past.perf",
-    #        "present.perf.prog","future.prog",
-    #        "past.perf.prog","future.perf",
-    #        "future.perf.prog"]
-
-    # ratios = [655438,610475,100503,67433,46884,45191,26264,3398,2336,1288,660,9]
     #sample_sentences.run(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, kets, ratios, 500, False)
 
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
@@ -66,7 +58,8 @@ def step_5():
     chdir(WD_EXTRACT_NGRAM)
     file_tools.manage_directories(NGRAM_FILES, True)
     file_tools.manage_directories(TARGETS_FILES, True)
-    # extracting ngrams is optional
+
+    # extracting ngrams by frequency is optional
     # extract_ngrams.run(TENSES_GZ, NGRAM_FILES, TEMP_DIR_EXT, NUM_THREADS)
 
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
@@ -87,14 +80,23 @@ def step_7():
 def main():
     #uncomment each step you wish to complete
     #step_1()
-    #step_2()
+    step_2()
     #step_3()
     #step_4()
     #step_5()
     #step_6()
     #step_7()
+    # keys = ["present.simple","past.simple",
+    #        "present.perf","future.simple",
+    #        "present.prog","past.perf",
+    #        "present.perf.prog","future.prog",
+    #        "past.perf.prog","future.perf",
+    #        "future.perf.prog"]
+
+    # ratios = [655438,610475,100503,67433,46884,45191,26264,3398,2336,1288,660,9]
     chdir('D:\\work\\OoOM\\ndl\\test_location\\test')
-    top_cues_for_sen.run("tenses_file", "cue_weights", "result_file", [30, 14, 10, 6], 5, 500)
+    top_cues_for_sen.run("tenses_file", "cue_weights", "result_file", [1410, 441, 133, 132], 5, 500)
+    #top_cues_for_sen.run("tenses_file", "cue_weights", "result_file", [655438,610475,100503,67433,46884,45191,26264,3398,2336,1288,660,9], 5, 500)
 
 if __name__ == "__main__":
     main()
