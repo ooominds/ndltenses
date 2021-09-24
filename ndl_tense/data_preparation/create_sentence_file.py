@@ -156,6 +156,34 @@ def process_token(line, end_sent_marks, to_remove, KEEP_ORIGINAL_TOKEN, NORMALIS
     else:
         return token, tag
 
+"""
+        # Record start time
+        start = time.time()
+        keep_sen = True
+        for ii, line in enumerate(f):
+            try:
+                if KEEP_ORIGINAL_SEN:
+                    token, tag = process_token(line, end_sent_marks, to_remove, True, False)
+                else:
+                    token, tag = process_token(line, end_sent_marks, to_remove, False, True)
+            except:
+                continue
+            if token == "CTBD":
+                current_sent, current_verbs, o_current_sent = [], [], []
+                keep_sen = False
+            if keep_sen:
+"""
+
+
+def extend_all_sents(current_verbs, current_sent, all_sents):
+    
+    if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
+        current_sent_str = " ".join(current_sent)
+        # only if sentence is new, add to dictionary
+        if current_sent_str not in all_sents:
+            all_sents[current_sent_str] = current_verbs
+    return(all_sents)
+
 def extract_sentences(file, to_remove, NORMALISE, KEEP_ORIGINAL_SEN, VERBOSE):
 
     """ Extract a cleaned list of all sentences in a tagged BNC file
@@ -176,9 +204,7 @@ def extract_sentences(file, to_remove, NORMALISE, KEEP_ORIGINAL_SEN, VERBOSE):
     end_sent_marks = (".", "!", "?", "</s>", "</u>")
 
     all_sents = OrderedDict()
-    all_o_sents =  [] # list of original sentences
     current_sent = [] # Current list of words in the currently processed sentence
-    o_current_sent = [] # Current list of words (without alterations) in the currently processed sentence
     current_verbs = [] # Current list of verbs in the currently processed sentence
 
     with open(file, mode = 'r', encoding = 'utf-8') as f:
@@ -189,82 +215,48 @@ def extract_sentences(file, to_remove, NORMALISE, KEEP_ORIGINAL_SEN, VERBOSE):
         for ii, line in enumerate(f):
             try:
                 if KEEP_ORIGINAL_SEN:
-                    original_token, _ = process_token(line, end_sent_marks, to_remove, True, False)
+                    token, tag = process_token(line, end_sent_marks, to_remove, True, False)
+                else:
+                    token, tag = process_token(line, end_sent_marks, to_remove, False, True)
             except:
                 continue
-            try:
-                token, tag = process_token(line, end_sent_marks, to_remove, False, True)
-            except:
-                o_current_sent.append(original_token)
-                continue
-
             if token == "CTBD":
-                current_sent, current_verbs, o_current_sent = [], [], []
+                current_sent, current_verbs = [], []
                 keep_sen = False
             if keep_sen:
-                # For sequence of tokens
-                if isinstance(token, list): 
-                    if (token[-1] == '.'):
-                        if NORMALISE: 
-                            current_sent.extend(token[:-1])
-                        else:
+                if isinstance(token, list) : 
+                    if (token[-1] == '.'): 
+                        if KEEP_ORIGINAL_SEN:
                             current_sent.extend(token)
-                        if KEEP_ORIGINAL_SEN:
-                            o_current_sent.extend(original_token)
-
-                        if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
-                            current_sent_str = " ".join(current_sent)
-                            if KEEP_ORIGINAL_SEN:
-                                o_current_sent_str = " ".join(o_current_sent)
-                            # only if sentence is new, add to dictionary
-                            if current_sent_str not in all_sents:
-                                all_sents[current_sent_str] = current_verbs
-                            if KEEP_ORIGINAL_SEN and o_current_sent not in all_o_sents:
-                                    all_o_sents.append(o_current_sent_str)
-                        current_sent = [] # reinitialise the sent
-                        o_current_sent = [] # reinitialise the original sent
-                        current_verbs = [] # reinitialise the verbs
+                        else:
+                            current_sent.extend(token[:-1])
+                        all_sents = extend_all_sents(current_verbs, current_sent, all_sents)
+                        current_sent, current_verbs = [], [] # reinitialise the sent and verbs
                     else: # Case of a sequence of words
-                        current_sent.extend(token)
-                        if KEEP_ORIGINAL_SEN:
-                            o_current_sent.extend(original_token) 
-
+                        current_sent.extend(token) 
                 elif token in end_sent_marks: # marker for the end of a sentence
-                    if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
-                        current_sent_str = " ".join(current_sent)
-                        if KEEP_ORIGINAL_SEN:
-                            o_current_sent_str = " ".join(o_current_sent)
-                            o_current_sent_str += token
-                        if current_sent_str not in all_sents:
-                            all_sents[current_sent_str ] = current_verbs
-                        if KEEP_ORIGINAL_SEN and o_current_sent_str not in all_o_sents:
-                            all_o_sents.append(o_current_sent_str)
-                    current_sent = [] # reinitialise the sent
-                    o_current_sent = [] # reinitialise the original sent
-                    current_verbs = [] # reinitialise the verbs
+                    all_sents = extend_all_sents(current_verbs, current_sent, all_sents)
+                    current_sent, current_verbs = [], [] # reinitialise the sent and verbs
                 else:
                     current_sent.append(token)
-                    if KEEP_ORIGINAL_SEN:
-                        o_current_sent.append(original_token)
                     if tag.lower().startswith("v"): 
                         if "-" in tag: # Exclude sentences having ambiguous verb tags
                             current_sent = [] # reinitialise the sent
-                            o_current_sent = []
                             current_verbs = [] # reinitialise the verbs
                         else:
-                            current_verbs.append([token, tag, len(current_sent) - 1])
+                            current_verbs.append([token, tag, len(current_sent) - 1])     
             else:
                 if token in end_sent_marks:
-                    keep_sen = True     
+                    keep_sen = True
             if (ii+1) % 1000000 == 0 and VERBOSE:
                 logging.info('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
         if VERBOSE:
             logging.info('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
-        return all_sents, all_o_sents
+        return all_sents
+
 
 
 def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
-    
     """
     Carry out this step of processing and create a file of sentences with
     verbs, verb tags, verb tags, sentences and sentence length
@@ -289,15 +281,15 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
     RETURN: Does not return anything, creates an annotated file
     ----
     """  
+
     TAGGED_FILE, RESULTS = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1] 
-    sentences, o_sents = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, True, KEEP_ORIGINAL_SEN, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
+    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, True, KEEP_ORIGINAL_SEN, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
     sentences_dict = dict()
     for i, (sent, verbs) in enumerate(sentences.items()):
         sentences_dict[i] = dict()
         sentences_dict[i]["sentence"] = sent
-        sentences_dict[i]["O_sentence"] = o_sents[i]
         sentences_dict[i]["sentence_length"] = len(sent.split())
         sentences_dict[i]["num_verb_tags"] = len(verbs)
         for j, (verb, tag, position) in enumerate(verbs):

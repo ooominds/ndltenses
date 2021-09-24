@@ -2,7 +2,6 @@ from numpy import transpose
 from pandas import DataFrame
 from ndl_tense.data_preparation import row_tenses
 import re
-import time
 
 def shift_and_rename(vect_tags, diff):
     # renaming the shifted columns

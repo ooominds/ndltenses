@@ -1,6 +1,6 @@
 
 ####################################
-# EXTRACT and create SENTENCES
+# STEP 1: EXTRACT and create SENTENCES
 ####################################
 
 NF = "" # path to the folder containing the necessary files that are user defined
@@ -19,7 +19,7 @@ EXTRACT_SENTENCES_FILES = [TAGGED_FILE, RESULTS] # list of files that need to be
 
 
 ######################################
-# ANNOTATE TENSES                    
+# STEP 2: ANNOTATE TENSES                    
 ######################################
 
 WD_ANNOTATE = TOP + "" # directory to store the results of this step
@@ -33,7 +33,7 @@ ANNOTATE_FILES = [SENTS, TENSES_ANNOTATED_NOINF_CLEAN]
 #--------------------------------------------------------
 
 ######################################
-# PREPARE DATA
+# STEP 3: PREPARE DATA
 ######################################
 
 WD_PREPDAT = TOP + "" # directory to store the results of this step
@@ -58,7 +58,7 @@ PREPDAT_FILES = [TENSES,TENSES_ONE_SENT_PER_VERB_WITH_MODALS,TENSES_ONE_SENT_PER
 
 
 ######################################
-# PREPARE TRAIN VALID TEST
+# STEP 3: PREPARE TRAIN VALID TEST
 ######################################
 
 ### Define file paths
@@ -94,7 +94,7 @@ CREATE_TRAIN_VALID_TEST_FILES = [TENSES_ONE_SENT_PER_VERB_SHUF_GZ, TENSES_TRAIN_
 
 
 ######################################
-# EXTRACT INFINITIVES FOR TRAINING
+# STEP 4: EXTRACT INFINITIVES FOR TRAINING
 ######################################
 
 WD_EXTRACT_INF = TOP + ""
@@ -130,7 +130,7 @@ NGRAM = WD_EXTRACT_NGRAM + "" #csv
 TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "data"
 
 ######################################
-# NGRAMs TO USE
+# STEP 5: PREPARE NGRAMs TO USE
 ######################################
 
 
@@ -155,7 +155,7 @@ K_NGRAMS = 10000
 
 
 ######################################
-# PREPARE CUES
+# STEP 6: PREPARE CUES
 ######################################
 
 WD_CUES = TOP + ""
@@ -173,7 +173,7 @@ ALL_CUES = WD_CUES + ""
 #--------------------------------------------------------
 
 ######################################
-#SIMULATIONS
+# STEP 7: SIMULATIONS
 ######################################
 
 WD_SIM = ""
