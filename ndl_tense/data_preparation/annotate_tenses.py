@@ -130,7 +130,6 @@ def run(ANNOTATE_FILES, VERBOSE):
   ### Remove empty columns (except infinitive columns of non-empty verb columns)
 
   # Drop these columns from the dataframe
-  print(tenses_annotated.iloc[:10,:])
   names2remove = [col for col in tenses_annotated.columns if (tenses_annotated[col].isnull().values.all())]
   
   tenses_annotated.drop(names2remove, axis=1, inplace=True)

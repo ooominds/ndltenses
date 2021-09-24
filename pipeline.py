@@ -13,9 +13,11 @@ def step_1():
     
     # we remove colloquial spelling tokens like "gon", "wan" and "innit" here
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
-    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False,True, False)
-    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, False, True, True)
-    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, True, False)
+    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, True, False)
+    create_sentence_file.run([TAGGED_FILE, RESULTS_O_SENS], {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, True, False)
+    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, False, False, True)
+    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, True, True, True)
+    create_sentence_file.add_column_to_file(RESULTS, RESULTS_O_SENS, "sentence", "O_sentence", 1)
 
 def step_2():
     file_tools.manage_directories(ANNOTATE_DIRS, False)
@@ -23,7 +25,7 @@ def step_2():
     file_tools.manage_directories(ANNOTATE_FILES, True)
 
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
-    annotate_tenses.run(ANNOTATE_FILES, False)
+    annotate_tenses.run(ANNOTATE_FILES, True)
 
 def step_3():
     file_tools.manage_directories(PREPDAT_DIRS, False)
@@ -79,8 +81,8 @@ def step_7():
 
 def main():
     #uncomment each step you wish to complete
-    step_1()
-    #step_2()
+    #step_1()
+    step_2()
     #step_3()
     #step_4()
     #step_5()

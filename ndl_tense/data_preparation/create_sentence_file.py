@@ -176,7 +176,7 @@ def process_token(line, end_sent_marks, to_remove, KEEP_ORIGINAL_TOKEN, NORMALIS
 
 
 def extend_all_sents(current_verbs, current_sent, all_sents):
-    
+
     if len(current_verbs) > 0 and len(current_sent) > 2: # no one-word sentences or sentences without verbs
         current_sent_str = " ".join(current_sent)
         # only if sentence is new, add to dictionary
@@ -184,7 +184,7 @@ def extend_all_sents(current_verbs, current_sent, all_sents):
             all_sents[current_sent_str] = current_verbs
     return(all_sents)
 
-def extract_sentences(file, to_remove, NORMALISE, KEEP_ORIGINAL_SEN, VERBOSE):
+def extract_sentences(file, to_remove, KEEP_ORIGINAL_SEN, VERBOSE):
 
     """ Extract a cleaned list of all sentences in a tagged BNC file
 
@@ -225,16 +225,10 @@ def extract_sentences(file, to_remove, NORMALISE, KEEP_ORIGINAL_SEN, VERBOSE):
                 keep_sen = False
             if keep_sen:
                 if isinstance(token, list) : 
-                    if (token[-1] == '.'): 
-                        if KEEP_ORIGINAL_SEN:
-                            current_sent.extend(token)
-                        else:
-                            current_sent.extend(token[:-1])
-                        all_sents = extend_all_sents(current_verbs, current_sent, all_sents)
-                        current_sent, current_verbs = [], [] # reinitialise the sent and verbs
-                    else: # Case of a sequence of words
-                        current_sent.extend(token) 
+                    current_sent.extend(token) 
                 elif token in end_sent_marks: # marker for the end of a sentence
+                    if KEEP_ORIGINAL_SEN:
+                        current_sent.extend(token)
                     all_sents = extend_all_sents(current_verbs, current_sent, all_sents)
                     current_sent, current_verbs = [], [] # reinitialise the sent and verbs
                 else:
@@ -254,7 +248,15 @@ def extract_sentences(file, to_remove, NORMALISE, KEEP_ORIGINAL_SEN, VERBOSE):
             logging.info('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
         return all_sents
 
+def add_column_to_file(file_1, file_2, col_to_join, new_col_name, position):
+    table1 = pd.read_csv("%s.csv"%(file_1))
+    table2 = pd.read_csv("%s.csv"%(file_2))
+    table1[new_col_name] = table2[col_to_join]
+    
+    new_col = table1.pop(new_col_name)
+    table1.insert(position, new_col.name, new_col)
 
+    table1.to_csv("%s.csv"%(file_1), index=False)
 
 def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
     """
@@ -283,7 +285,7 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
     """  
 
     TAGGED_FILE, RESULTS = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1] 
-    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, True, KEEP_ORIGINAL_SEN, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
+    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, KEEP_ORIGINAL_SEN, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
     sentences_dict = dict()
