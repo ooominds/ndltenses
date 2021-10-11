@@ -31,11 +31,12 @@ def unique_cues(sample_df, cues_index, keys):
 
 def sentences_in_cues(sens_filepath, cue_weights, n_cues):
     sens_df = pd.read_csv(sens_filepath)
-    sens_df['SplitCols'] = sens_df['NgramCuesWithInfinitive'].apply(lambda x: set(x.split('_')))
+    #sens_df['SplitCols'] = sens_df['NgramCuesWithInfinitive'].apply(lambda x: set(x.split('_')))
+    sens_df['SplitCols'] = sens_df['FilteredCues'].apply(lambda x: set(x.split('_')))
 
-    trained_sens = sens_df[sens_df['SplitCols'].apply(lambda x: x.issubset(list(cue_weights.index)))]
-    print(trained_sens.columns)
-    trained_sens.to_csv("reduced_sentences.csv")
+    test_sens = sens_df[sens_df['SplitCols'].apply(lambda x: x.issubset(list(cue_weights.index)))]
+    print(test_sens.columns)
+    test_sens.to_csv("reduced_sentences.csv")
 
 # Find the top n cues and their associated weights
 def find_top_n_cues(cues, ta, cue_weights, n_cues):
@@ -44,7 +45,7 @@ def find_top_n_cues(cues, ta, cue_weights, n_cues):
     return(list(top_cues.index), list(top_cues[ta]))
     
 
-def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
+def run(O_SENS, TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
     """
         create an excel file using data of the learned weights of an NDL model with a sample of the sentences it was trained on:
         SentenceID, Sentence, TA, StrongestCues, StrongCue1_Strength, ...StrongCueN_Strength
@@ -55,7 +56,6 @@ def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
             this is by default the tenses_annotated_one_sent_per_verb_shuffeled.csv file (it is zipped)
         CUE_WEIGHT_FILE:
             this is a file created after the model is trained and after some post-processing,
-            not ready to be added to the package
         save_path: str
             where to save the excel file to be created
         ratios: list
@@ -86,12 +86,20 @@ def run(TENSES_FILE, CUE_WEIGHT_FILE, save_path, ratios, n_cues, sample_size):
     #        "past.simple",
     #        "present.prog",
     #        "present.perf"]
+
     sentences_in_cues("%s.csv"%(TENSES_FILE), cue_weights, n_cues)
+    o_sen = pd.read_csv("{}.csv".format(O_SENS))
+    o_sen['SentenceID'] = np.arange(o_sen.shape[0])
+    o_sen.rename(columns={'Sentence':'O_Sentence'}, inplace=True)
+    o_sen.sort_values(by="SentenceID", inplace=True)
+    
+    o_sen = o_sen[["SentenceID", "O_Sentence"]]
     sample_sentences_df = sample_sentences.run("reduced_sentences.csv", keys, ratios, sample_size, False)
+    sample_sentences_df.join(o_sen, on="SentenceID", how="left")
     sample_sentences_df.sort_values(by = "SentenceID", inplace=True)
 
     # getting index (an integer represnetation) of wanted columns
-    cues_index = sample_sentences_df.columns.get_loc('NgramCuesWithInfinitive')
+    cues_index = sample_sentences_df.columns.get_loc('FilteredCues')
     ta_index = sample_sentences_df.columns.get_loc('Tense')
 
     #cue_weights = unique_cues(sample_sentences_df, keys, cues_index)

@@ -42,3 +42,8 @@ setup.cfg
 setup.py
 test_param.py
 ndl_paramsearch.py
+ndl_tense/test_location
+ndl_tense/results_for_resubmition
+loading_activations.py
+without_gon.csv
+test_location/test/new_smaple_thing.csv

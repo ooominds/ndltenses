@@ -63,7 +63,7 @@ def simple_band_sample(ratios, sample_size):
 
 def run(file_path, keys, ratios, sample_size, VERBOSE):
     sen_df = pd.read_csv(file_path)
-    ratios = simple_band_sample(ratios,sample_size)
+    ratios = simple_band_sample(ratios, sample_size)
     ta_sample_sizes = dict(zip(keys,ratios))
     sample_sentences_df = sample_sens(sen_df, ta_sample_sizes)
     if VERBOSE:

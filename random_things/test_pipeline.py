@@ -1,6 +1,4 @@
 from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
-
-#below import commented out for now, uncomment if you want to run step 6
 #from ndl_tense.simulations import ndl_model
 from ndl_tense.post_processing import top_cues_for_sen, sample_sentences
 from ndl_tense import file_tools
@@ -9,31 +7,22 @@ import numpy as np
 from os import chdir
 
 def step_1():
-    # create folders specified by the list stored in EXTRACT_SNETNECES_DIRS
     file_tools.manage_directories(EXTRACT_SENTENCES_DIRS, False)
-    chdir(WD_EXTRACT) # change working directory to the path in WD_EXTRACT
 
-    # create folders specified by the list stored in EXTRACT_SNETNECES_FILES
-    # the "True" means that the paths in the list are for files and not directories
+    chdir(WD_EXTRACT)
     file_tools.manage_directories(EXTRACT_SENTENCES_FILES, True)
     
-    # create_sentence_file: (list of file paths),
-    #                       {dictionary of token:tag pairs to remove from corpus} - # we remove colloquial spelling tokens like "gon", "wan" and "innit" here,
-    #                       whether to create a .tsv of the output,
-    #                       whether to keep the original sentence or "clean" it to be used for training an ndl model
+    # we remove colloquial spelling tokens like "gon", "wan" and "innit" here
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
-
     create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, True, False)
     create_sentence_file.run([TAGGED_FILE, RESULTS_O_SENS], {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, True, False)
+    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, False, False, True)
+    #create_sentence_file.run(EXTRACT_SENTENCES_FILES, {}, True, True, True)
     create_sentence_file.add_column_to_file(RESULTS, RESULTS_O_SENS, "sentence", "O_sentence", 1)
 
 def step_2():
-    # create folders specified by the list stored in ANNOTATE_DIRS
     file_tools.manage_directories(ANNOTATE_DIRS, False)
-    chdir(WD_ANNOTATE) # change working directory to the path in WD_EXTRACT
-
-    # create folders specified by the list stored in ANNOTATE_FILES
-    # the "True" means that the paths in the list are for files and not directories
+    chdir(WD_ANNOTATE)
     file_tools.manage_directories(ANNOTATE_FILES, True)
 
     # the final parameter is for verbosity (whether to print the output of the process as we go along)
@@ -92,14 +81,30 @@ def step_7():
     ndl_model.run(SIM_FILES, SIM_PARAMS)
 
 def main():
-    # uncomment by deleting hashtag for each step you wish to complete
+    #uncomment each step you wish to complete
     #step_1()
     #step_2()
     #step_3()
     #step_4()
     #step_5()
-    #step_6() 
-    #step_7() #requires you to uncomment an import line at the top
+    #step_6()
+    #step_7()
+    keys = ["present.simple","past.simple",
+            "present.perf","future.simple",
+            "present.prog","past.perf",
+            "present.perf.prog","future.prog",
+            "past.perf.prog","future.perf",
+            "future.perf.prog"]
+    #ratios = [655438,610475,100503,67433,46884,45191,26264,3398,2336,1288,660,9]
+    ratios = [500,500,500,500,500,500,500,500,500,500,500,500]
+    #chdir('D:\\work\\OoOM\\ndl\\test_location\\test')
+    #top_cues_for_sen.run("tenses_file", "cue_weights", "result_file", [1410, 441, 133, 132], 5, 500)
+    #top_cues_for_sen.run("tenses_file", "cue_weights", "result_file", [655438,610475,100503,67433,46884,45191,26264,3398,2336,1288,660,9], 5, 500)
+    sample_size = 50000
+    file_path = "D:\\work\\OoOM\\ndl\\ndl_tense\\data_analysis\\Model_results\\results_29_09_2021\\Results_all_testset_ngrams_multiverbs.csv"
+    chdir('D:\\work\\OoOM\\ndl\\test_location\\test')
+    new_df = sample_sentences.run(file_path, keys, ratios, sample_size, True)
+    new_df.to_csv("new_sample_thing.csv", index=False)
 
 if __name__ == "__main__":
     main()
