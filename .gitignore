@@ -45,5 +45,8 @@ ndl_paramsearch.py
 ndl_tense/test_location
 ndl_tense/results_for_resubmition
 loading_activations.py
+colloquial_full_sen.txt
 without_gon.csv
 test_location/test/new_smaple_thing.csv
+sample_q.txt
+/dist

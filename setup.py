@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="ndl_tense",
-    version="0.0.2",
+    version="0.0.3",
     license = 'MIT',
     author="Tekevwe Kwakpovwe",
     author_email="t.kwakpovwe@gmail.com",
@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",
-    download_url= "https://github.com/ooominds/ndltenses/archive/refs/tags/test_1.tar.gz",
+    download_url= "https://github.com/ooominds/ndltenses/archive/refs/tags/v0.0.tar.gz",
     keywords=["NDL", "Tense", "NLP"],
     install_requires=[
           'numpy',
