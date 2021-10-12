@@ -10,6 +10,4 @@ ndl_tense:
 7) Parameters files (param_default.py and param_file.py) for handling the folders, file names and hyperparameters at each stage of the pipeline
 8) Tense/aspect counts
 9) Chunk sentences
-10) add null tags to corpora
-11) locate articles associated with nouns
 packaged on PyPi
