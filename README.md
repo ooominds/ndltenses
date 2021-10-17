@@ -21,8 +21,6 @@ There are some necessary files (NF) that need to be created by yourself and stor
 ---------------------------------------------------
 The pipeline.py file (found in the GitHub repository) acts as a step-by-step guide to run the code from preparing the data (including annotation) of the English tense project to training an NDL model on this data.
 
-Based on code by Adnane Ez-zizi dated 06/08/2020; corrected, updated and adapted as a python package by Tekevwe Kwakpovwe, 08/2021. Changes listed in the ![changes file](changes.txt)
-
 
 #### Step I: Create sentences file from corpus file with verb tags 
 
@@ -91,3 +89,12 @@ Based on code by Adnane Ez-zizi dated 06/08/2020; corrected, updated and adapted
 - Folder variable: WD_SIM
 - File 1: ndl_model
 -> Train an NDL model
+
+
+## contributors
+---------------------------------------------------
+This packages is based on code written for R by Adnane Ez-zizi - date of last change 06/08/2020. This code was corrected, updated and adapted as a Python package by Tekevwe Kwakpovwe, completed August 2021. Changes are listed in the ![changes file](changes.txt)
+
+The tense-aspect annotation heuristics were provided by Dagmar Hanzlikova, Laurence Romain and Dagmar Divjak.
+
+Work by all contributors was funded by Leverhulme Trust Leadership Award RL-2016-001 to Dagmar Divjak.
