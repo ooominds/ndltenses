@@ -7,13 +7,14 @@
 ### Libraries
 import os
 import logging
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("data_preparation")
+logger.setLevel(level=logging.INFO)
 
 from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
 import pandas as pd
 
-def clean_sents(tenses_df):
+def clean_sents(tenses_df, o_sents):
   """
   Remove empty and lengthy sentences from the dataframe
 
@@ -33,10 +34,11 @@ def clean_sents(tenses_df):
   ### Reorder the columns
   nC = len(tenses_df.columns)
   nV = ((nC-3)/3)  # number of verbs 
-
+  o_sents = False
   ## Order column names 
-  if "O_sentence" in tenses_df.columns:
+  if o_sents:
     col_order = ["sentence", "O_sentence", "sentence_length", "num_verb_tags"]
+    o_sents = True
   else:
     col_order = ["sentence", "sentence_length", "num_verb_tags"]
 
@@ -72,7 +74,7 @@ def clean_sents(tenses_df):
 #################
 # Annotation
 #################
-def run(ANNOTATE_FILES, VERBOSE):
+def run(ANNOTATE_FILES, VERBOSE=True):
   """
   Carry out this stage of processing and annotate the input csv file for tense
 
@@ -93,8 +95,11 @@ def run(ANNOTATE_FILES, VERBOSE):
   SENTS, TENSES_ANNOTATED_NOINF_CLEAN = ANNOTATE_FILES[0], ANNOTATE_FILES[1]
   ### Basic data preparation
   tenses_df =  pd.read_csv("%s.csv"%(SENTS), na_values = "")
+  o_sents = False
+  if "O_sentence" in tenses_df.columns:
+    o_sents = True
 
-  tenses_df = clean_sents(tenses_df)
+  tenses_df = clean_sents(tenses_df, o_sents)
   
   # Remove 'sentence_length' and 'num_verb_tags' columns
   tenses_df.drop(columns= ["sentence_length", "num_verb_tags"], inplace=True)
@@ -120,8 +125,7 @@ def run(ANNOTATE_FILES, VERBOSE):
   tenses_annotated.columns=col_names
 
   for j in range(0, tenses_annotated.shape[0]):
-    tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(tenses_df.iloc[j,:])
-    #print(tenses_annotated.iloc[j,4:8])
+    tenses_annotated.loc[j] = tags_to_tense.get_vect_tenses(tenses_df.iloc[j,:], o_sents)
 
   ##################################
   # Remove unnecessery empty columns
@@ -138,10 +142,10 @@ def run(ANNOTATE_FILES, VERBOSE):
   for j in range(non_empty_verb_col):
     tenses_annotated["Infinitive%s"%(j+1)] = np.nan
   
-  if "O_sentence" in tenses_df.columns:
+  if o_sents:
     tenses_annotated["O_Sentence"] = tenses_df['O_sentence']
 
   tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   if VERBOSE:
-    logging.info("STEP 2: Annotating tenses complete\n")
+    logger .info("STEP 2: Annotating tenses complete\n")
   

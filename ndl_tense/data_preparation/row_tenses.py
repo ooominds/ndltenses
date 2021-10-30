@@ -24,6 +24,7 @@ def get_tenses(vect_tags):
 
     ### Define tense of the first verb 
     vect_tenses = {"Tense":"", "VerbForm":"", "MainVerb":"", "Position":"", "infinitive":""}
+    #print(vect_tags)
     c_names = list(vect_tags.columns)
 
     ################### Imperatives ######################

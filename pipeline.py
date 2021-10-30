@@ -1,5 +1,5 @@
-from ndl_tense.data_preparation import create_sentence_file
-#,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
+from ndl_tense.data_preparation import create_sentence_file,annotate_tenses
+#,prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
 
 #below import commented out for now, uncomment if you want to run step 6
 #from ndl_tense.simulations import ndl_model
@@ -37,7 +37,7 @@ def step_2():
     # the "True" means that the paths in the list are for files and not directories
     file_tools.manage_directories(ANNOTATE_FILES, True)
 
-    # the final parameter is for verbosity (whether to print the output of the process as we go along)
+    # the final parameter is for verbosity (True = print the output of the process as we go along)
     annotate_tenses.run(ANNOTATE_FILES, True)
 
 def step_3():
@@ -94,8 +94,8 @@ def step_7():
 
 def main():
     # uncomment by deleting hashtag for each step you wish to complete
-    step_1()
-    #step_2()
+    #step_1()
+    step_2()
     #step_3()
     #step_4()
     #step_5()
