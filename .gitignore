@@ -34,6 +34,8 @@ test_location/test/tenses_file - Copy.csv
 test_location/test/reduced_sentences.csv
 BNC.tagged.txt
 BNC.tagged.null.txt
+BNC.spoken.clean.txt
+BNC.tagged.null.txt
 BNC.tagged.null.short.txt
 ndl_tense/simulations/NDL_ngram_oneverb
 ndl_tense/simulations/NDL_ngram_multiverbs
@@ -50,3 +52,7 @@ without_gon.csv
 test_location/test/new_smaple_thing.csv
 sample_q.txt
 /dist
+changes.txtcolloquial_full_sen.txt
+MANIFEST
+setup.py
+setup.cfg

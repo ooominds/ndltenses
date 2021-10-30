@@ -1,11 +1,11 @@
-from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
+from ndl_tense.data_preparation import create_sentence_file
+#,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
 
 #below import commented out for now, uncomment if you want to run step 6
 #from ndl_tense.simulations import ndl_model
-from ndl_tense.post_processing import top_cues_for_sen, sample_sentences
+#from ndl_tense.post_processing import top_cues_for_sen, sample_sentences
 from ndl_tense import file_tools
 from param_file import *
-import numpy as np
 from os import chdir
 
 def step_1():
@@ -17,15 +17,16 @@ def step_1():
     # the "True" means that the paths in the list are for files and not directories
     file_tools.manage_directories(EXTRACT_SENTENCES_FILES, True)
     
+    # (The default paramenters are the ones set here)
     # create_sentence_file: (list of file paths),
     #                       {dictionary of token:tag pairs to remove from corpus} - # we remove colloquial spelling tokens like "gon", "wan" and "innit" here,
-    #                       whether to create a .tsv of the output,
-    #                       whether to keep the original sentence or "clean" it to be used for training an ndl model
-    # the final parameter is for verbosity (whether to print the output of the process as we go along)
+    #                       "True" = create a .tsv of the output,
+    #                       True = keep the original sentence | False = "clean" it to be used for training an ndl model
+    #                       the final parameter is for verbosity True = print the output of the process as we go along
+    # The default paramenters are the ones set here 
+    #  so this can be run with a call like create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}) and have the same result
 
-    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, True, False)
-    create_sentence_file.run([TAGGED_FILE, RESULTS_O_SENS], {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, True, False)
-    create_sentence_file.add_column_to_file(RESULTS, RESULTS_O_SENS, "sentence", "O_sentence", 1)
+    create_sentence_file.run(EXTRACT_SENTENCES_FILES, {"gon":"VVG", "wan":"VVB", "innit":"VBB"}, False, False, True)
 
 def step_2():
     # create folders specified by the list stored in ANNOTATE_DIRS
@@ -93,7 +94,7 @@ def step_7():
 
 def main():
     # uncomment by deleting hashtag for each step you wish to complete
-    #step_1()
+    step_1()
     #step_2()
     #step_3()
     #step_4()

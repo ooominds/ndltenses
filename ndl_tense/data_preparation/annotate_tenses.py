@@ -7,7 +7,7 @@
 ### Libraries
 import os
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 from ndl_tense.data_preparation import tags_to_tense
 import numpy as np

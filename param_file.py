@@ -1,4 +1,3 @@
-
 ####################################
 # EXTRACT and create SENTENCES
 ####################################
@@ -7,12 +6,9 @@ NF = 'D:\\work\\OoOM\\ndl\\necessary_files' # necessary files that are user defi
 TOP = 'D:\\work\\OoOM\\ndl\\test_location\\data_preparation' #the top level directory to place files created by the process in
 
 WD_EXTRACT = TOP + "\\extract\\" # directory to store the results of this step
-#TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.null'
-#TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\BNC.tagged.null.short'
-#TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\colloquial_full_sen' # should be a .txt file
 TAGGED_FILE = 'D:\\work\\OoOM\\ndl\\necessary_files\\BNC.tagged.supershort' # should be a .txt file
-RESULTS = WD_EXTRACT + "example_sentences" # this should be a csv file
-RESULTS_O_SENS = WD_EXTRACT + "o_sens_example_sentences" # this should be a csv file
+RESULTS = WD_EXTRACT + "extracted_sentences" # this should be a csv file
+RESULTS_O_SENS = WD_EXTRACT + "o_sens_extracted_sentences" # this should be a csv file
 EXTRACT_SENTENCES_DIRS = [WD_EXTRACT] # main directory in which the results of this step are stored
 EXTRACT_SENTENCES_FILES = [TAGGED_FILE, RESULTS] # list of files that need to be created (potentially with sub-directories)
 

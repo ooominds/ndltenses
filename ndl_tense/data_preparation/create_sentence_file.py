@@ -6,7 +6,8 @@
 import os
 import re
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger("data_preparation")
+logger.setLevel(level=logging.INFO)
 
 from collections import OrderedDict
 import pandas as pd
@@ -98,9 +99,9 @@ def process_token(line, end_sent_marks, to_remove, KEEP_ORIGINAL_TOKEN, NORMALIS
     # Split words seperated with a dash
     elif seq_dash_pattern.search(token):
         if NORMALISE:
-            words = " ".join(token.lower().split('-'))
+            words = token.lower().split('-')
         else:
-            words = " ".join(token.split('-'))
+            words = token.split('-')
         for word in words:
             if special_char_pattern.search(word):
                 words.remove(word)
@@ -243,14 +244,14 @@ def extract_sentences(file, to_remove, KEEP_ORIGINAL_SEN, VERBOSE):
                 if token in end_sent_marks:
                     keep_sen = True
             if (ii+1) % 1000000 == 0 and VERBOSE:
-                logging.info('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
+                logger.info('{} lines processed in {}s\n'.format(ii+1, (time.time() - start)))
         if VERBOSE:
-            logging.info('%d lines processed in %.0fs\n' % (ii+1, (time.time() - start)))
+            logger.info('{} lines processed in {}\n'.format(ii+1, (time.time() - start)))
         return all_sents
 
 def add_column_to_file(file_1, file_2, col_to_join, new_col_name, position):
-    table1 = pd.read_csv("%s.csv"%(file_1))
-    table2 = pd.read_csv("%s.csv"%(file_2))
+    table1 = pd.read_csv("{}.csv".format(file_1))
+    table2 = pd.read_csv("{}.csv".format(file_2))
     table1[new_col_name] = table2[col_to_join]
     
     new_col = table1.pop(new_col_name)
@@ -258,7 +259,7 @@ def add_column_to_file(file_1, file_2, col_to_join, new_col_name, position):
 
     table1.to_csv("%s.csv"%(file_1), index=False)
 
-def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
+def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV=False, KEEP_ORIGINAL_SEN=False, VERBOSE=True):
     """
     Carry out this step of processing and create a file of sentences with
     verbs, verb tags, verb tags, sentences and sentence length
@@ -285,7 +286,7 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
     """  
 
     TAGGED_FILE, RESULTS = EXTRACT_SENTENCES_FILES[0], EXTRACT_SENTENCES_FILES[1] 
-    sentences = extract_sentences("%s.txt"%(TAGGED_FILE), TO_REMOVE, KEEP_ORIGINAL_SEN, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
+    sentences = extract_sentences("{}.txt".format(TAGGED_FILE), TO_REMOVE, KEEP_ORIGINAL_SEN, VERBOSE) # 43264 with ambiguous verb tags / 40436 without
     # turn into dictionary of dictionary representation
     start = time.time()
     sentences_dict = dict()
@@ -299,13 +300,13 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
             sentences_dict[i]["verb_{}_tag".format(j+1)] = tag
             sentences_dict[i]["verb_{}_position".format(j+1)] = position + 1
     if VERBOSE:
-        logging.info('Dictionary of dictionary constructed in %.3fs\n' % ((time.time()- start)))
+        logger .info('Dictionary of dictionary constructed in {}s\n'.format((time.time()- start)))
 
     # turn into data frame
     start = time.time()
     sentences_df = pd.DataFrame.from_dict(sentences_dict, orient="index")
     if VERBOSE:
-        logging.info('Dataframe constructed in %.3fs\n' % ((time.time()- start)))
+        logger .info('Dataframe constructed in {}s\n'.format((time.time()- start)))
 
     if TO_TSV:
         file_type = "tsv"
@@ -315,4 +316,4 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV, KEEP_ORIGINAL_SEN, VERBOSE):
     with open("%s.%s"%(RESULTS, file_type), "w", encoding="utf-8") as res_csv:
         sentences_df.to_csv(res_csv, sep = ",", index = False, encoding="utf-8")
     if VERBOSE:
-        logging.info('STEP 1: Creating the sentences file is complete')
+        logger .info('STEP 1: Creating the extracted sentences file is complete')
