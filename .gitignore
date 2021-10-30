@@ -8,14 +8,7 @@ ndl_tense/tense_aspect_pairs_BNC.txt
 ndl_tense/data_preparation/Data_preparation_steps.txt
 ndl_tense/data_preparation/ngram_prep_data/events_multi_temp.gz
 ndl_tense/data_preparation/ngram_prep_data/events_one_temp.gz
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/1grams.csv
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/1grams_touse.csv
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/2grams.csv
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/2grams_touse.csv
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/3grams.csv
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/3grams_touse.csv
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/4grams.csv
-ndl_tense/data_preparation/ngram_prep_data/multi_verbs/4grams_touse.csv
+ndl_tense/data_preparation/ngram_prep_data/multi_verbs
 ndl_tense/data_preparation/ngram_prep_data/multi_verbs/events_4grams.gz
 ndl_tense/data_preparation/ngram_prep_data/multi_verbs/ngrams_touse.csv
 ndl_tense/data_preparation/ngram_prep_data/one_verb/1grams.csv
@@ -33,10 +26,10 @@ test_location/test/tenses_file.csv
 test_location/test/tenses_file - Copy.csv
 test_location/test/reduced_sentences.csv
 BNC.tagged.txt
-BNC.tagged.null.txt
 BNC.spoken.clean.txt
 BNC.tagged.null.txt
 BNC.tagged.null.short.txt
+BNC.tagged.null.txt
 ndl_tense/simulations/NDL_ngram_oneverb
 ndl_tense/simulations/NDL_ngram_multiverbs
 to_do.txt
@@ -56,3 +49,7 @@ changes.txtcolloquial_full_sen.txt
 MANIFEST
 setup.py
 setup.cfg
+pyproject.toml
+word_associates.py
+random_things
+changes.txt
