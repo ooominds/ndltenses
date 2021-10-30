@@ -484,8 +484,6 @@ def add_info(tenses, TENSES_ONE_VERB_READY_GZ):
     ### Data set containing only sentences with one verb
     tenses1 = tenses[tenses.NumOfVerbs == 1]
 
-    tenses1['Tense'].value_counts()
-
     # Export the dataset
     tenses1.to_csv(TENSES_ONE_VERB_READY_GZ, compression='gzip', index = False, encoding="utf-8")
 
@@ -651,6 +649,23 @@ def run(PREPDAT_FILES, VERBOSE=True):
     tenses['NumOfVerbs'] = tenses.groupby(['SentenceID'])['Sentence'].transform('count')
     cols = list(tenses.columns)
     cols.insert(3,cols.pop(cols.index('NumOfVerbs')))
+    tenses = tenses.loc[:, cols]
+
+    ################################################################
+    # Add information about the order of each verb within a sentence 
+    #################################################################
+
+
+    SentID_list = list(tenses["SentenceID"].unique())
+    tenses = tenses[tenses['SentenceID'].isin(SentID_list)]
+
+    # Create a column to encode the order of the verb relative to the other verbs and move it after the 'NumOfVerbs' column 
+    tenses['VerbOrder'] = tenses.groupby('SentenceID').cumcount()
+    tenses['VerbOrder'] =  tenses['VerbOrder'] + 1
+
+    # Change the order of the column 'VerbOrder'
+    cols = list(tenses.columns)
+    cols.insert(5, cols.pop(cols.index('VerbOrder')))
     tenses = tenses.loc[:, cols]
 
     shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ)

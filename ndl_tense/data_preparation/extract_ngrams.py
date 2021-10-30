@@ -12,7 +12,6 @@ import csv
 import gc
 import pandas as pd
 from nltk.util import ngrams
-import gzip
 from pyndl.count import cues_outcomes
 
 
@@ -125,14 +124,12 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     NGRAM2 = NGRAM_FILES[2]
     NGRAM3 = NGRAM_FILES[3]
     NGRAM4 = NGRAM_FILES[4]
-    EVENT_FILE = "%s.gz"%(NGRAM_FILES[5])
+    EVENT_FILE = "{}.gz".format(NGRAM_FILES[5])
 
     ### Load the data
     start = time.time()
     tenses_full = pd.read_csv("%s.csv.gz"%(TENSES_GZ), compression='gzip', usecols = ['WordCuesNoInfinitive', 'Tense'])
     logging.info('Loading the data took %ds' %((time.time()-start)))
-    #print(f'Number of examples: {len(tenses_full)}')
-    # Number of examples: 7047168
 
     ### Keep only the cues and outcomes then rename columns 
     tenses_full = tenses_full.rename(columns={"WordCuesNoInfinitive": "cues", "Tense": "outcomes"}) 
@@ -145,14 +142,8 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     ######## Calculate the frequency of co-occurence between each 1-gram and tense #############
     tenses_1gram = create_ngram_event_df_file(tenses_full, 1)
     ngram_freqs1 = compute_cue_freqs(tenses_1gram, TEMP_DIR, NUM_THREADS, True) 
-    ngram_freqs1.shape # (286911, 2)
+    ngram_freqs1.shape 
     ngram_freqs1.head() 
-    #   ngram  frequency
-    # 0   the    9419620
-    # 1    of    4482465
-    # 2   and    4278936
-    # 3    to    4267642
-    # 4     a    3445382
 
     ### Number of n-grams that appear at least 10 times
     len(ngram_freqs1[ngram_freqs1['frequency']>=10]) # 103915
@@ -164,14 +155,8 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     ######## Calculate the frequency of co-occurence between each 2-gram and tense #############
     tenses_2grams = create_ngram_event_df_file(tenses_full, 2)
     ngram_freqs2 = compute_cue_freqs(tenses_2grams, TEMP_DIR, NUM_THREADS, True) 
-    ngram_freqs2.shape # (9444152, 2)
+    ngram_freqs2.shape
     ngram_freqs2.head() 
-    #     ngram  frequency
-    # 0  of#the    1124747
-    # 1  in#the     800043
-    # 2  to#the     452096
-    # 3   it#is     349753
-    # 4  on#the     338707
 
     ### Number of n-grams that appear at least 10 times
     len(ngram_freqs2[ngram_freqs2['frequency']>=10]) # 1103795
@@ -183,14 +168,8 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     ######## Calculate the frequency of co-occurence between each 3-gram and tense #############
     tenses_3grams = create_ngram_event_df_file(tenses_full, 3)
     ngram_freqs3 = compute_cue_freqs(tenses_3grams, TEMP_DIR, NUM_THREADS, True) 
-    ngram_freqs3.shape # (33851071, 2)
+    ngram_freqs3.shape 
     ngram_freqs3.head() 
-    #         ngram  frequency
-    # 1    i#do#not      58839
-    # 2  one#of#the      58365
-    # 3  the#end#of      32642
-    # 4   it#is#not      32553
-    # 5     it#is#a      31347
 
     ### Number of n-grams that appear at least 10 times
     len(ngram_freqs3[ngram_freqs3['frequency']>=10]) # 1458210

@@ -6,9 +6,11 @@
 import pandas as pd
 import time
 import logging
-logging.basicConfig(level=logging.DEBUG)
 
-def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
+logger = logging.getLogger("data_preparation")
+logger.setLevel(level=logging.INFO)
+
+def run(EXTRACT_INFINITIVE_FILES, VERBOSE=True):
     """
     Extract the infinitives from the file as well as their co-occurence frequencies
 
@@ -39,9 +41,9 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
 
     ### Load the data
     start = time.time()
-    tenses = pd.read_csv("%s.csv.gz"%(TENSES_GZ), compression='gzip', usecols = ['Infinitive', 'Tense'])
+    tenses = pd.read_csv("{}.csv.gz".format(TENSES_GZ), compression='gzip', usecols = ['Infinitive', 'Tense'])
     if VERBOSE:
-        logging.info('Loading the data took %ds\n'%((time.time()-start)))
+        logger.info('Loading the data took {}s\n'.format((time.time()-start)))
 
     # Number of examples: 7041928
 
@@ -59,17 +61,11 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
     # future.perf             2962
     # future.perf.prog          30
 
-    tenses.columns
-    # Index(['Tense', 'Infinitive'], dtype='object')
 
     ### Calculate the frequency and proportion of co-occurence between each infinitive and tense
     cooc_freqs = tenses.groupby(["Infinitive", "Tense"]).size().reset_index(name="Freq")  
-    cooc_freqs.shape 
-    # (41849, 3)
 
     cooc_freqs = pd.crosstab(tenses["Infinitive"], tenses["Tense"])
-    cooc_freqs.shape 
-    # (14723, 12)
 
     # Rename the columns
     tense_col_names = list(map(lambda s: "_".join([s.replace('.', '_'),"freq"]), cooc_freqs.columns))
@@ -98,7 +94,7 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE):
     infinitives = cooc_freqs.index.to_frame()
 
     ### Export the co-occurence and infinitives datasets
-    cooc_freqs.to_csv("%s.csv"%(COOC_FREQ_CSV), sep = ',')
-    infinitives.to_csv("%s.csv"%(INFINITIVES_CSV), sep = ',', header = False, index = False)
+    cooc_freqs.to_csv("{}.csv".format(COOC_FREQ_CSV), sep = ',')
+    infinitives.to_csv("{}.csv".format(INFINITIVES_CSV), sep = ',', header = False, index = False)
     if VERBOSE:
-        logging.info('STEP 4: Extracting infinitives is complete\n')
+        logger.info('STEP 4: Extracting infinitives is complete\n')

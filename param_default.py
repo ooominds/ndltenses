@@ -55,8 +55,6 @@ PREPDAT_FILES = [TENSES,TENSES_ONE_SENT_PER_VERB_WITH_MODALS,TENSES_ONE_SENT_PER
 #--------------------------------------------------------
 
 
-
-
 ######################################
 # STEP 3: PREPARE TRAIN VALID TEST
 ######################################
@@ -109,11 +107,6 @@ EXTRACT_INFINITIVE_FILES =  [TENSES_GZ, COOC_FREQ_CSV, INFINITIVES_CSV]
 
 #--------------------------------------------------------
 
-
-######################################
-# OPTIONAL: EXTRACT NGRAM WITH FREQ
-######################################
-
 WD_EXTRACT_NGRAM = TOP + ""
 
 ### Parameters to use
@@ -137,13 +130,13 @@ TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "data"
 # Final list of ngrams to use in training (5000)
 TARGETS = WD_EXTRACT_NGRAM + "" #.csv file
 # Separate lists of chunks
-TARGETS_1G = WD_EXTRACT_NGRAM + ""
-TARGETS_2G = WD_EXTRACT_NGRAM + ""
-TARGETS_3G = WD_EXTRACT_NGRAM + ""
-TARGETS_4G = WD_EXTRACT_NGRAM + ""
-EVENT_FILE = WD_EXTRACT_NGRAM + ""
+TARGETS_1G = WD_EXTRACT_NGRAM + "" #csv
+TARGETS_2G = WD_EXTRACT_NGRAM + "" #csv
+TARGETS_3G = WD_EXTRACT_NGRAM + "" #csv 
+TARGETS_4G = WD_EXTRACT_NGRAM + "" #csv
+EVENT_FILE = WD_EXTRACT_NGRAM + "" #csv
 
-NGRAM_FOLDERS = [WD_EXTRACT_NGRAM]
+NGRAM_FOLDERS = [WD_EXTRACT_NGRAM, TEMP_DIR_EXT]
 NGRAM_FILES = [NGRAM, NGRAM1, NGRAM2, NGRAM3, NGRAM4, EVENT_FILE]
 TARGETS_FILES = [TARGETS, TARGETS_1G, TARGETS_2G, TARGETS_3G, TARGETS_4G]
 K_NGRAMS = 10000
@@ -166,7 +159,7 @@ NGRAMS = TARGETS
 # list of ngrams to use in training (4681)
 INFINITIVES = INFINITIVES_CSV
 # final list of all cues
-ALL_CUES = WD_CUES + ""
+ALL_CUES = WD_CUES + "" #csv
 
 
 

@@ -7,6 +7,9 @@ from param_file import CREATE_TRAIN_VALID_TEST_FILES
 import pandas as pd
 import time
 import logging
+from collections import Counter
+from sklearn.model_selection import train_test_split
+
 logger = logging.getLogger("data_preparation")
 logger.setLevel(level=logging.INFO)
 
@@ -21,11 +24,7 @@ pd.set_option('display.max_columns', 150)
 ####################
 
 ### Import necessary packages
-import re
-import csv 
-import random
-from collections import Counter
-from sklearn.model_selection import train_test_split
+
 
 ### Set working directory
 
@@ -68,35 +67,8 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_VALID, PROP_TEST, VERBOSE)
         logger.info('Loading the data took {}s\n'.format((time.time()-start)))
     # Number of examples: 7041930
 
-    tenses['Tense'].value_counts()
-    # present.simple       3245124
-    # past.simple          2639397
-    # present.perf          339566
-    # future.simple         272308
-    # past.perf             253212
-    # present.prog          148123
-    # past.prog             114803
-    # present.perf.prog      11308
-    # future.prog             8059
-    # past.perf.prog          7038
-    # future.perf             2962
-    # future.perf.prog          30
-
     ### Remove future.perf.prog
     tenses = tenses[tenses['Tense'] != 'future.perf.prog']
-
-    tenses['Tense'].value_counts()
-    # present.simple       3245124
-    # past.simple          2639397
-    # present.perf          339566
-    # future.simple         272308
-    # past.perf             253212
-    # present.prog          148123
-    # past.prog             114803
-    # present.perf.prog      11308
-    # future.prog             8059
-    # past.perf.prog          7038
-    # future.perf             2962
 
     # Create a counter of sent ids
     SentID_list = list(tenses["SentenceID"])
@@ -173,37 +145,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_VALID, PROP_TEST, VERBOSE)
     #tenses_train = tenses
     #tenses_train.to_csv(TENSES_ONE_VERB_TRAIN_GZ, compression='gzip', index = False) # Export the train dataset
 
-
-##################################################
-# ngram based event files for the multi verbs set
-##################################################
-def ngram_event_files(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test,
-                      NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST):
-
-    #print(f'Number of examples: {len(tenses_multiverbs_train)}') # Number of examples: 6343547
-    #print(f'Number of examples: {len(tenses_multiverbs_valid)}') # Number of examples: 352168
-    #print(f'Number of examples: {len(tenses_multiverbs_test)}') # Number of examples: 351408
-
-    ### Rename cue and outcome columns and reorder
-    tenses_multiverbs_train.rename(columns = {'NgramCuesWithInfinitive': 'cues',
-                                        'Tense': 'outcomes'}, inplace = True)
-    tenses_multiverbs_valid.rename(columns = {'NgramCuesWithInfinitive': 'cues',
-                                        'Tense': 'outcomes'}, inplace = True)
-    tenses_multiverbs_test.rename(columns = {'NgramCuesWithInfinitive': 'cues',
-                                        'Tense': 'outcomes'}, inplace = True)
-                                        
-    tenses_multiverbs_train = tenses_multiverbs_train[['cues', 'outcomes']]
-    tenses_multiverbs_valid = tenses_multiverbs_valid[['cues', 'outcomes']]
-    tenses_multiverbs_test = tenses_multiverbs_test[['cues', 'outcomes']]
-
-    # Export the ngram-based event files
-    tenses_multiverbs_train.to_csv("{}.gz"%(NGRAM_EVENTS_MULTI_VERBS_TRAIN), sep='\t' , index = False, compression='gzip')
-    tenses_multiverbs_valid.to_csv("{}.gz"%(NGRAM_EVENTS_MULTI_VERBS_VALID), sep='\t', index = False, compression='gzip')
-    tenses_multiverbs_test.to_csv("{}.gz"%(NGRAM_EVENTS_MULTI_VERBS_TEST), sep='\t', index = False, compression='gzip')
-
-    del tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test
-
-def run(PREPARE_TRAIN_VALID_TEST_FILES, VERBOSE):
+def run(PREPARE_TRAIN_VALID_TEST_FILES, BY='NgramCuesWithInfinitive', VERBOSE=True):
     TENSES_TRAIN_GZ = PREPARE_TRAIN_VALID_TEST_FILES[0]
     TENSES_VALID_GZ = PREPARE_TRAIN_VALID_TEST_FILES[1]
     TENSES_TEST_GZ = PREPARE_TRAIN_VALID_TEST_FILES[2]
@@ -214,23 +156,25 @@ def run(PREPARE_TRAIN_VALID_TEST_FILES, VERBOSE):
     
     ### Load the data
     start = time.time()
-    tenses_multiverbs_train = pd.read_csv("{}.csv.gz"%(TENSES_TRAIN_GZ), compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
-    tenses_multiverbs_valid = pd.read_csv("{}.csv.gz"%(TENSES_VALID_GZ), compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
-    tenses_multiverbs_test = pd.read_csv("{}.csv.gz".format(TENSES_TEST_GZ), compression='gzip', usecols=['WordCuesWithInfinitive', 'Tense'])
+    tenses_multiverbs_train = pd.read_csv("{}.csv.gz".format(TENSES_TRAIN_GZ), compression='gzip', usecols=[BY, 'Tense'])
+    tenses_multiverbs_valid = pd.read_csv("{}.csv.gz".format(TENSES_VALID_GZ), compression='gzip', usecols=[BY, 'Tense'])
+    tenses_multiverbs_test = pd.read_csv("{}.csv.gz".format(TENSES_TEST_GZ), compression='gzip', usecols=[BY, 'Tense'])
     
-    tenses_multiverbs_train.rename(columns = {'WordCuesWithInfinitive': 'cues',
+    tenses_multiverbs_train.rename(columns = {BY: 'cues',
                                         'Tense': 'outcomes'}, inplace = True)
-    tenses_multiverbs_valid.rename(columns = {'WordCuesWithInfinitive': 'cues',
+    tenses_multiverbs_valid.rename(columns = {BY: 'cues',
                                         'Tense': 'outcomes'}, inplace = True)
-    tenses_multiverbs_test.rename(columns = {'WordCuesWithInfinitive': 'cues',
+    tenses_multiverbs_test.rename(columns = {BY: 'cues',
                                         'Tense': 'outcomes'}, inplace = True)
 
     tenses_multiverbs_train = tenses_multiverbs_train[['cues', 'outcomes']]
     tenses_multiverbs_valid = tenses_multiverbs_valid[['cues', 'outcomes']]
     tenses_multiverbs_test = tenses_multiverbs_test[['cues', 'outcomes']]
     
-    ngram_event_files(tenses_multiverbs_train, tenses_multiverbs_valid, tenses_multiverbs_test,
-                      NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGRAM_EVENTS_MULTI_VERBS_TEST)
+    tenses_multiverbs_train.to_csv("{}.gz".format(NGRAM_EVENTS_MULTI_VERBS_TRAIN), sep='\t' , index = False, compression='gzip')
+    tenses_multiverbs_valid.to_csv("{}.gz".format(NGRAM_EVENTS_MULTI_VERBS_VALID), sep='\t', index = False, compression='gzip')
+    tenses_multiverbs_test.to_csv("{}.gz".format(NGRAM_EVENTS_MULTI_VERBS_TEST), sep='\t', index = False, compression='gzip')
+
     if VERBOSE:
         logger.info('Loading the data sets took {}s\n'.format((time.time()-start)))
         logger.info('STEP 4 2/2: Preparing NDL events is complete\n')

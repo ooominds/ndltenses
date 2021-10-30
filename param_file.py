@@ -38,8 +38,8 @@ WD_PREPDAT = TOP + '\\prepare_events\\' # directory to store the results of this
 
 ### Define file paths
 TENSES = TENSES_ANNOTATED_NOINF_CLEAN
-TENSES_ONE_SENT_PER_VERB_WITH_MODALS = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_with_modals" #.csv
-TENSES_ONE_SENT_PER_VERB_SHUF_GZ = WD_PREPDAT + "tenses_annotated_one_sent_per_verb_shuffeled" #.csv.gz
+TENSES_ONE_SENT_PER_VERB_WITH_MODALS = WD_PREPDAT + "annotated_one_sent_per_verb_with_modals" #.csv
+TENSES_ONE_SENT_PER_VERB_SHUF_GZ = WD_PREPDAT + "annotated_one_sent_per_verb_randomised" #.csv.gz
 #TENSES_ONE_VERB = WD_PREPDAT + "\\tenses_annotated_oneverb.csv"
 #TENSES_ONE_VERB_READY_GZ = WD_PREPDAT + "\\tenses_annotated_oneverb_ready.csv.gz"
 #TENSES_ONE_VERB_SHUF_GZ = WD_PREPDAT + "\\tenses_annotated_oneverb_shuffeled.csv.gz"
@@ -107,11 +107,6 @@ EXTRACT_INFINITIVE_FILES =  [TENSES_GZ, COOC_FREQ_CSV, INFINITIVES_CSV]
 
 #--------------------------------------------------------
 
-
-######################################
-# OPTIONAL: EXTRACT NGRAM WITH FREQ
-######################################
-
 WD_EXTRACT_NGRAM = TOP + '\\prepare_ngrams\\'
 
 ### Parameters to use
@@ -125,7 +120,7 @@ NGRAM2 = WD_EXTRACT_NGRAM + "2grams" #csv
 NGRAM3 = WD_EXTRACT_NGRAM + "3grams" #csv
 NGRAM4 = WD_EXTRACT_NGRAM + "4grams" #csv
 NGRAM = WD_EXTRACT_NGRAM + "ngrams" #csv
-TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "ngrams_with_freq"
+TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "data"
 
 ######################################
 # NGRAMs TO USE
@@ -135,13 +130,13 @@ TEMP_DIR_EXT = WD_EXTRACT_NGRAM + "ngrams_with_freq"
 # Final list of ngrams to use in training (5000)
 TARGETS = WD_EXTRACT_NGRAM + "ngrams_touse" #.csv file
 # Separate lists of chunks
-TARGETS_1G = WD_EXTRACT_NGRAM + "1grams_touse"
-TARGETS_2G = WD_EXTRACT_NGRAM + "2grams_touse"
-TARGETS_3G = WD_EXTRACT_NGRAM + "3grams_touse"
-TARGETS_4G = WD_EXTRACT_NGRAM + "4grams_touse"
-EVENT_FILE = WD_EXTRACT_NGRAM + "events_4grams"
+TARGETS_1G = WD_EXTRACT_NGRAM + "1grams_touse" #csv
+TARGETS_2G = WD_EXTRACT_NGRAM + "2grams_touse" #csv 
+TARGETS_3G = WD_EXTRACT_NGRAM + "3grams_touse" #csv
+TARGETS_4G = WD_EXTRACT_NGRAM + "4grams_touse" #csv
+EVENT_FILE = WD_EXTRACT_NGRAM + "events_4grams" #csv
 
-NGRAM_FOLDERS = [WD_EXTRACT_NGRAM]
+NGRAM_FOLDERS = [WD_EXTRACT_NGRAM, TEMP_DIR_EXT]
 NGRAM_FILES = [NGRAM, NGRAM1, NGRAM2, NGRAM3, NGRAM4, EVENT_FILE]
 TARGETS_FILES = [TARGETS, TARGETS_1G, TARGETS_2G, TARGETS_3G, TARGETS_4G]
 K_NGRAMS = 10000
@@ -164,14 +159,14 @@ NGRAMS = TARGETS
 # list of ngrams to use in training (4681)
 INFINITIVES = INFINITIVES_CSV
 # final list of all cues
-ALL_CUES = WD_CUES + '\\cues_touse'
+ALL_CUES = WD_CUES + '\\cues_touse' #csv
 
 
 
 #--------------------------------------------------------
 
 ######################################
-#SIMULATIONS
+# SIMULATIONS
 ######################################
 
 WD_SIM = 'D:\\work\\OoOM\\ndl\\test_location\\simulations\\'

@@ -1,5 +1,5 @@
-from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data,prepare_ndl_events
-#, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
+from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events,extract_infinitive,extract_ngrams,prepare_ngrams
+#, prepare_cues
 
 #below import commented out for now, uncomment if you want to run step 6
 #from ndl_tense.simulations import ndl_model
@@ -44,20 +44,20 @@ def step_3():
     file_tools.manage_directories(PREPDAT_DIRS, False)
     chdir(WD_PREPDAT)
     file_tools.manage_directories(PREPDAT_FILES, True)
-    file_tools.manage_directories(PREPARE_TRAIN_VALID_TEST_FILES, False)
+    file_tools.manage_directories(PREPARE_TRAIN_VALID_TEST_FILES, True)
 
     #optional
     #sample_sentences.run(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, kets, ratios, 500, False)
 
     # the final parameter is for verbosity (True =  print the output of the process as we go along)
-    file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, False)
+    file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, True)
 
     prepare_data.run(PREPDAT_FILES, True)
     chdir(WD_PREPDAT)
     prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID, True)
 
     # the final parameter is for verbosity (True =  print the output of the process as we go along)
-    prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES, True)
+    prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES, 'NgramCuesWithInfinitive', True)
 
 def step_4():
     file_tools.manage_directories(EXTRACT_SENTENCES_FOLDERS, False)
@@ -65,7 +65,7 @@ def step_4():
     chdir(WD_EXTRACT_INF)
 
     # the final parameter is for verbosity (True = print the output of the process as we go along)
-    extract_infinitive.run(EXTRACT_INFINITIVE_FILES, False)
+    extract_infinitive.run(EXTRACT_INFINITIVE_FILES, True)
 
 def step_5():
     file_tools.manage_directories(NGRAM_FOLDERS, False)
@@ -95,9 +95,9 @@ def main():
     # uncomment by deleting hashtag for each step you wish to complete
     #step_1()
     #step_2()
-    step_3()
+    #step_3()
     #step_4()
-    #step_5()
+    step_5()
     #step_6() 
     #step_7() #requires you to uncomment an import line at the top
 
