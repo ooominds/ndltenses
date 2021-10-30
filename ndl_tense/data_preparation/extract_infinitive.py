@@ -5,10 +5,10 @@
 ### Import necessary packages
 import pandas as pd
 import time
-import logging
+#import logging
 
-logger = logging.getLogger("data_preparation")
-logger.setLevel(level=logging.INFO)
+#logger = logging.getLogger("data_preparation")
+#logger.setLevel(level=logging.INFO)
 
 def run(EXTRACT_INFINITIVE_FILES, VERBOSE=True):
     """
@@ -43,7 +43,7 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE=True):
     start = time.time()
     tenses = pd.read_csv("{}.csv.gz".format(TENSES_GZ), compression='gzip', usecols = ['Infinitive', 'Tense'])
     if VERBOSE:
-        logger.info('Loading the data took {}s\n'.format((time.time()-start)))
+        print('Loading the data took {}s\n'.format((time.time()-start)))
 
     # Number of examples: 7041928
 
@@ -97,4 +97,4 @@ def run(EXTRACT_INFINITIVE_FILES, VERBOSE=True):
     cooc_freqs.to_csv("{}.csv".format(COOC_FREQ_CSV), sep = ',')
     infinitives.to_csv("{}.csv".format(INFINITIVES_CSV), sep = ',', header = False, index = False)
     if VERBOSE:
-        logger.info('STEP 4: Extracting infinitives is complete\n')
+        print('STEP 4: Extracting infinitives is complete\n')

@@ -9,7 +9,7 @@ from param_file import PREPARE_TRAIN_VALID_TEST_FILES
 import pandas as pd
 import numpy as np
 import time
-import logging
+#import logging
 import csv 
 import random
 import string
@@ -21,8 +21,8 @@ from collections import Counter
 #nltk.download('wordnet')
 #tqdm.pandas()
 
-logger = logging.getLogger("data_preparation")
-logger.setLevel(level=logging.INFO)
+#logger = logging.getLogger("data_preparation")
+#logger.setLevel(level=logging.INFO)
 
 def convert_to_inf(TENSES, VERBOSE):
     lemmatizer = WordNetLemmatizer() # Initialise the lemmatizer

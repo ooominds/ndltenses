@@ -6,12 +6,12 @@
 from param_file import CREATE_TRAIN_VALID_TEST_FILES
 import pandas as pd
 import time
-import logging
+#import logging
 from collections import Counter
 from sklearn.model_selection import train_test_split
 
-logger = logging.getLogger("data_preparation")
-logger.setLevel(level=logging.INFO)
+#logger = logging.getLogger("data_preparation")
+#logger.setLevel(level=logging.INFO)
 
 ### Set working directory
 
@@ -64,7 +64,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_VALID, PROP_TEST, VERBOSE)
     start = time.time()
     tenses = pd.read_csv("{}.csv.gz".format(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip')
     if VERBOSE:
-        logger.info('Loading the data took {}s\n'.format((time.time()-start)))
+        print('Loading the data took {}s\n'.format((time.time()-start)))
     # Number of examples: 7041930
 
     ### Remove future.perf.prog
@@ -93,7 +93,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_VALID, PROP_TEST, VERBOSE)
     tenses_train.to_csv("{}.csv.gz".format(TENSES_TRAIN_GZ), compression='gzip', index = False) # Export the train dataset
     del tenses_train
     if VERBOSE:
-        logger.info('STEP 4 1/2: Preparing NDL events files is complete\n')
+        print('STEP 4 1/2: Preparing NDL events files is complete\n')
 
     ###########################################################
     # Split the 'one-verb' set into train, valid and test sets 

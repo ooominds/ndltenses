@@ -5,15 +5,15 @@
 ### Import necessary packages
 import os
 import time
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
+#import logging
 import csv
 import gc
 import pandas as pd
 from nltk.util import ngrams
 from pyndl.count import cues_outcomes
 
+#logger = logging.getLogger("data_preparation")
+#logger.setLevel(level=logging.INFO)
 
 ###################
 # Useful functions
@@ -128,8 +128,8 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
 
     ### Load the data
     start = time.time()
-    tenses_full = pd.read_csv("%s.csv.gz"%(TENSES_GZ), compression='gzip', usecols = ['WordCuesNoInfinitive', 'Tense'])
-    logging.info('Loading the data took %ds' %((time.time()-start)))
+    tenses_full = pd.read_csv("{}.csv.gz".format(TENSES_GZ), compression='gzip', usecols = ['WordCuesNoInfinitive', 'Tense'])
+    print('Loading the data took {}s'.format((time.time()-start)))
 
     ### Keep only the cues and outcomes then rename columns 
     tenses_full = tenses_full.rename(columns={"WordCuesNoInfinitive": "cues", "Tense": "outcomes"}) 
@@ -149,7 +149,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     len(ngram_freqs1[ngram_freqs1['frequency']>=10]) # 103915
 
     ### Export the co-occurence dataset
-    ngram_freqs1.to_csv("%s.csv"%(NGRAM1), sep = ',', index = False)
+    ngram_freqs1.to_csv("{}.csv".format(NGRAM1), sep = ',', index = False)
     del ngram_freqs1, tenses_1gram
 
     ######## Calculate the frequency of co-occurence between each 2-gram and tense #############
@@ -162,7 +162,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     len(ngram_freqs2[ngram_freqs2['frequency']>=10]) # 1103795
 
     ### Export the co-occurence dataset
-    ngram_freqs2.to_csv("%s.csv"%(NGRAM2), sep = ',', index = False)
+    ngram_freqs2.to_csv("{}.csv".format(NGRAM2), sep = ',', index = False)
     del ngram_freqs2, tenses_2grams
 
     ######## Calculate the frequency of co-occurence between each 3-gram and tense #############
@@ -175,7 +175,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     len(ngram_freqs3[ngram_freqs3['frequency']>=10]) # 1458210
 
     ### Export the co-occurence dataset
-    ngram_freqs3.to_csv("%s.csv"%(NGRAM3), sep = ',', index = False)
+    ngram_freqs3.to_csv("{}.csv".format(NGRAM3), sep = ',', index = False)
     del ngram_freqs3, tenses_3grams
 
     ######## Calculate the frequency of co-occurence between each 4-gram and tense #############
@@ -192,7 +192,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     n_events, cue_freqs, outcome_freqs = cues_outcomes(EVENT_FILE,
                                                     number_of_processes = 1,
                                                     verbose = True)
-    logging.info('Frequency counts completed in %.3fs\n' % ((time.time()- start)))  
+    print('Frequency counts completed in {}s\n'.format((time.time()- start)))  
 
     # save cue frequencies to file
     with open("%s.csv"%(NGRAM4), mode = 'w') as o:

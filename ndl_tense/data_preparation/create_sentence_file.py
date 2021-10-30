@@ -6,8 +6,8 @@
 import os
 import re
 import logging
-logger = logging.getLogger("data_preparation")
-logger.setLevel(level=logging.INFO)
+#logger = logging.getLogger("data_preparation")
+#logger.setLevel(level=logging.INFO)
 
 from collections import OrderedDict
 import pandas as pd
@@ -244,9 +244,9 @@ def extract_sentences(file, to_remove, KEEP_ORIGINAL_SEN, VERBOSE):
                 if token in end_sent_marks:
                     keep_sen = True
             if (ii+1) % 1000000 == 0 and VERBOSE:
-                logger.info('{} lines processed in {}s\n'.format(ii+1, (time.time() - start)))
+                print('{} lines processed in {}s\n'.format(ii+1, (time.time() - start)))
         if VERBOSE:
-            logger.info('{} lines processed in {}\n'.format(ii+1, (time.time() - start)))
+            print('{} lines processed in {}\n'.format(ii+1, (time.time() - start)))
         return all_sents
 
 def add_column_to_file(file_1, file_2, col_to_join, new_col_name, position):
@@ -300,13 +300,13 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV=False, KEEP_ORIGINAL_SEN=Fals
             sentences_dict[i]["verb_{}_tag".format(j+1)] = tag
             sentences_dict[i]["verb_{}_position".format(j+1)] = position + 1
     if VERBOSE:
-        logger .info('Dictionary of dictionary constructed in {}s\n'.format((time.time()- start)))
+        print('Dictionary of dictionary constructed in {}s\n'.format((time.time()- start)))
 
     # turn into data frame
     start = time.time()
     sentences_df = pd.DataFrame.from_dict(sentences_dict, orient="index")
     if VERBOSE:
-        logger .info('Dataframe constructed in {}s\n'.format((time.time()- start)))
+        print('Dataframe constructed in {}s\n'.format((time.time()- start)))
 
     if TO_TSV:
         file_type = "tsv"
@@ -316,4 +316,4 @@ def run(EXTRACT_SENTENCES_FILES, TO_REMOVE, TO_TSV=False, KEEP_ORIGINAL_SEN=Fals
     with open("%s.%s"%(RESULTS, file_type), "w", encoding="utf-8") as res_csv:
         sentences_df.to_csv(res_csv, sep = ",", index = False, encoding="utf-8")
     if VERBOSE:
-        logger .info('STEP 1: Creating the extracted sentences file is complete')
+        print('STEP 1: Creating the extracted sentences file is complete')

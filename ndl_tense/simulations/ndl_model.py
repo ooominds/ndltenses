@@ -8,9 +8,6 @@
 import pandas as pd
 import numpy as np
 import xarray as xr
-import logging
-#logging.basicConfig(level=logging.INFO)
-
 import time
 
 from pyndl.ndl import ndl
@@ -30,6 +27,10 @@ import ndl_tense.simulations.evaluation as ev
 # imp.reload(pr)
 # imp.reload(md)
 # imp.reload(ev)
+#logger = logging.getLogger("simulations")
+#logging.getLogger("tensorflow").setLevel(logging.WARNING)
+#logger.setLevel(level=logging.INFO)
+
 
 ### Set the max width of a column
 pd.set_option('display.max_colwidth', 120)
@@ -106,10 +107,10 @@ def train_model(NGRAM_FILT_EVENTS_MULTI_VERBS_TRAIN, NGRAM_FILT_EVENTS_MULTI_VER
                             params = p)
 
     # Save the weights and training history
-    #md.export_model(model = NDL_model, path = "%s.h5"%(MODEL_PATH))  # create a HDF5 file 
-    #NDL_model.save("%s.h5"%(MODEL_PATH)) #save_model(model = NDL_model, path = )
+    #md.export_model(model = NDL_model, path = "{}.h5".format(MODEL_PATH))  # create a HDF5 file 
+    #NDL_model.save("{}.h5".format(MODEL_PATH)) #save_model(model = NDL_model, path = )
     #NDL_model.save(MODEL_PATH) #save_model(model = NDL_model, path = )
-    NDL_model.weights.to_netcdf("%s.nc"%(WEIGHTS_PATH)) 
+    NDL_model.weights.to_netcdf("{}.nc".format(WEIGHTS_PATH)) 
     #md.export_history(history_dict = NDL_history, path = HISTORY_PATH)
     #del NDL_model, NDL_history_dict  # delete the existing model and history dictionary
     return(NDL_model)
@@ -128,7 +129,7 @@ def train_model(NGRAM_FILT_EVENTS_MULTI_VERBS_TRAIN, NGRAM_FILT_EVENTS_MULTI_VER
 #               remove_duplicates = True,
 #               temporary_directory = TEMP_DIR,
 #               verbose = False)
-# logging.info('Weight mat estimated in %.0fs\n' % ((time.time() - start_weight)))
+# logging.info('Weight mat estimated in %.0fs\n' .format ((time.time() - start_weight)))
 
 # ### Model object
 # NDL_model = md.NDLmodel(weights)
@@ -188,7 +189,7 @@ def evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
                             number_of_threads = 1,
                             remove_duplicates = True,
                             ignore_missing_cues = True)
-    logging.info('Activations calculated in %.0fs\n' % ((time.time() - start_activ)))
+    print('Activations calculated in {}s\n'.format((time.time() - start_activ)))
 
     activ_test2 = activ_test.transpose()
     activ_test_df = activ_test2.to_pandas()
@@ -205,14 +206,14 @@ def evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
     # Predicted outcomes from the activations
     start_pred = time.time()
     y_pred = ev.activations_to_predictions(activ_test)
-    logging.info('Predictions generated in %.0fs\n' % ((time.time() - start_pred)))
+    print('Predictions generated in {}s\n'.format((time.time() - start_pred)))
 
     # start_pred = time.time()
     # y_pred = ev.predict_outcomes_NDL(model = NDL_model,
     #                                  data_test = NGRAM_EVENTS_MULTI_VERBS_TEST,  
     #                                  temp_dir = TEMP_DIR, 
     #                                  num_threads = no_threads)
-    # logging.info('Predictions generated in %.0fs\n' % ((time.time() - start_pred)))
+    # print('Predictions generated in %.0fs\n' % ((time.time() - start_pred)))
 
     # Overall test accuracy
     #test_accuracy = accuracy_score(y_test, y_pred)
@@ -273,7 +274,7 @@ def read_model(NGRAM_EVENTS_MULTI_VERBS_TEST, TENSE_SET, MODEL_PATH):
     ----
     """
 
-    NDL_model = md.import_model("%s.h5"%(MODEL_PATH))
+    NDL_model = md.import_model("{}.h5".format(MODEL_PATH))
     activ_test = activation(events = NGRAM_EVENTS_MULTI_VERBS_TEST, 
                             weights = NDL_model.weights,
                             number_of_threads = 1,
@@ -300,17 +301,17 @@ def run(SIM_FILES, SIM_PARAMS):
     """
 
     # Import the cue index system
-    NGRAM_EVENTS_MULTI_VERBS_TRAIN = "%s.gz"%(SIM_FILES[0])
-    NGRAM_EVENTS_MULTI_VERBS_VALID = "%s.gz"%(SIM_FILES[1])
-    NGRAM_EVENTS_MULTI_VERBS_TEST = "%s.gz"%(SIM_FILES[2])
-    TENSE_SET, CUE_INDEX, OUTCOME_INDEX = "%s.csv.gz"%(SIM_FILES[3]), SIM_FILES[4], "%s.csv"%(SIM_FILES[5])
+    NGRAM_EVENTS_MULTI_VERBS_TRAIN = "{}.gz".format(SIM_FILES[0])
+    NGRAM_EVENTS_MULTI_VERBS_VALID = "{}.gz".format(SIM_FILES[1])
+    NGRAM_EVENTS_MULTI_VERBS_TEST = "{}.gz".format(SIM_FILES[2])
+    TENSE_SET, CUE_INDEX, OUTCOME_INDEX = "{}.csv.gz".format(SIM_FILES[3]), SIM_FILES[4], "{}.csv".format(SIM_FILES[5])
     TEMP_DIR, WEIGHTS_PATH, MODEL_PATH = SIM_FILES[6], SIM_FILES[7], SIM_FILES[8]
-    RESULTS_TEST, ACTIVATION_TEST = "%s.csv"%(SIM_FILES[9]), "%s.csv"%(SIM_FILES[10])
+    RESULTS_TEST, ACTIVATION_TEST = "{}.csv".format(SIM_FILES[9]), "{}.csv".format(SIM_FILES[10])
 
     ### Parameters to use
-    no_threads = SIM_PARAMS[11] # Number of CPU cores to use
+    no_threads = SIM_PARAMS[0] # Number of CPU cores to use
 
-    cue_to_index = pr.import_index_system("%s.csv"%(CUE_INDEX))
+    cue_to_index = pr.import_index_system("{}.csv".format(CUE_INDEX))
     pr.display_dictionary(cue_to_index, start = 0, end = 5)
     # {the: 1}
     # {of: 2}
@@ -330,7 +331,7 @@ def run(SIM_FILES, SIM_PARAMS):
     index_to_outcome = pr.reverse_dictionary(outcome_to_index)
     NDL_model = train_model(NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, TEMP_DIR,
                 MODEL_PATH, WEIGHTS_PATH, cue_to_index, outcome_to_index, no_threads)
-    #NDL_model = md.load_NDL_model("%s.nc"%(WEIGHTS_PATH))
+    #NDL_model = md.load_NDL_model("{}.nc".format(WEIGHTS_PATH))
     tenses_test, y_pred = evaluate(TENSE_SET, ACTIVATION_TEST, NGRAM_EVENTS_MULTI_VERBS_TEST,
              NDL_model, outcome_to_index, index_to_outcome)
     

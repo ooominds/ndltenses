@@ -6,9 +6,9 @@
 
 ### Libraries
 import os
-import logging
-logger = logging.getLogger("data_preparation")
-logger.setLevel(level=logging.INFO)
+#import logging
+#logger = logging.getLogger("data_preparation")
+#logger.setLevel(level=logging.INFO)
 
 from ndl_tense.data_preparation import tags_to_tense
 import numpy as np
@@ -147,5 +147,5 @@ def run(ANNOTATE_FILES, VERBOSE=True):
 
   tenses_annotated.to_csv("{}.csv".format(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   if VERBOSE:
-    logger .info("STEP 2: Annotating tenses complete\n")
+    print("STEP 2: Annotating tenses complete\n")
   

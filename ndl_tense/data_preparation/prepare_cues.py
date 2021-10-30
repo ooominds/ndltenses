@@ -7,22 +7,25 @@
 ### Import necessary packages
 import numpy as np
 import pandas as pd
-import logging
-logging.basicConfig(level=logging.DEBUG)
+#import logging
 
-def run(NGRAMS, INFINITIVES, ALL_CUES, VERBOSE):
+#logger = logging.getLogger("data_preparation")
+#logger.setLevel(level=logging.INFO)
+
+
+def run(NGRAMS, INFINITIVES, ALL_CUES, VERBOSE=True):
 
     #################
     # Load the data 
     #################
 
     ### Load the list of n-grams
-    ngram_df = pd.read_csv(NGRAMS)
+    ngram_df = pd.read_csv("{}.csv".format(NGRAMS))
     # Remove the freq column
     ngram_df.drop(columns = ['frequency'], inplace = True)
 
     ### Load the list of infinitives
-    infinitives_df = pd.read_csv(INFINITIVES, header = None, names = ["infinitive"])
+    infinitives_df = pd.read_csv("{}.csv".format(INFINITIVES), header = None, names = ["infinitive"])
     infinitives_df['infinitive'] = infinitives_df['infinitive'].apply(lambda s: s.upper())
 
     ### Rename columns
@@ -37,6 +40,6 @@ def run(NGRAMS, INFINITIVES, ALL_CUES, VERBOSE):
     all_cues_df['index'] = np.arange(1, (len(all_cues_df)+1))
 
     # Save a separate dataframe for each group
-    all_cues_df.to_csv("%s.csv"%(ALL_CUES), sep = ',', index = False, header=False)
+    all_cues_df.to_csv("{}.csv".format(ALL_CUES), sep = ',', index = False, header=False)
     if VERBOSE:
-        logging.info("STEP 6: Preparing cues is complete")
+        print("STEP 6: Preparing cues is complete")
