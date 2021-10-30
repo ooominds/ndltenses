@@ -1,5 +1,5 @@
-from ndl_tense.data_preparation import create_sentence_file,annotate_tenses
-#,prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
+from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data,prepare_ndl_events
+#, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
 
 #below import commented out for now, uncomment if you want to run step 6
 #from ndl_tense.simulations import ndl_model
@@ -49,23 +49,22 @@ def step_3():
     #optional
     #sample_sentences.run(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, kets, ratios, 500, False)
 
-    # the final parameter is for verbosity (whether to print the output of the process as we go along)
+    # the final parameter is for verbosity (True =  print the output of the process as we go along)
     file_tools.manage_directories(CREATE_TRAIN_VALID_TEST_FILES, False)
 
-    #for one verb per sent, so this is optional
-    prepare_data.run(PREPDAT_FILES, False)
+    prepare_data.run(PREPDAT_FILES, True)
     chdir(WD_PREPDAT)
-    prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID, False)
+    prepare_ndl_events.prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_TEST, PROP_VALID, True)
 
-    # the final parameter is for verbosity (whether to print the output of the process as we go along)
-    prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES, False)
+    # the final parameter is for verbosity (True =  print the output of the process as we go along)
+    prepare_ndl_events.run(PREPARE_TRAIN_VALID_TEST_FILES, True)
 
 def step_4():
     file_tools.manage_directories(EXTRACT_SENTENCES_FOLDERS, False)
     file_tools.manage_directories(EXTRACT_INFINITIVE_FILES, True)
     chdir(WD_EXTRACT_INF)
 
-    # the final parameter is for verbosity (whether to print the output of the process as we go along)
+    # the final parameter is for verbosity (True = print the output of the process as we go along)
     extract_infinitive.run(EXTRACT_INFINITIVE_FILES, False)
 
 def step_5():
@@ -95,8 +94,8 @@ def step_7():
 def main():
     # uncomment by deleting hashtag for each step you wish to complete
     #step_1()
-    step_2()
-    #step_3()
+    #step_2()
+    step_3()
     #step_4()
     #step_5()
     #step_6() 

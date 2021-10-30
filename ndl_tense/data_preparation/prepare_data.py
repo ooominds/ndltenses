@@ -10,7 +10,6 @@ import pandas as pd
 import numpy as np
 import time
 import logging
-logging.basicConfig(level=logging.INFO)
 import csv 
 import random
 import string
@@ -21,6 +20,9 @@ from nltk.util import ngrams
 from collections import Counter
 #nltk.download('wordnet')
 #tqdm.pandas()
+
+logger = logging.getLogger("data_preparation")
+logger.setLevel(level=logging.INFO)
 
 def convert_to_inf(TENSES, VERBOSE):
     lemmatizer = WordNetLemmatizer() # Initialise the lemmatizer
@@ -62,7 +64,7 @@ def convert_to_inf(TENSES, VERBOSE):
         # Progress message
         if (i+1) % 100000 == 0 and VERBOSE:
             now = time.time()
-            logging.info('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
+            logger.info('-{} iterations completed in {}s\n'.format((i+1), (now - start)))
 
         for j in range(1, (nV+1)):
             if str(tenses.at[i, "".join(['MainVerb', str(j)])]) != 'nan':
@@ -80,7 +82,7 @@ def add_sen_length(tenses, VERBOSE):
     nR = tenses.shape[0] # number of rows
     nV = int((nC-1)/5)  # number of verbs 
 
-    #print("number of verbs: %s"%(nV))
+    #print("number of verbs: {}"format(nV))
 
     ### Add SentLength column
     tenses['SentenceLength'] = tenses['Sentence'].apply(lambda s: len(s.split(' '))) 
@@ -94,7 +96,7 @@ def add_sen_length(tenses, VERBOSE):
         # Progress message
         if (i+1) % 100000 == 0 and VERBOSE:
             now = time.time()
-            logging.info('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
+            logger.info('-{} iterations completed in {}s\n'.format((i+1), (now - start)))
         for j in range(1, (nV+1)):
             if str(tenses.at[i, "".join(['Tense', str(j)])]) != 'nan':
                 continue
@@ -123,7 +125,7 @@ def add_sen_length(tenses, VERBOSE):
 # Remove sentences with no tense/verb
 ######################################
 
-def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
+def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, O_SENS, VERBOSE):
     """
     Creates a new dataset with additional informative columns, each row now focuses on one verb from
     the sentence
@@ -152,10 +154,10 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
     nV = int((nC-4)/5)  # number of verbs 
 
     # Write to the csv file that encodes the results
-    with open("%s.csv"%(TENSES_ONE_SENT_PER_VERB_WITH_MODALS), mode = 'w', encoding="utf-8") as o:
+    with open("{}.csv".format(TENSES_ONE_SENT_PER_VERB_WITH_MODALS), mode = 'w', encoding="utf-8") as o:
         csv_writer = csv.writer(o, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         heading = list(tenses.columns[0:4])
-        if "O_Sentence" in tenses.columns:
+        if O_SENS:
             heading.append("O_Sentence")
         heading.extend(['Tense', 'VerbForm', 'MainVerb', 'Position', 'Infinitive'])
         csv_writer.writerow(heading)
@@ -167,12 +169,12 @@ def remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE):
             # Progress message
             if (i+1) % 100000 == 0 and VERBOSE:
                 now = time.time()
-                logging.info('-%d iterations completed in %.0fs\n' % ((i+1), (now - start)))
+                logger.info('-{} iterations completed in {}s\n'.format ((i+1), (now - start)))
 
             for j in range(1, (nV+1)):
                 if str(tenses.at[i, "".join(['Tense', str(j)])]) != 'nan':
                     # Write the row
-                    if "O_Sentence" in tenses.columns:
+                    if O_SENS:
                         colnames_touse = ['SentenceID', 'Sentence', 'SentenceLength', 'NumOfVerbs', "O_Sentence"]
                     else:
                         colnames_touse = ['SentenceID', 'Sentence', 'SentenceLength', 'NumOfVerbs']
@@ -258,7 +260,7 @@ def convert_word_AE2BE(word, AE_to_BE):
     except:
         return word
 
-def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST):
+def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST, O_SENS):
     """
         Convert sentences from American English to British English
     -----        
@@ -274,13 +276,13 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
     -----
     """
     # Load the data
-    tenses = pd.read_csv("%s.csv"%(TENSES_ONE_SENT_PER_VERB_WITH_MODALS), encoding="utf-8")
+    tenses = pd.read_csv("{}.csv".format(TENSES_ONE_SENT_PER_VERB_WITH_MODALS), encoding="utf-8")
 
     # Load the dictionary that can convert AE to BE
     AE_to_BE = import_dict(dict_path = AE2BE_LIST)
 
     # Load the dictionary that Laurence prepared to convert AE to BE
-    inf_corrections = import_dict(dict_path = "%s.csv"%(INFINITIVE_CORR_LIST))
+    inf_corrections = import_dict(dict_path = "{}.csv".format(INFINITIVE_CORR_LIST))
 
     # Correct the infinitives in the dataframe
     tenses["Infinitive_BE"] = tenses["Infinitive"].apply(lambda s: correct_infinitive(inf_corrections, s))
@@ -309,16 +311,27 @@ def convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CO
                             "MainVerb_BE": "MainVerb",
                             "Infinitive_BE": "Infinitive"}, inplace = True)
     # Reorder the columns
-    tenses = tenses[['SentenceID', 
-            'Sentence', 
-            'SentenceLength', 
-            'NumOfVerbs', 
-            'Tense', 
-            'VerbForm', 
-            'MainVerb',
-            'Position',    
-            'Infinitive',
-            'O_Sentence']]
+    if O_SENS:
+        tenses = tenses[['SentenceID', 
+                'Sentence', 
+                'SentenceLength', 
+                'NumOfVerbs', 
+                'Tense', 
+                'VerbForm', 
+                'MainVerb',
+                'Position',    
+                'Infinitive',
+                'O_Sentence']]
+    else:
+        tenses = tenses[['SentenceID', 
+                'Sentence', 
+                'SentenceLength', 
+                'NumOfVerbs', 
+                'Tense', 
+                'VerbForm', 
+                'MainVerb',
+                'Position',    
+                'Infinitive']]        
     return(tenses)
 
 ########################################################################
@@ -506,7 +519,7 @@ def shuffle_sents(tenses, TENSES_ONE_SENT_PER_VERB_SHUF_GZ):
     tenses = SentID_df.merge(tenses)
 
     # Export the dataset
-    tenses.to_csv("%s.csv.gz"%(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip', index = False, encoding="utf-8")
+    tenses.to_csv("{}.csv.gz".format(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip', index = False, encoding="utf-8")
 
 def remove_modals(tenses):
     #######################################################################
@@ -573,15 +586,18 @@ def remove_modals(tenses):
     # Export the dataset
     return(tenses)
 
-def run(PREPDAT_FILES, VERBOSE):
+def run(PREPDAT_FILES, VERBOSE=True):
     TENSES = PREPDAT_FILES[0]
     TENSES_ONE_SENT_PER_VERB_WITH_MODALS, TENSES_ONE_SENT_PER_VERB_SHUF_GZ = PREPDAT_FILES[1], PREPDAT_FILES[2]
     AE2BE_LIST, INFINITIVE_CORR_LIST= PREPDAT_FILES[3], PREPDAT_FILES[4]
 
-    tenses = convert_to_inf("%s.csv"%(TENSES), VERBOSE)
+    tenses = convert_to_inf("{}.csv".format(TENSES), VERBOSE)
+    O_SENS = False
+    if "O_Sentence" in tenses.columns:
+        O_SENS = True
     tenses = add_sen_length(tenses, VERBOSE)
-    remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, VERBOSE)
-    tenses = convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST)
+    remove_sen(tenses, TENSES_ONE_SENT_PER_VERB_WITH_MODALS, O_SENS, VERBOSE)
+    tenses = convert_sens(TENSES_ONE_SENT_PER_VERB_WITH_MODALS, AE2BE_LIST, INFINITIVE_CORR_LIST, O_SENS)
     tenses = remove_modals(tenses)
 
     ######################
@@ -624,7 +640,7 @@ def run(PREPDAT_FILES, VERBOSE):
     #IF VERBOSE:
     # start = time.time()
     # tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")
-    # logging.info('Loading the data took %ds' %((time.time()-start)))
+    # logger.info('Loading the data took formatds' format((time.time()-start)))
 
     #print(f'Number of examples: {len(tenses)}')
     # Number of examples: 7047168
@@ -650,4 +666,4 @@ def run(PREPDAT_FILES, VERBOSE):
     # Export the dataset
     #tenses1.to_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")
     if VERBOSE:
-        logging.info("STEP 2.5: Preparing data is compliete\n")
+        logger.info("STEP 2.5: Preparing data is compliete\n")

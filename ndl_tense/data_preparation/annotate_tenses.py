@@ -109,9 +109,9 @@ def run(ANNOTATE_FILES, VERBOSE=True):
   ## Rename column names (remove "_" and start from verb1)
 
   for j in range(1,int(nV)+1):
-    tenses_df.rename(columns={"verb_%s"%(j):"Verb%s"%(j)}, inplace=True)
-    tenses_df.rename(columns={"verb_%s_position"%(j):"Position%s"%(j)}, inplace=True)
-    tenses_df.rename(columns={"verb_%s_tag"%(j):"Tag%s"%(j)}, inplace=True)
+    tenses_df.rename(columns={"verb_{}".format(j):"Verb{}".format(j)}, inplace=True)
+    tenses_df.rename(columns={"verb_{}_position".format(j):"Position{}".format(j)}, inplace=True)
+    tenses_df.rename(columns={"verb_{}_tag".format(j):"Tag{}".format(j)}, inplace=True)
   # Change the name of the Sentence column
   #colnames(tenses_df)[colnames(tenses_df) == "sentence"] = "Sentence"
   tenses_df.rename(columns={"sentence":"Sentence"}, inplace=True)
@@ -121,7 +121,7 @@ def run(ANNOTATE_FILES, VERBOSE=True):
 
   col_names = ['Sentence']
   for j in range(1,1+nV):
-    col_names += ["Tense%s"%(j),"VerbForm%s"%(j), "MainVerb%s"%(j), "Position%s"%(j)]
+    col_names += ["Tense{}".format(j),"VerbForm{}".format(j), "MainVerb{}".format(j), "Position{}".format(j)]
   tenses_annotated.columns=col_names
 
   for j in range(0, tenses_annotated.shape[0]):
@@ -140,12 +140,12 @@ def run(ANNOTATE_FILES, VERBOSE=True):
 
   non_empty_verb_col = len([col for col in tenses_annotated.columns if "MainVerb" in col])
   for j in range(non_empty_verb_col):
-    tenses_annotated["Infinitive%s"%(j+1)] = np.nan
+    tenses_annotated["Infinitive{}".format(j+1)] = np.nan
   
   if o_sents:
     tenses_annotated["O_Sentence"] = tenses_df['O_sentence']
 
-  tenses_annotated.to_csv("%s.csv"%(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
+  tenses_annotated.to_csv("{}.csv".format(TENSES_ANNOTATED_NOINF_CLEAN), encoding="utf-8", index = False)
   if VERBOSE:
     logger .info("STEP 2: Annotating tenses complete\n")
   
