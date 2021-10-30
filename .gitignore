@@ -53,3 +53,6 @@ pyproject.toml
 word_associates.py
 random_things
 changes.txt
+tense_aspect_counts.py
+train_with_order.py
+test_param.py
