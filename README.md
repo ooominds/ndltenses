@@ -66,7 +66,7 @@ The pipeline.py file (found in the GitHub repository) acts as a step-by-step gui
 #### Step IV: Prepare the infinitive cues to use
 
 - Folder variable: WD_EXTRACT_INF
-- File 1 **optional** (main): extract_infinitive.py  (use corresponding run function to use)
+- File 1 (main): extract_infinitive.py  (use corresponding run function to use)
 - File 2: Extract_infinitive_freqs_oneverb.py (for the dataset containing only sentences with a single verb)
 
 -> Created a list of all possible infinitives with their co-occurence frequencies with each tense
