@@ -21,8 +21,10 @@ from collections import Counter
 #nltk.download('wordnet')
 #tqdm.pandas()
 
-#logger = logging.getLogger("data_preparation")
-#logger.setLevel(level=logging.INFO)
+import logging
+logger = logging.getLogger("data_preparation")
+logger.setLevel(level=logging.INFO)
+
 
 def convert_to_inf(TENSES, VERBOSE):
     lemmatizer = WordNetLemmatizer() # Initialise the lemmatizer
@@ -37,7 +39,7 @@ def convert_to_inf(TENSES, VERBOSE):
 
     ### Load the data
     tenses = pd.read_csv(TENSES, encoding="utf-8")
-    #print(f'Number of examples: {len(tenses)}')
+    #logger.info(f'Number of examples: {len(tenses)}')
     # Number of examples: 4227346
 
     # Remove words containing digits
@@ -82,7 +84,7 @@ def add_sen_length(tenses, VERBOSE):
     nR = tenses.shape[0] # number of rows
     nV = int((nC-1)/5)  # number of verbs 
 
-    #print("number of verbs: {}"format(nV))
+    #logger.info("number of verbs: {}"format(nV))
 
     ### Add SentLength column
     tenses['SentenceLength'] = tenses['Sentence'].apply(lambda s: len(s.split(' '))) 
@@ -559,7 +561,7 @@ def remove_modals(tenses):
 
     # Remove the modals and imperatives
     tenses = tenses[~tenses['Tense'].isin(['modal', 'imperative'])]
-    #print(tenses['Tense'].value_counts())
+    #logger.info(tenses['Tense'].value_counts())
     # present.simple       3201494
     # past.simple          2639252
     # present.perf          370457
@@ -640,7 +642,7 @@ def run(PREPDAT_FILES, VERBOSE=True):
     # tenses = pd.read_csv(TENSES_ONE_SENT_PER_VERB_READY_GZ, compression='gzip', encoding="utf-8")
     # logger.info('Loading the data took formatds' format((time.time()-start)))
 
-    #print(f'Number of examples: {len(tenses)}')
+    #logger.info(f'Number of examples: {len(tenses)}')
     # Number of examples: 7047168
 
     ### Rename the column of original num of verbs
@@ -676,7 +678,7 @@ def run(PREPDAT_FILES, VERBOSE=True):
     ### Data set containing only sentences with one verb
     #tenses1 = tenses[tenses.NumOfVerbs == 1]
 
-    #print(tenses1['Tense'].value_counts())
+    #logger.info(tenses1['Tense'].value_counts())
 
     # Export the dataset
     #tenses1.to_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip', index = False, encoding="utf-8")

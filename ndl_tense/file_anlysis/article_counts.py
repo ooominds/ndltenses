@@ -1,6 +1,8 @@
 from numpy import mean
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+
 
 def distances(x):
     avg_dis = mean([x[n]-x[n-1] for n in range(1,len(x))])
@@ -88,11 +90,11 @@ def article_counts(infile, VERBOSE, null_token='ø'):
     def_info, indef_info, null_info, article_pos, article_no_null = counts(data_read, def_info, indef_info, null_info, null_token)
     avg_pos = (distances(def_info[1]), distances(indef_info[1]), distances(null_info[1]), distances(article_pos), distances(article_no_null))
     if VERBOSE:
-        logging.info("DEF INFO - \ncount: %s \nmean distances %s"%(def_info[0], avg_pos[0]))
-        logging.info("INDEF INFO - \ncount: %s \nmean distances %s"%(indef_info[0], avg_pos[1]))
-        logging.info("NULL INFO - \ncount: %s \nmean distances %s\n"%(null_info[0], avg_pos[2]))
-        logging.info("mean distance to article: %s"%(avg_pos[3]))
-        logging.info("mean distance to article (whithout null article): %s"%(avg_pos[4]))
+        logger.info("DEF INFO - \ncount: %s \nmean distances %s"%(def_info[0], avg_pos[0]))
+        logger.info("INDEF INFO - \ncount: %s \nmean distances %s"%(indef_info[0], avg_pos[1]))
+        logger.info("NULL INFO - \ncount: %s \nmean distances %s\n"%(null_info[0], avg_pos[2]))
+        logger.info("mean distance to article: %s"%(avg_pos[3]))
+        logger.info("mean distance to article (whithout null article): %s"%(avg_pos[4]))
 
     # count of definite articles, average distance between definite articles
     # count of indefinite articles, average distance between indefinite articles

@@ -22,6 +22,9 @@ import ndl_tense.simulations.preprocessing as pr
 import ndl_tense.simulations.modelling as md
 import ndl_tense.simulations.evaluation as ev
 
+#import logging 
+#logger = logging.getLogger(__name__)
+
 # ### To reload packages
 # import imp
 # imp.reload(pr)

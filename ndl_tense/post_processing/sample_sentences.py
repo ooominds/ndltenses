@@ -2,7 +2,7 @@ import pandas as pd
 from math import gcd, ceil
 from functools import reduce
 import logging
-logging.basicConfig(level=logging.INFO)
+logger.setLevel(level=logging.INFO)
 
 def sample_sens(sen_df, sample_sizes):
     new_frame = pd.DataFrame()
@@ -67,5 +67,5 @@ def run(file_path, keys, ratios, sample_size, VERBOSE):
     ta_sample_sizes = dict(zip(keys,ratios))
     sample_sentences_df = sample_sens(sen_df, ta_sample_sizes)
     if VERBOSE:
-        logging.info("sentence sampling complete")
+        logger.info("sentence sampling complete")
     return(sample_sentences_df)

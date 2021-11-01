@@ -6,9 +6,10 @@
 
 ### Import necessary packages
 import pandas as pd
-#import logging
-#logger = logging.getLogger("data_preparation")
-#logger.setLevel(level=logging.INFO)
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+
 
 ### Set working directory
 
@@ -19,11 +20,11 @@ def run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES, VERBOSE):
     FREQ_3G_PATH = NGRAM_FILES[3]
     FREQ_4G_PATH = NGRAM_FILES[4]
 
-    TARGETS = "{}.csv".format(TARGETS_FILES[0])
-    TARGETS_1G = "{}.csv".format(TARGETS_FILES[1])
-    TARGETS_2G = "{}.csv".format(TARGETS_FILES[2])
-    TARGETS_3G = "{}.csv".format(TARGETS_FILES[3])
-    TARGETS_4G = "{}.csv".format(TARGETS_FILES[4])
+    TARGETS = TARGETS_FILES[0]
+    TARGETS_1G = TARGETS_FILES[1]
+    TARGETS_2G = TARGETS_FILES[2]
+    TARGETS_3G = TARGETS_FILES[3]
+    TARGETS_4G = TARGETS_FILES[4]
     
     #################################################################
     # Load the frequency files as dictionaries prior to band-sampling
@@ -78,4 +79,4 @@ def run(NGRAM_FILES, K_NGRAMS, TARGETS_FILES, VERBOSE):
     Freq_4G_df.to_csv("{}.csv".format(TARGETS_4G), sep = ',', index = False)
     Freq_all_df.to_csv("{}.csv".format(TARGETS), sep = ',', index = False)
     if VERBOSE:
-        print("STEP 5: Preparing ngrams is complete\n")
+        logger.info("STEP 5: Preparing ngrams is complete\n")

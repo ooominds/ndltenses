@@ -5,15 +5,15 @@
 ### Import necessary packages
 import os
 import time
-#import logging
+import logging
 import csv
 import gc
 import pandas as pd
 from nltk.util import ngrams
 from pyndl.count import cues_outcomes
 
-#logger = logging.getLogger("data_preparation")
-#logger.setLevel(level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
 
 ###################
 # Useful functions
@@ -129,7 +129,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     ### Load the data
     start = time.time()
     tenses_full = pd.read_csv("{}.csv.gz".format(TENSES_GZ), compression='gzip', usecols = ['WordCuesNoInfinitive', 'Tense'])
-    print('Loading the data took {}s'.format((time.time()-start)))
+    logger.info('Loading the data took {}s'.format((time.time()-start)))
 
     ### Keep only the cues and outcomes then rename columns 
     tenses_full = tenses_full.rename(columns={"WordCuesNoInfinitive": "cues", "Tense": "outcomes"}) 
@@ -192,7 +192,7 @@ def run(TENSES_GZ, NGRAM_FILES, TEMP_DIR, NUM_THREADS):
     n_events, cue_freqs, outcome_freqs = cues_outcomes(EVENT_FILE,
                                                     number_of_processes = 1,
                                                     verbose = True)
-    print('Frequency counts completed in {}s\n'.format((time.time()- start)))  
+    logger.info('Frequency counts completed in {}s\n'.format((time.time()- start)))  
 
     # save cue frequencies to file
     with open("%s.csv"%(NGRAM4), mode = 'w') as o:

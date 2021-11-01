@@ -10,8 +10,10 @@ import time
 from collections import Counter
 from sklearn.model_selection import train_test_split
 
-#logger = logging.getLogger("data_preparation")
-#logger.setLevel(level=logging.INFO)
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+
 
 ### Set working directory
 
@@ -64,7 +66,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_VALID, PROP_TEST, VERBOSE)
     start = time.time()
     tenses = pd.read_csv("{}.csv.gz".format(TENSES_ONE_SENT_PER_VERB_SHUF_GZ), compression='gzip')
     if VERBOSE:
-        print('Loading the data took {}s\n'.format((time.time()-start)))
+        logger.info('Loading the data took {}s\n'.format((time.time()-start)))
     # Number of examples: 7041930
 
     ### Remove future.perf.prog
@@ -93,7 +95,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_VALID, PROP_TEST, VERBOSE)
     tenses_train.to_csv("{}.csv.gz".format(TENSES_TRAIN_GZ), compression='gzip', index = False) # Export the train dataset
     del tenses_train
     if VERBOSE:
-        print('STEP 4 1/2: Preparing NDL events files is complete\n')
+        logger.info('STEP 4 1/2: Preparing NDL events files is complete\n')
 
     ###########################################################
     # Split the 'one-verb' set into train, valid and test sets 
@@ -104,7 +106,7 @@ def prepare_files(CREATE_TRAIN_VALID_TEST_FILES, PROP_VALID, PROP_TEST, VERBOSE)
     # tenses = pd.read_csv(TENSES_ONE_VERB_SHUF_GZ, compression='gzip')
     # logger.info('Loading the data took %ds' %((time.time()-start)))
 
-    #print(f'Number of examples: {len(tenses)}')
+    #logger.info(f'Number of examples: {len(tenses)}')
     # Number of examples: 1853675
 
     #tenses['Tense'].value_counts()
