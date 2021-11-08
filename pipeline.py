@@ -1,7 +1,7 @@
 from ndl_tense.data_preparation import create_sentence_file,annotate_tenses, prepare_data, prepare_ndl_events, extract_infinitive, extract_ngrams, prepare_ngrams, prepare_cues
 
 #below import commented out for now, uncomment if you want to run step 6
-#from ndl_tense.simulations import ndl_model
+from ndl_tense.simulations import ndl_model
 #from ndl_tense.post_processing import top_cues_for_sen, sample_sentences
 from ndl_tense import file_tools
 from param_file import *
@@ -94,13 +94,13 @@ def step_7():
 
 def main():
     # uncomment by deleting hashtag for each step you wish to complete
-    step_1()
-    step_2()
-    step_3()
-    step_4()
-    step_5()
-    step_6() 
-    #step_7() #requires you to uncomment an import line at the top
+    #step_1()
+    #step_2()
+    #step_3()
+    #step_4()
+    #step_5()
+    #step_6() 
+    step_7() #requires you to uncomment an import line at the top
 
 if __name__ == "__main__":
     main()

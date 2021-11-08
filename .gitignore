@@ -1,6 +1,5 @@
 ndl_tense/data_preparation/Results
 ndl_tense/data_preparation/Data_shared
-ndl_tense/data_analysis
 ndl_tense/Data_preparation_steps.txt
 ndl_tense/machine_file.sh
 ndl_tense/Modelling_steps.txt
@@ -20,6 +19,14 @@ ndl_tense/data_preparation/ngram_prep_data/one_verb/3grams_touse.csv
 ndl_tense/data_preparation/ngram_prep_data/one_verb/4grams.csv
 ndl_tense/data_preparation/ngram_prep_data/one_verb/4grams_touse.csv
 ndl_tense/data_preparation/ngram_prep_data/one_verb/ngrams_touse.csv
+ndl_tense/data_analysis/model_results/to_ignore
+ndl_tense/data_analysis/Results
+ndl_tense/data_analysis/Plots.R
+ndl_tense/data_analysis/Analyses.R
+
+ndl_tense/data_analysis/model_results/Results_testset_ngrams_multiverbs.csv
+ndl_tense/data_analysis/model_results/Results_all_testset_ngrams_multiverbs.csv
+
 test_location/Data_shared
 test_location/data_preparation
 test_location/test

@@ -14,7 +14,7 @@ import h5py
 import shutil
 import ntpath
 
-import keras
+from tensorflow import keras
 from keras.models import Sequential, load_model
 from keras.layers import Dropout, Dense, LSTM, Embedding, Flatten
 from keras.preprocessing.sequence import pad_sequences
