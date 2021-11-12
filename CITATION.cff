@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-  - family-names: Kwakpovwe
-    given-names: Oghenetekevwe
-title: ndltenses: A package for training an NDL model to learn tenses using pyndl
-version: v1.0
+  - family-names: "Kwakpovwe"
+    given-names: "Oghenetekevwe"
+title: "ndltenses: A package for training an NDL model to learn tenses using pyndl"
+version: 1.0
 doi: 10.5281/zenodo.5680781
 date-released: 2017-12-18
 url: "https://github.com/ooominds/ndltenses"
