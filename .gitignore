@@ -24,8 +24,50 @@ ndl_tense/data_analysis/Results
 ndl_tense/data_analysis/Plots.R
 ndl_tense/data_analysis/Analyses.R
 
+ndl_tense/data_analysis/top_cues/Top_ngram_cues_from_weights.r
+ndl_tense/data_analysis/top_cues/Top_sentence_cues_from_weights.R
+ndl_tense/data_analysis/top_cues/Top_mixed_cues_from_weights.r
+ndl_tense/data_analysis/top_cues/Top_infinitive_cues_from_weights.r
+ndl_tense/data_analysis/top_cues/Top_cues_from_weights.r
+ndl_tense/data_analysis/top_cues/Distribution_lexical_versus_context_cues.r
+ndl_tense/data_analysis/top_cues/conversion_functions.R
+ndl_tense/data_analysis/top_cues/.Rhistory
+
 ndl_tense/data_analysis/model_results/Results_testset_ngrams_multiverbs.csv
 ndl_tense/data_analysis/model_results/Results_all_testset_ngrams_multiverbs.csv
+
+
+ndl_tense/data_analysis/top_cues/Data
+ndl_tense/data_analysis/top_cues/Data/New folder
+ndl_tense/data_analysis/top_cues/Data/New folder/NDL_weights_ngrams_multiverbs_test.nc
+ndl_tense/data_analysis/top_cues/Results
+ndl_tense/data_analysis/top_cues/Results/Cue_type_distribution_detailed_ngrams_long.csv
+ndl_tense/data_analysis/top_cues/Results/Cue_type_distribution_detailed_ngrams.csv
+ndl_tense/data_analysis/top_cues/Results/Cue_type_distribution.csv
+ndl_tense/data_analysis/top_cues/Results/Proportion_cue_category_for_top_cues_new.png
+ndl_tense/data_analysis/top_cues/Results/Proportion_cue_category_for_top_cues.png
+ndl_tense/data_analysis/top_cues/Results/Proportion_cue_category_for_top_cues1.png
+ndl_tense/data_analysis/top_cues/Results/Strong_500_neg_infinitive_cues_multiverbs.csv
+ndl_tense/data_analysis/top_cues/Results/Strong_500_neg_mixed_cues_multiverbs.csv
+ndl_tense/data_analysis/top_cues/Results/Strong_500_neg_mixed_cues_oneverb.csv
+ndl_tense/data_analysis/top_cues/Results/Strong_500_neg_ngram_cues_multiverbs.csv
+ndl_tense/data_analysis/top_cues/Results/Strong_500_pos_infinitive_cues_multiverbs.csv
+ndl_tense/data_analysis/top_cues/Results/Strong_500_pos_mixed_cues_multiverbs.csv
+ndl_tense/data_analysis/top_cues/Results/Strong_500_pos_mixed_cues_oneverb.csv
+ndl_tense/data_analysis/top_cues/Results/Strong_500_pos_ngram_cues_multiverbs.csv
+ndl_tense/data_analysis/top_cues/top_cue_results
+ndl_tense/data_analysis/top_cues/top_cue_results/accuracies_top_3_predictions.csv
+ndl_tense/data_analysis/top_cues/top_cue_results/accuracies.csv
+ndl_tense/data_analysis/top_cues/top_cue_results/cue_weights_with_support.csv
+ndl_tense/data_analysis/top_cues/top_cue_results/cues_weights.csv
+ndl_tense/data_analysis/top_cues/top_cue_results/Strong_100_pos_both_cues_multiverbs_by_weights.csv
+ndl_tense/data_analysis/top_cues/top_cue_results/Strong_44669_pos_both_cues_multiverbs.csv
+ndl_tense/data_analysis/top_cues/.RData
+
+
+
+
+
 
 test_location/Data_shared
 test_location/data_preparation

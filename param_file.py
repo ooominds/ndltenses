@@ -189,4 +189,20 @@ SIM_FILES = [NGRAM_EVENTS_MULTI_VERBS_TRAIN, NGRAM_EVENTS_MULTI_VERBS_VALID, NGR
 SIM_PARAMS = [NO_THREADS]
 
 
-#--------------------------------------------------------             
+#-------------------------------------------------------- #-------------------------------------------------------- 
+#-------------------------------------------------------- #-------------------------------------------------------- 
+#-------------------------------------------------------- #-------------------------------------------------------- 
+#-------------------------------------------------------- #-------------------------------------------------------- 
+
+
+######################################
+# DATA ANALYSIS - data preparation
+######################################
+
+
+TOP = '/home/tek/work/OoOM/ndl/ndl_tense/data_analysis
+WD_ANALYSIS_PREP = TOP + "/model_results"
+RESULTS_ALL_TEST = WD + "/results_29_09_2021/results_all_testset_ngrams_multiverbs.csv"
+
+DATA_ANALYSIS_DIR = [WD_ANALYSIS_PREP]
+DATA_ANALYSIS_FILES = [RESULT_ALL_TEST, RESULTS_TEST, ACTIVATION_TEST, OUTCOME_INDEX]
