@@ -6,7 +6,6 @@ import xarray as xr
 
 ### Function to load the weight matrix from an .nc file
 def load_weights(LOCATION_OF_WEIGHTS):
-    
     ds = xr.open_dataset(LOCATION_OF_WEIGHTS)
     weights = pd.DataFrame(ds.variables['__xarray_dataarray_variable__'].values).T
     weights.columns = ds.variables['outcomes']
@@ -15,7 +14,6 @@ def load_weights(LOCATION_OF_WEIGHTS):
 
 ### Function that finds the n strongest and weakest cue for each cluster based on positive and negative values
 def find_strongest_cues(weights, n_strong_cues = 100, negative=False):
-    
     new_cols, new_col_names = [], []
     for col in tense_columns[:-1]:
         sorted_col = weights.loc[:, [col, 'cues']].sort_values(by=col, ascending=negative).head(n_strong_cues)

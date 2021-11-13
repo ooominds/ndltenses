@@ -111,7 +111,7 @@ def create_results_df(RESULTS_TEST, RESULT_ALL_TEST, predictions_df):
     results_df.to_csv(RESULTS_ALL_TEST, sep = ',', index = False)
 
 
-def run(DATA_ANALYSIS_PARAMS, VERBOSE = True):
+def run(DATA_ANALYSIS_FILES, VERBOSE = True):
 
     ### Set the max width of a column
     pd.set_option('display.max_colwidth', 120)
