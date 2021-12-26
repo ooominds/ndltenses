@@ -18,6 +18,7 @@ from tensorflow import keras
 from keras.models import Sequential, load_model
 from keras.layers import Dropout, Dense, LSTM, Embedding, Flatten
 from keras.preprocessing.sequence import pad_sequences
+from keras import utils as np_utils
 from keras import optimizers
 from keras import activations
 from keras import losses

@@ -39,7 +39,7 @@ def calculate_activation_support(x, activ_cols):
     for j in range(activ_cols):
         name = "{}.activ.support".format(activations_df.columns[j])
         sub = (activations_df.iloc[x, [y for y in activ_cols if y > j or y < j]])
-        activations_df[name] = min(activations_df.iloc[x,j] - s for s in sub])
+        activations_df[name] = min([activations_df.iloc[x,j] - s for s in sub])
 
 
 ### Add other_tense label
@@ -123,8 +123,8 @@ def run(DATA_ANALYSIS_FILES, VERBOSE = True):
     pd.set_option('display.max_columns', 10)
     np.set_printoptions(precision=4)
 
-    RESULT_ALL_TEST = DATA_ANALYSIS_FILES[0]
-    RESULTS_TEST =  DATA_ANALYSIS_FILES[1]
+    RESULTS_TEST =  DATA_ANALYSIS_FILES[0]
+    RESULT_ALL_TEST = DATA_ANALYSIS_FILES[1]
     ACTIVATION_TEST = DATA_ANALYSIS_FILES[2]
     OUTCOME_INDEX =  DATA_ANALYSIS_FILES[3]
     # Import the outcome index system

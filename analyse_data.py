@@ -1,5 +1,4 @@
-from os import chdir, join
-from param file import *
+from param_file import *
 from ndl_tense.data_analysis import prepare_data, plots
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +19,9 @@ def plot_plots():
 
     # required file paths + verbose parameter (set to True)
     plots.run(DATA_ANALYSIS_PLOTS_FILES, True)
+
+def activ_support():
+    print("Hello world")
 
 def main():
     prepare()

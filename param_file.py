@@ -200,12 +200,14 @@ SIM_PARAMS = [NO_THREADS]
 ######################################
 
 
-TOP = '/home/tek/work/OoOM/ndl/ndl_tense/data_analysis
+TOP = "/home/tek/work/OoOM/ndl/ndl_tense/data_analysis"
 WD_ANALYSIS_PREP = TOP + "/model_results"
-RESULTS_ALL_TEST = WD + "/results_29_09_2021/results_all_testset_ngrams_multiverbs.csv"
+RESULTS_TEST = WD_ANALYSIS_PREP + "/results/results_testset_ngrams_multiverbs.csv"
+RESULTS_ALL_TEST = WD_ANALYSIS_PREP + "/results/results_all_testset_ngrams_multiverbs.csv"
 
-DATA_ANALYSIS_DIR = [WD_ANALYSIS_PREP, RESULTS_ALL_TEST = WD + "/results_29_09_2021"]
-DATA_ANALYSIS_FILES = [RESULT_ALL_TEST, RESULTS_TEST, ACTIVATION_TEST, OUTCOME_INDEX]
+
+DATA_ANALYSIS_DIR = [WD_ANALYSIS_PREP, RESULTS_ALL_TEST + WD_ANALYSIS_PREP + "/results_29_09_2021"]
+DATA_ANALYSIS_FILES = [RESULTS_TEST, RESULTS_ALL_TEST, ACTIVATION_TEST, OUTCOME_INDEX]
 
 
 ######################################
@@ -218,17 +220,17 @@ WD_PLOTS_PATH = WD_ANALYSIS_PREP
 # Results file - this file is too large to be on GitHub so must be created post-processing
 RESULTS = RESULTS_ALL_TEST
 
-OVERALL_ACCURACY = WD + "/results/Accuracy_per_tense.png"
-ACCURACY_PER_COMP = WD + "/results/Accuracy_per_tense_compact.png"
+OVERALL_ACCURACY = WD_PLOTS_PATH + "/results/Accuracy_per_tense.png"
+ACCURACY_PER_COMP = WD_PLOTS_PATH + "/results/Accuracy_per_tense_compact.png"
 
-ACCURACY_SECOND_TENSE = WD + "/results/Accuracy2_per_tense.png.png"
-ACCURACY2_TENSE_COMP = WD + "/results/Accuracy2_per_tense_compact.png"
+ACCURACY_SECOND_TENSE = WD_PLOTS_PATH + "/results/Accuracy2_per_tense.png.png"
+ACCURACY2_TENSE_COMP = WD_PLOTS_PATH + "/results/Accuracy2_per_tense_compact.png"
 
-ACCURACY_THIRD_TENSE = WD + "/results/Accuracy3_per_tense.png"
-ACCURACY3_TENSE_COMP = WD + "/results/Accuracy3_per_tense_compact.png"
+ACCURACY_THIRD_TENSE = WD_PLOTS_PATH + "/results/Accuracy3_per_tense.png"
+ACCURACY3_TENSE_COMP = WD_PLOTS_PATH + "/results/Accuracy3_per_tense_compact.png"
 
-ACCURACY_TOP_THREE = WD + "/results/Accuracy_top3_per_tense.png"
-ACCURACY_T3_COMP = WD + "/results/Accuracy_top3_per_tense_compact.png"
+ACCURACY_TOP_THREE = WD_PLOTS_PATH + "/results/Accuracy_top3_per_tense.png"
+ACCURACY_T3_COMP = WD_PLOTS_PATH + "/results/Accuracy_top3_per_tense_compact.png"
 
 DATA_ANALYSIS_PLOTS_DIR = [WD_PLOTS_PATH]
 DATA_ANALYSIS_PLOTS_FILES = [OVERALL_ACCURACY, ACCURACY_PER_COMP,
