@@ -31,6 +31,7 @@ The pipeline.py file (found in the GitHub repository) acts as a step-by-step gui
 
 - Folder variable: WD_ANNOTATE
 - Main file: annotate_tenses.py (quite a long process, use the corresponding run function)
+- Adds null articles and tags to sentences
 - A function "Check_lengthy_sentences.R" used to find the 99% quantile of sentence lengths, to define sentence lengths will be added.
 - Removed sentences with num words either < 3 or > 60 (1% and 99% quantiles)
  
