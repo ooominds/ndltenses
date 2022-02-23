@@ -91,6 +91,23 @@ The pipeline.py file (found in the GitHub repository) acts as a step-by-step gui
 - File 1: ndl_model
 -> Train an NDL model
 
+## null tagger
+---------------------------------------------------
+A naive null tagger for .txt input files formatted with one column representing tags and the other representing tokens.
+The tags are reduced BNC tags.
+
+Grammar used for the null tagger {
+            GEN: {<POS|DPS|DT0><NN.*|VVB-NN.*>+}
+            NPR1: {<AT0.*|DT0><|AJ.*>*<AJ0.*><NN.*><PRP.*><AT0.*><NN.*>}
+            NullNPR1: {<AJ0.*><NN.*><PRP.*><AT0.*><NN.*>+}
+            NPR2: {<AT.*|DT0><ORD><CRD>*<NN.*|VVB-NN.*>+}
+            NullNPR2: {<ORD><CRD>*<NN.*|VVB-NN.*>+}
+            NPR3: {<AT.*|DT0><ORD>*<CRD><NN.*|VVB-NN.*>+}
+            NullNPR3: {<ORD>*<CRD><NN.*|VVB-NN.*>+}
+            NPR4: {<AT.*|DT0><AJ.*|PP\$|DP.*|AV.*|>*<NN.*|VVB-NN.*|NP0-NN.*>+}
+            NullNPR4: {<AJ.*>*<NN.*|VVB-NN.*|NP0-NN.*>+}
+ }
+
 
 ## contributors
 ---------------------------------------------------
