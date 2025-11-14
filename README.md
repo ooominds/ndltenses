@@ -6,7 +6,7 @@ A package for training an NDL model to learn tenses using pyndl; can also be use
 
 This should be installable from PyPi so this means it requires pip. 
 You can install the latest pip by typing "pip install pip".
-From a terminal, type "pip install ndl=tense".
+From a terminal, type "pip install ndl-tense".
 ":$ pip install ndl-tense"
 
 ## parameter file
